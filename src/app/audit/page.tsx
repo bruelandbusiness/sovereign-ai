@@ -45,7 +45,7 @@ export default function AuditPage() {
   const showScanning = state === "scanning" || (state === "results" && !scanComplete);
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col page-enter">
       <Header variant="minimal" />
 
       <main className="flex-1">

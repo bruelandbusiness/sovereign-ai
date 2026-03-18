@@ -42,7 +42,7 @@ export default function MarketplacePage() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden">
+    <div className="relative min-h-screen overflow-x-hidden page-enter">
       <Header />
 
       {/* Hero */}
@@ -135,6 +135,9 @@ export default function MarketplacePage() {
       <div className="border-t border-border/40">
         <BundleSection />
       </div>
+
+      {/* Extra bottom padding on mobile for sticky bar */}
+      <div className="h-20 sm:hidden" />
 
       <Footer />
 

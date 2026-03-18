@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import { Zap, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Container } from "./Container";
@@ -79,31 +80,47 @@ export function Header({
           )}
         </div>
 
-        {variant === "default" && mobileOpen && (
-          <nav className="border-t border-border/40 pb-4 pt-2 md:hidden">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileOpen(false)}
-                className={cn(
-                  "block py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-                )}
-              >
-                {link.label}
-              </Link>
-            ))}
-            <Button
-              onClick={() => {
-                setMobileOpen(false);
-                onCtaClick?.();
-              }}
-              className="mt-2 w-full gradient-bg text-white"
+        <AnimatePresence>
+          {variant === "default" && mobileOpen && (
+            <motion.nav
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
+              className="overflow-hidden border-t border-border/40 md:hidden"
             >
-              {ctaLabel}
-            </Button>
-          </nav>
-        )}
+              <div className="pb-4 pt-2">
+                {navLinks.map((link, i) => (
+                  <motion.div
+                    key={link.href}
+                    initial={{ opacity: 0, x: -12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                  >
+                    <Link
+                      href={link.href}
+                      onClick={() => setMobileOpen(false)}
+                      className={cn(
+                        "block py-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                      )}
+                    >
+                      {link.label}
+                    </Link>
+                  </motion.div>
+                ))}
+                <Button
+                  onClick={() => {
+                    setMobileOpen(false);
+                    onCtaClick?.();
+                  }}
+                  className="mt-2 w-full gradient-bg text-white btn-shine"
+                >
+                  {ctaLabel}
+                </Button>
+              </div>
+            </motion.nav>
+          )}
+        </AnimatePresence>
       </Container>
     </header>
   );

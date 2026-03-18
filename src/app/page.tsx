@@ -17,7 +17,7 @@ export default function HomePage() {
   const openBooking = () => setBookingOpen(true);
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-screen flex-col bg-background page-enter">
       <Header onCtaClick={openBooking} />
 
       <main className="flex-1">
