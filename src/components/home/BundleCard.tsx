@@ -12,9 +12,10 @@ import { cn } from "@/lib/utils";
 interface BundleCardProps {
   bundle: Bundle;
   onSelect?: () => void;
+  annual?: boolean;
 }
 
-export function BundleCard({ bundle, onSelect }: BundleCardProps) {
+export function BundleCard({ bundle, onSelect, annual = false }: BundleCardProps) {
   const resolvedServices = bundle.services
     .map((id) => getServiceById(id))
     .filter(Boolean);
@@ -54,10 +55,15 @@ export function BundleCard({ bundle, onSelect }: BundleCardProps) {
           </p>
 
           <div className="mt-4 flex flex-col items-center">
-            <PriceDisplay amount={bundle.price} size="lg" />
+            <PriceDisplay amount={annual ? bundle.annualPrice : bundle.price} size="lg" />
+            {annual && (
+              <span className="mt-1 text-xs text-muted-foreground line-through">
+                ${bundle.price.toLocaleString()}/mo
+              </span>
+            )}
             {bundle.savings && (
               <span className="mt-2 inline-block rounded-full bg-accent/10 px-3 py-0.5 text-xs font-medium text-accent">
-                {bundle.savings}
+                {annual ? "2 months free" : bundle.savings}
               </span>
             )}
             {bundle.popular && (

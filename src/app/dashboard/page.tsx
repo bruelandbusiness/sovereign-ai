@@ -15,6 +15,8 @@ import { ActivityFeed } from "@/components/dashboard/ActivityFeed";
 import { ROISection } from "@/components/dashboard/ROISection";
 import { ActiveServicesCard } from "@/components/dashboard/ActiveServicesCard";
 import { SubscriptionCard } from "@/components/dashboard/SubscriptionCard";
+import { OnboardingChecklist } from "@/components/dashboard/OnboardingChecklist";
+import { NotificationBell } from "@/components/dashboard/NotificationBell";
 import { useDashboard } from "@/hooks/useDashboard";
 import { useSession } from "@/lib/auth-context";
 
@@ -67,6 +69,7 @@ export default function DashboardPage() {
               <DashboardHeader profile={displayProfile} />
             </div>
             <div className="flex items-center gap-2 shrink-0">
+              <NotificationBell />
               <Link href="/dashboard/billing">
                 <Button variant="ghost" size="sm">
                   <CreditCard className="mr-1.5 h-4 w-4" />
@@ -78,6 +81,11 @@ export default function DashboardPage() {
                 Sign Out
               </Button>
             </div>
+          </div>
+
+          {/* Onboarding checklist */}
+          <div className="mt-6">
+            <OnboardingChecklist />
           </div>
 
           {/* Motivational goal banner */}

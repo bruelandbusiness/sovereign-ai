@@ -10,6 +10,8 @@ import { HowItWorks } from "@/components/home/HowItWorks";
 import { TestimonialsSection } from "@/components/home/TestimonialsSection";
 import { CTASection } from "@/components/home/CTASection";
 import { BookingModal } from "@/components/home/BookingModal";
+import { ROICalculator } from "@/components/home/ROICalculator";
+import { ExitIntentPopup } from "@/components/shared/ExitIntentPopup";
 
 export default function HomePage() {
   const [bookingOpen, setBookingOpen] = useState(false);
@@ -25,6 +27,7 @@ export default function HomePage() {
         <ServicesGrid />
         <HowItWorks />
         <BundlePricing onSelect={openBooking} />
+        <ROICalculator />
         <TestimonialsSection />
         <CTASection onCtaClick={openBooking} />
       </main>
@@ -32,6 +35,7 @@ export default function HomePage() {
       <Footer />
 
       <BookingModal open={bookingOpen} onOpenChange={setBookingOpen} />
+      <ExitIntentPopup />
     </div>
   );
 }

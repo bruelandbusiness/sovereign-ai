@@ -18,7 +18,7 @@ export function Footer() {
           </div>
 
           {/* Links */}
-          <div className="grid grid-cols-2 gap-4 text-xs">
+          <div className="grid grid-cols-3 gap-4 text-xs">
             <div className="space-y-2.5">
               <p className="font-semibold text-foreground">Product</p>
               <Link href="/audit" className="block text-muted-foreground transition-colors hover:text-foreground">
@@ -30,20 +30,41 @@ export function Footer() {
               <Link href="/#pricing" className="block text-muted-foreground transition-colors hover:text-foreground">
                 Pricing
               </Link>
+              <Link href="/demo" className="block text-muted-foreground transition-colors hover:text-foreground">
+                Live Demo
+              </Link>
+              <Link href="/results" className="block text-muted-foreground transition-colors hover:text-foreground">
+                Case Studies
+              </Link>
             </div>
             <div className="space-y-2.5">
               <p className="font-semibold text-foreground">Company</p>
-              <Link href="/#services" className="block text-muted-foreground transition-colors hover:text-foreground">
-                How It Works
+              <Link href="/about" className="block text-muted-foreground transition-colors hover:text-foreground">
+                About Us
               </Link>
-              <Link href="/onboarding" className="block text-muted-foreground transition-colors hover:text-foreground">
-                Get Started
+              <Link href="/blog" className="block text-muted-foreground transition-colors hover:text-foreground">
+                Blog
               </Link>
+              <Link href="/guarantee" className="block text-muted-foreground transition-colors hover:text-foreground">
+                Guarantee
+              </Link>
+              <Link href="/faq" className="block text-muted-foreground transition-colors hover:text-foreground">
+                FAQ
+              </Link>
+              <Link href="/changelog" className="block text-muted-foreground transition-colors hover:text-foreground">
+                Changelog
+              </Link>
+            </div>
+            <div className="space-y-2.5">
+              <p className="font-semibold text-foreground">Legal</p>
               <Link href="/legal/privacy" className="block text-muted-foreground transition-colors hover:text-foreground">
                 Privacy Policy
               </Link>
               <Link href="/legal/terms" className="block text-muted-foreground transition-colors hover:text-foreground">
                 Terms
+              </Link>
+              <Link href="/onboarding" className="block text-muted-foreground transition-colors hover:text-foreground">
+                Get Started
               </Link>
             </div>
           </div>

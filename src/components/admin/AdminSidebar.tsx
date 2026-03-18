@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Users, LogOut, Zap } from "lucide-react";
+import { LayoutDashboard, Users, LogOut, Zap, LifeBuoy } from "lucide-react";
 import { useSession } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 
 const NAV_ITEMS = [
   { href: "/admin", label: "Overview", icon: LayoutDashboard },
   { href: "/admin/clients", label: "Clients", icon: Users },
+  { href: "/admin/support", label: "Support", icon: LifeBuoy },
 ];
 
 export function AdminSidebar() {

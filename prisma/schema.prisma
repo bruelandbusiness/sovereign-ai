@@ -17,9 +17,10 @@ model Account {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  magicLinks MagicLink[]
-  sessions   Session[]
-  client     Client?
+  magicLinks    MagicLink[]
+  sessions      Session[]
+  client        Client?
+  notifications Notification[]
 }
 
 model MagicLink {
@@ -68,8 +69,13 @@ model Client {
   chatbotConfig   ChatbotConfig?
   reviewCampaigns ReviewCampaign[]
   contentJobs     ContentJob[]
-  emailCampaigns  EmailCampaign[]
-  bookings        Booking[]
+  emailCampaigns   EmailCampaign[]
+  bookings         Booking[]
+  onboardingSteps  OnboardingStep[]
+  referralCodes    ReferralCode[]   @relation("referrer")
+  referredBy       ReferralCode[]   @relation("referred")
+  supportTickets   SupportTicket[]
+  npsResponses     NPSResponse[]
 }
 
 model Subscription {
@@ -250,4 +256,116 @@ model Booking {
   client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
 
   @@index([clientId, startsAt])
+}
+
+// ─── Blog ───────────────────────────────────────────────────
+
+model BlogPost {
+  id              String   @id @default(cuid())
+  slug            String   @unique
+  title           String
+  content         String   // Markdown content
+  excerpt         String
+  author          String   @default("Sovereign AI Team")
+  category        String   // ai-marketing | lead-generation | reviews | chatbots | roi
+  tags            String?  // Comma-separated
+  metaTitle       String?
+  metaDescription String?
+  publishedAt     DateTime @default(now())
+  createdAt       DateTime @default(now())
+
+  @@index([slug])
+  @@index([publishedAt])
+}
+
+// ─── Onboarding Checklist ───────────────────────────────────
+
+model OnboardingStep {
+  id          String    @id @default(cuid())
+  clientId    String
+  stepKey     String    // gbp | chatbot-greeting | business-hours | first-post | logo
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@unique([clientId, stepKey])
+}
+
+// ─── Referral Program ───────────────────────────────────────
+
+model ReferralCode {
+  id              String   @id @default(cuid())
+  clientId        String
+  code            String   @unique
+  referredClientId String?
+  creditCents     Int      @default(0)
+  status          String   @default("active") // active | credited | expired
+  createdAt       DateTime @default(now())
+
+  client         Client  @relation("referrer", fields: [clientId], references: [id], onDelete: Cascade)
+  referredClient Client? @relation("referred", fields: [referredClientId], references: [id])
+
+  @@index([code])
+}
+
+// ─── Support Tickets ────────────────────────────────────────
+
+model SupportTicket {
+  id          String   @id @default(cuid())
+  clientId    String
+  subject     String
+  description String
+  status      String   @default("open") // open | in_progress | resolved | closed
+  priority    String   @default("medium") // low | medium | high
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  client   Client          @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  messages TicketMessage[]
+
+  @@index([clientId])
+}
+
+model TicketMessage {
+  id         String   @id @default(cuid())
+  ticketId   String
+  senderRole String   // client | admin
+  message    String
+  createdAt  DateTime @default(now())
+
+  ticket SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+}
+
+// ─── Notifications ──────────────────────────────────────────
+
+model Notification {
+  id        String   @id @default(cuid())
+  accountId String
+  type      String   // lead | review | content | booking | system
+  title     String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([accountId, read])
+}
+
+// ─── NPS Survey ─────────────────────────────────────────────
+
+model NPSResponse {
+  id          String    @id @default(cuid())
+  clientId    String
+  score       Int       // 1-10
+  feedback    String?
+  surveyType  String    // 30day | 90day
+  sentAt      DateTime  @default(now())
+  respondedAt DateTime?
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
 }

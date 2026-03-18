@@ -350,6 +350,7 @@ export const BUNDLES: Bundle[] = [
     id: "starter",
     name: "Starter",
     price: 3497,
+    annualPrice: 2914,
     services: ["lead-gen", "reviews", "booking"],
     description: "Essential AI marketing for businesses just getting started.",
     savings: "Save ~$1,300/mo",
@@ -358,6 +359,7 @@ export const BUNDLES: Bundle[] = [
     id: "growth",
     name: "Growth",
     price: 6997,
+    annualPrice: 5831,
     services: ["lead-gen", "voice-agent", "seo", "email", "reviews", "crm"],
     description:
       "The most popular bundle for businesses ready to scale aggressively.",
@@ -368,6 +370,7 @@ export const BUNDLES: Bundle[] = [
     id: "empire",
     name: "Empire",
     price: 12997,
+    annualPrice: 10831,
     services: SERVICES.map((s) => s.id),
     description:
       "Every AI service we offer. Complete marketing domination for your market.",

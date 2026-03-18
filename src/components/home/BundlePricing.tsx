@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Shield } from "lucide-react";
 import { Section } from "@/components/layout/Section";
@@ -15,6 +16,8 @@ interface BundlePricingProps {
 }
 
 export function BundlePricing({ onSelect }: BundlePricingProps) {
+  const [annual, setAnnual] = useState(false);
+
   return (
     <Section id="pricing">
       <Container>
@@ -34,6 +37,33 @@ export function BundlePricing({ onSelect }: BundlePricingProps) {
               Every plan includes a 30-day money-back guarantee. If you
               don&apos;t see results, you don&apos;t pay.
             </p>
+
+            {/* Annual/Monthly toggle */}
+            <div className="mt-8 inline-flex items-center gap-1 rounded-full border border-border/50 bg-card p-1">
+              <button
+                onClick={() => setAnnual(false)}
+                className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
+                  !annual
+                    ? "gradient-bg text-white shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Monthly
+              </button>
+              <button
+                onClick={() => setAnnual(true)}
+                className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
+                  annual
+                    ? "gradient-bg text-white shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Annual
+                <span className="ml-1.5 rounded-full bg-accent/20 px-2 py-0.5 text-[10px] font-bold text-accent">
+                  2 months free
+                </span>
+              </button>
+            </div>
           </div>
         </FadeInView>
 
@@ -46,7 +76,7 @@ export function BundlePricing({ onSelect }: BundlePricingProps) {
         >
           {BUNDLES.map((bundle) => (
             <motion.div key={bundle.id} variants={staggerItem} className="flex">
-              <BundleCard bundle={bundle} onSelect={onSelect} />
+              <BundleCard bundle={bundle} onSelect={onSelect} annual={annual} />
             </motion.div>
           ))}
         </motion.div>

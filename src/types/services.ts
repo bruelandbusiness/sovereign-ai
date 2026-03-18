@@ -54,6 +54,7 @@ export interface Bundle {
   id: BundleId;
   name: string;
   price: number;
+  annualPrice: number;
   services: ServiceId[];
   description: string;
   popular?: boolean;
