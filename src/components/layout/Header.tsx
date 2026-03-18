@@ -3,8 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Zap, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SovereignLogo } from "@/components/brand/SovereignLogo";
 import { Container } from "./Container";
 import { cn } from "@/lib/utils";
 
@@ -33,13 +34,8 @@ export function Header({
     <header className="sticky top-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-xl">
       <Container>
         <div className="flex h-16 items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg gradient-bg">
-              <Zap className="h-4 w-4 text-white" />
-            </div>
-            <span className="font-display text-lg font-bold tracking-tight">
-              SOVEREIGN AI
-            </span>
+          <Link href="/" className="flex items-center">
+            <SovereignLogo variant="wordmark" size="sm" />
           </Link>
 
           {variant === "default" && (

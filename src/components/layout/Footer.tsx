@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Zap, Shield } from "lucide-react";
+import { Shield } from "lucide-react";
+import { SovereignLogo } from "@/components/brand/SovereignLogo";
 import { Container } from "./Container";
 
 export function Footer() {
@@ -9,14 +10,7 @@ export function Footer() {
         <div className="grid gap-8 sm:grid-cols-3">
           {/* Brand */}
           <div>
-            <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg gradient-bg">
-                <Zap className="h-3.5 w-3.5 text-white" />
-              </div>
-              <span className="font-display text-sm font-bold tracking-tight">
-                SOVEREIGN AI
-              </span>
-            </div>
+            <SovereignLogo variant="wordmark" size="xs" />
             <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
               AI-powered marketing automation for local service businesses.
               16 AI systems working 24/7 to grow your revenue.
