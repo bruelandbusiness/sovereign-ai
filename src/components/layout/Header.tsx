@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { SovereignLogo } from "@/components/brand/SovereignLogo";
 import { Container } from "./Container";
 import { cn } from "@/lib/utils";
+import { useSession } from "@/lib/auth-context";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -29,6 +30,7 @@ export function Header({
   onCtaClick,
 }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { user } = useSession();
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-xl">
@@ -37,6 +39,15 @@ export function Header({
           <Link href="/" className="flex items-center">
             <SovereignLogo variant="wordmark" size="sm" />
           </Link>
+
+          {variant === "minimal" && (
+            <Link
+              href="/"
+              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Back to site
+            </Link>
+          )}
 
           {variant === "default" && (
             <>
@@ -52,7 +63,13 @@ export function Header({
                 ))}
               </nav>
 
-              <div className="hidden md:block">
+              <div className="hidden items-center gap-3 md:flex">
+                <Link
+                  href={user ? "/dashboard" : "/login"}
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  {user ? "Dashboard" : "Client Login"}
+                </Link>
                 <Button
                   onClick={onCtaClick}
                   className="gradient-bg text-white hover:opacity-90"
@@ -104,6 +121,13 @@ export function Header({
                     </Link>
                   </motion.div>
                 ))}
+                <Link
+                  href={user ? "/dashboard" : "/login"}
+                  onClick={() => setMobileOpen(false)}
+                  className="block py-2.5 text-sm font-medium text-primary transition-colors hover:text-primary/80"
+                >
+                  {user ? "Dashboard" : "Client Login"}
+                </Link>
                 <Button
                   onClick={() => {
                     setMobileOpen(false);

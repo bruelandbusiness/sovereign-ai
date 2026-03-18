@@ -9,16 +9,18 @@ import { FadeInView } from "@/components/shared/FadeInView";
 import { formatPrice } from "@/lib/constants";
 import type { SubscriptionInfo } from "@/types/dashboard";
 
-const DEMO_SUBSCRIPTION: SubscriptionInfo = {
-  bundleId: "growth",
-  bundleName: "Growth Bundle",
-  monthlyAmount: 6997,
-  activeServiceCount: 6,
-  status: "active",
-};
+interface SubscriptionCardProps {
+  subscription?: SubscriptionInfo | null;
+}
 
-export function SubscriptionCard() {
-  const sub = DEMO_SUBSCRIPTION;
+export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
+  const sub = subscription || {
+    bundleId: "growth" as const,
+    bundleName: "Growth Bundle",
+    monthlyAmount: 6997,
+    activeServiceCount: 6,
+    status: "active" as const,
+  };
 
   return (
     <FadeInView>

@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/db";
+import { createAccountWithMagicLink } from "@/lib/auth";
+import { sendWelcomeEmail } from "@/lib/email";
 
 const API_URL = process.env.API_URL || "http://localhost:8000";
 
@@ -6,19 +9,12 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // Create a lead from the onboarding data
-    const leadData = {
-      business_name: body.step1?.businessName || "",
-      email: body.step1?.email || "",
-      phone: body.step1?.phone || "",
-      city: body.step1?.city || "",
-      state: body.step1?.state || "",
-      vertical: body.step1?.industry || "",
-    };
+    const selectedServices = body.step3?.selectedServices || [];
+    const email = body.step1?.email || "";
+    const ownerName = body.step1?.ownerName || "";
+    const businessName = body.step1?.businessName || "";
 
     // Try to create a checkout session if services were selected
-    const selectedServices = body.step3?.selectedServices || [];
-
     if (selectedServices.length > 0) {
       try {
         const checkoutResponse = await fetch(
@@ -28,9 +24,16 @@ export async function POST(request: NextRequest) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               items: selectedServices,
-              customer_email: leadData.email,
-              customer_name: body.step1?.ownerName || "",
-              business_name: leadData.business_name,
+              customer_email: email,
+              customer_name: ownerName,
+              business_name: businessName,
+              metadata: {
+                customer_name: ownerName,
+                business_name: businessName,
+                email,
+                services: JSON.stringify(selectedServices),
+                onboarding_data: JSON.stringify(body),
+              },
             }),
           }
         );
@@ -44,11 +47,45 @@ export async function POST(request: NextRequest) {
           });
         }
       } catch {
-        // If checkout fails, still succeed the onboarding — payment can happen later
+        // If checkout fails, still create a free account below
       }
     }
 
-    // If no services or checkout failed, just save the lead
+    // Create a free account so they can access the dashboard
+    if (email) {
+      try {
+        const authResult = await createAccountWithMagicLink(email, ownerName);
+
+        await prisma.client.upsert({
+          where: { accountId: authResult.account.id },
+          create: {
+            accountId: authResult.account.id,
+            businessName: businessName || "My Business",
+            ownerName: ownerName || "",
+            phone: body.step1?.phone || null,
+            city: body.step1?.city || null,
+            state: body.step1?.state || null,
+            vertical: body.step1?.industry || null,
+            website: body.step1?.website || null,
+            serviceAreaRadius: body.step1?.serviceAreaRadius || null,
+            onboardingData: JSON.stringify(body),
+          },
+          update: {
+            onboardingData: JSON.stringify(body),
+          },
+        });
+
+        await sendWelcomeEmail(
+          email,
+          ownerName || "there",
+          businessName || "your business",
+          authResult.url
+        );
+      } catch (error) {
+        console.error("Failed to create account:", error);
+      }
+    }
+
     return NextResponse.json({
       success: true,
       message: "Onboarding submitted successfully",

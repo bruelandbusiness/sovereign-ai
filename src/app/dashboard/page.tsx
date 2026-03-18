@@ -1,11 +1,13 @@
 "use client";
 
-import { Target, ArrowRight, Sparkles } from "lucide-react";
+import { Target, ArrowRight, Sparkles, LogOut } from "lucide-react";
+import Link from "next/link";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Container } from "@/components/layout/Container";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { KPIGrid } from "@/components/dashboard/KPIGrid";
 import { LeadTable } from "@/components/dashboard/LeadTable";
@@ -13,21 +15,46 @@ import { ActivityFeed } from "@/components/dashboard/ActivityFeed";
 import { ROISection } from "@/components/dashboard/ROISection";
 import { ActiveServicesCard } from "@/components/dashboard/ActiveServicesCard";
 import { SubscriptionCard } from "@/components/dashboard/SubscriptionCard";
-import type { ClientProfile } from "@/types/dashboard";
-
-const DEMO_PROFILE: ClientProfile = {
-  businessName: "Smith's Heating & Air",
-  ownerName: "John Smith",
-  initials: "SH",
-  city: "Phoenix, AZ",
-  vertical: "HVAC",
-  plan: "Growth Bundle",
-};
+import { useDashboard } from "@/hooks/useDashboard";
+import { useSession } from "@/lib/auth-context";
 
 export default function DashboardPage() {
+  const { user, signOut } = useSession();
+  const { profile, kpis, leads, activities, services, subscription, isLoading } =
+    useDashboard();
+
+  const displayProfile = profile || {
+    businessName: user?.client?.businessName || "Your Business",
+    ownerName: user?.client?.ownerName || user?.name || "",
+    initials: (user?.client?.businessName || "YB").slice(0, 2).toUpperCase(),
+    city: user?.client?.city && user?.client?.state
+      ? `${user.client.city}, ${user.client.state}`
+      : "",
+    vertical: user?.client?.vertical || "",
+    plan: subscription?.bundleName || "",
+  };
+
+  const leadsThisMonth = kpis.find((k) => k.label === "Leads This Month");
   const goalTotal = 60;
-  const goalCurrent = 47;
-  const goalPercent = Math.round((goalCurrent / goalTotal) * 100);
+  const goalCurrent =
+    typeof leadsThisMonth?.value === "number" ? leadsThisMonth.value : 0;
+  const goalPercent =
+    goalTotal > 0 ? Math.min(100, Math.round((goalCurrent / goalTotal) * 100)) : 0;
+
+  const activeServiceIds = services
+    .filter((s) => s.status === "active")
+    .map((s) => s.serviceId);
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen flex-col bg-background">
+        <Header variant="minimal" />
+        <main className="flex flex-1 items-center justify-center">
+          <div className="text-muted-foreground">Loading your dashboard...</div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-background page-enter">
@@ -35,8 +62,15 @@ export default function DashboardPage() {
 
       <main className="flex-1 py-8">
         <Container>
-          {/* Client header */}
-          <DashboardHeader profile={DEMO_PROFILE} />
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <DashboardHeader profile={displayProfile} />
+            </div>
+            <Button variant="ghost" size="sm" onClick={signOut} className="shrink-0">
+              <LogOut className="mr-1.5 h-4 w-4" />
+              Sign Out
+            </Button>
+          </div>
 
           {/* Motivational goal banner */}
           <div className="mt-6 rounded-xl border border-primary/20 bg-primary/5 p-4 sm:p-5">
@@ -73,16 +107,17 @@ export default function DashboardPage() {
                   <TabsTrigger value="overview">Overview</TabsTrigger>
                   <TabsTrigger value="leads">Leads</TabsTrigger>
                   <TabsTrigger value="activity">Activity</TabsTrigger>
+                  <TabsTrigger value="services">Services</TabsTrigger>
                 </TabsList>
 
                 {/* Overview Tab */}
                 <TabsContent value="overview">
                   <div className="space-y-8">
-                    <KPIGrid />
+                    <KPIGrid kpis={kpis} />
 
                     <div className="grid gap-6 lg:grid-cols-2">
-                      <LeadTable maxHeight="380px" />
-                      <ActivityFeed maxHeight="380px" />
+                      <LeadTable leads={leads} maxHeight="380px" />
+                      <ActivityFeed activities={activities} maxHeight="380px" />
                     </div>
 
                     <ROISection />
@@ -91,20 +126,62 @@ export default function DashboardPage() {
 
                 {/* Leads Tab */}
                 <TabsContent value="leads">
-                  <LeadTable maxHeight="600px" />
+                  <LeadTable leads={leads} maxHeight="600px" />
                 </TabsContent>
 
                 {/* Activity Tab */}
                 <TabsContent value="activity">
-                  <ActivityFeed maxHeight="600px" />
+                  <ActivityFeed activities={activities} maxHeight="600px" />
+                </TabsContent>
+
+                {/* Services Tab */}
+                <TabsContent value="services">
+                  <div className="space-y-4">
+                    <h2 className="text-lg font-semibold">Your AI Services</h2>
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                      {activeServiceIds.includes("chatbot") && (
+                        <Link href="/dashboard/services/chatbot">
+                          <Card className="transition-colors hover:border-primary/50">
+                            <CardContent className="p-5">
+                              <h3 className="font-semibold">AI Chatbot</h3>
+                              <p className="mt-1 text-sm text-muted-foreground">Configure your website chatbot, view conversations</p>
+                            </CardContent>
+                          </Card>
+                        </Link>
+                      )}
+                      {activeServiceIds.includes("reviews") && (
+                        <Link href="/dashboard/services/reviews">
+                          <Card className="transition-colors hover:border-primary/50">
+                            <CardContent className="p-5">
+                              <h3 className="font-semibold">Review Automation</h3>
+                              <p className="mt-1 text-sm text-muted-foreground">Manage review campaigns, track ratings</p>
+                            </CardContent>
+                          </Card>
+                        </Link>
+                      )}
+                      {activeServiceIds.includes("content") && (
+                        <Link href="/dashboard/services/content">
+                          <Card className="transition-colors hover:border-primary/50">
+                            <CardContent className="p-5">
+                              <h3 className="font-semibold">Content Engine</h3>
+                              <p className="mt-1 text-sm text-muted-foreground">View generated posts, manage content calendar</p>
+                            </CardContent>
+                          </Card>
+                        </Link>
+                      )}
+                    </div>
+                    {activeServiceIds.length === 0 && (
+                      <p className="text-sm text-muted-foreground">No services active yet. Complete onboarding to get started.</p>
+                    )}
+                  </div>
                 </TabsContent>
               </Tabs>
             </div>
 
             {/* Sidebar */}
             <aside className="hidden space-y-6 lg:block">
-              <ActiveServicesCard />
-              <SubscriptionCard />
+              <ActiveServicesCard serviceIds={activeServiceIds} />
+              <SubscriptionCard subscription={subscription} />
 
               {/* Upsell card */}
               <Card className="border-primary/20 bg-gradient-to-b from-primary/10 to-transparent">
@@ -118,7 +195,7 @@ export default function DashboardPage() {
                     — Save $5,500/mo
                   </p>
                   <a
-                    href="/services"
+                    href="/marketplace"
                     className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary transition-colors hover:text-primary/80"
                   >
                     See Empire Benefits

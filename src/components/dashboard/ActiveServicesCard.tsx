@@ -8,16 +8,11 @@ import { getServiceById } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import type { ServiceId } from "@/types/services";
 
-const GROWTH_SERVICES: ServiceId[] = [
-  "lead-gen",
-  "voice-agent",
-  "seo",
-  "email",
-  "reviews",
-  "crm",
-];
+interface ActiveServicesCardProps {
+  serviceIds?: string[];
+}
 
-export function ActiveServicesCard() {
+export function ActiveServicesCard({ serviceIds = [] }: ActiveServicesCardProps) {
   return (
     <FadeInView>
       <Card>
@@ -28,7 +23,7 @@ export function ActiveServicesCard() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-2">
-            {GROWTH_SERVICES.map((id) => {
+            {(serviceIds as ServiceId[]).map((id) => {
               const service = getServiceById(id);
               if (!service) return null;
               const Icon = service.icon;

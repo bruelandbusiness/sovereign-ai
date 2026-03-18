@@ -1,0 +1,195 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// ─── Auth ────────────────────────────────────────────────────
+
+model Account {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  magicLinks MagicLink[]
+  sessions   Session[]
+  client     Client?
+}
+
+model MagicLink {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  accountId String
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  accountId String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+}
+
+// ─── Client & Subscription ──────────────────────────────────
+
+model Client {
+  id                 String   @id @default(cuid())
+  accountId          String   @unique
+  businessName       String
+  ownerName          String
+  phone              String?
+  city               String?
+  state              String?
+  vertical           String?
+  website            String?
+  serviceAreaRadius  String?
+  onboardingData     String?  // JSON blob of full onboarding form
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  account       Account         @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  subscription  Subscription?
+  services      ClientService[]
+  leads         Lead[]
+  activities    ActivityEvent[]
+  chatbotConfig ChatbotConfig?
+  reviewCampaigns ReviewCampaign[]
+  contentJobs   ContentJob[]
+}
+
+model Subscription {
+  id              String   @id @default(cuid())
+  clientId        String   @unique
+  stripeSubId     String?  @unique
+  stripeCustId    String?
+  bundleId        String?  // "starter" | "growth" | "empire" | null for à la carte
+  status          String   @default("active") // active | past_due | canceled
+  monthlyAmount   Int      @default(0) // cents
+  currentPeriodEnd DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+}
+
+model ClientService {
+  id         String   @id @default(cuid())
+  clientId   String
+  serviceId  String   // matches ServiceId from constants
+  status     String   @default("provisioning") // provisioning | active | paused | canceled
+  activatedAt DateTime?
+  config     String?  // JSON blob for service-specific config
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@unique([clientId, serviceId])
+}
+
+// ─── Leads & Activity ───────────────────────────────────────
+
+model Lead {
+  id       String   @id @default(cuid())
+  clientId String
+  name     String
+  email    String?
+  phone    String?
+  source   String   @default("website") // website | chatbot | form | phone | referral
+  status   String   @default("new") // new | qualified | appointment | won | lost
+  notes    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+}
+
+model ActivityEvent {
+  id          String   @id @default(cuid())
+  clientId    String
+  type        String   // lead_captured | review_received | call_booked | email_sent | content_published | review_response | ad_optimized | seo_update
+  title       String
+  description String
+  createdAt   DateTime @default(now())
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+}
+
+// ─── AI Chatbot ─────────────────────────────────────────────
+
+model ChatbotConfig {
+  id           String   @id @default(cuid())
+  clientId     String   @unique
+  systemPrompt String   // Auto-generated from business info
+  greeting     String   @default("Hi! How can I help you today?")
+  primaryColor String   @default("#4c85ff")
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  client        Client              @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  conversations ChatbotConversation[]
+}
+
+model ChatbotConversation {
+  id          String   @id @default(cuid())
+  chatbotId   String
+  visitorName String?
+  visitorEmail String?
+  messages    String   // JSON array of {role, content, timestamp}
+  leadCaptured Boolean @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  chatbot ChatbotConfig @relation(fields: [chatbotId], references: [id], onDelete: Cascade)
+}
+
+// ─── Review Automation ──────────────────────────────────────
+
+model ReviewCampaign {
+  id            String   @id @default(cuid())
+  clientId      String
+  name          String
+  customerName  String
+  customerEmail String
+  customerPhone String?
+  status        String   @default("pending") // pending | sent | reminded | completed | opted_out
+  reviewUrl     String?  // Google review link
+  sentAt        DateTime?
+  remindedAt    DateTime?
+  completedAt   DateTime?
+  rating        Int?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+}
+
+// ─── Content Engine ─────────────────────────────────────────
+
+model ContentJob {
+  id        String   @id @default(cuid())
+  clientId  String
+  type      String   @default("blog") // blog | social | service_page
+  title     String?
+  content   String?  // Generated content (markdown)
+  keywords  String?  // Comma-separated target keywords
+  status    String   @default("queued") // queued | generating | published | failed
+  publishAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+}
