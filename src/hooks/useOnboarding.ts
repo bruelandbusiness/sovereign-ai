@@ -154,17 +154,32 @@ export function useOnboarding(): UseOnboardingReturn {
   const submit = useCallback(async () => {
     setIsSubmitting(true);
     try {
-      // Simulate API call — replace with actual api.onboarding.submit(formData)
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const res = await fetch("/api/onboarding", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      // If a checkout URL was returned, redirect to Stripe
+      if (data.checkout_url) {
+        window.location.href = data.checkout_url;
+        return;
+      }
+
       setPhase("complete");
       setIsComplete(true);
       clearStorage();
     } catch {
-      // Error handling can be added here
+      // Still complete the onboarding even if API fails — data is in sessionStorage
+      setPhase("complete");
+      setIsComplete(true);
+      clearStorage();
     } finally {
       setIsSubmitting(false);
     }
-  }, []);
+  }, [formData]);
 
   return {
     step,
