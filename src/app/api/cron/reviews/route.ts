@@ -1,10 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { sendReviewRequestEmail } from "@/lib/email";
+import { verifyCronSecret } from "@/lib/cron";
 
 const THREE_DAYS_MS = 3 * 24 * 60 * 60 * 1000;
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const unauthorized = verifyCronSecret(request);
+  if (unauthorized) return unauthorized;
   try {
     const cutoff = new Date(Date.now() - THREE_DAYS_MS);
 

@@ -48,11 +48,26 @@ export async function POST(request: Request) {
     },
   });
 
-  // In production this would send via SendGrid to actual recipients.
-  // For now, just log the send and record the activity.
-  console.log(
-    `[EMAIL SEND] Campaign "${campaign.name}" (${campaign.id}) marked as sent for client ${clientId}`
-  );
+  // Send campaign email to all client leads with email addresses
+  const { sendCampaignEmail } = await import("@/lib/email");
+  const leads = await prisma.lead.findMany({
+    where: { clientId, email: { not: null } },
+    select: { email: true },
+  });
+
+  let sentCount = 0;
+  for (const lead of leads) {
+    if (lead.email) {
+      await sendCampaignEmail(lead.email, campaign.subject, campaign.body);
+      sentCount++;
+    }
+  }
+
+  // Update recipient count
+  await prisma.emailCampaign.update({
+    where: { id: campaign.id },
+    data: { recipients: sentCount },
+  });
 
   await prisma.activityEvent.create({
     data: {

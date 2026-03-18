@@ -109,3 +109,55 @@ export async function sendReviewRequestEmail(
     html
   );
 }
+
+export async function sendCampaignEmail(
+  to: string,
+  subject: string,
+  body: string
+) {
+  await sendEmail(to, subject, body);
+}
+
+export async function sendBookingReminderEmail(
+  email: string,
+  customerName: string,
+  businessName: string,
+  appointmentDate: string,
+  appointmentTime: string
+) {
+  const html = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 480px; margin: 0 auto; padding: 40px 20px;">
+      <div style="text-align: center; margin-bottom: 32px;">
+        <h1 style="color: #0a0a0f; font-size: 24px; margin: 0;">Appointment Reminder</h1>
+      </div>
+      <p style="color: #333; font-size: 16px; line-height: 1.5;">Hi ${customerName},</p>
+      <p style="color: #333; font-size: 16px; line-height: 1.5;">This is a friendly reminder that you have an upcoming appointment with <strong>${businessName}</strong>:</p>
+      <div style="background: #f8f9fa; border-radius: 8px; padding: 20px; margin: 24px 0; text-align: center;">
+        <p style="color: #333; font-size: 18px; font-weight: 600; margin: 0;">${appointmentDate}</p>
+        <p style="color: #666; font-size: 16px; margin: 8px 0 0;">at ${appointmentTime}</p>
+      </div>
+      <p style="color: #666; font-size: 14px;">If you need to reschedule, please contact us as soon as possible.</p>
+      <hr style="border: none; border-top: 1px solid #eee; margin: 32px 0;" />
+      <p style="color: #999; font-size: 12px; text-align: center;">— The ${businessName} Team</p>
+    </div>
+  `;
+
+  await sendEmail(email, `Reminder: Your appointment with ${businessName} tomorrow`, html);
+}
+
+export async function sendDripEmail(
+  to: string,
+  subject: string,
+  body: string,
+  businessName: string
+) {
+  const html = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 480px; margin: 0 auto; padding: 40px 20px;">
+      ${body}
+      <hr style="border: none; border-top: 1px solid #eee; margin: 32px 0;" />
+      <p style="color: #999; font-size: 12px; text-align: center;">Sent by ${businessName} via Sovereign AI</p>
+    </div>
+  `;
+
+  await sendEmail(to, subject, html);
+}

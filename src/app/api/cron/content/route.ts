@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import Anthropic from "@anthropic-ai/sdk";
+import { verifyCronSecret } from "@/lib/cron";
 
 const anthropic = new Anthropic();
 
@@ -84,7 +85,10 @@ Return ONLY the blog post content in markdown format.`;
   }
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const unauthorized = verifyCronSecret(request);
+  if (unauthorized) return unauthorized;
+
   // Find up to 2 queued content jobs
   const queuedJobs = await prisma.contentJob.findMany({
     where: { status: "queued" },

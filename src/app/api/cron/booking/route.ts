@@ -1,7 +1,12 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { sendBookingReminderEmail } from "@/lib/email";
+import { verifyCronSecret } from "@/lib/cron";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const unauthorized = verifyCronSecret(request);
+  if (unauthorized) return unauthorized;
+
   try {
     const now = new Date();
     const twentyFourHoursLater = new Date(
@@ -9,7 +14,6 @@ export async function GET() {
     );
 
     // Find bookings starting in the next 24 hours that are confirmed
-    // We use the existence of a "reminder" activity event to avoid re-reminding
     const upcomingBookings = await prisma.booking.findMany({
       where: {
         status: "confirmed",
@@ -46,15 +50,19 @@ export async function GET() {
         });
 
         if (existingReminder) {
-          continue; // Already reminded
+          continue;
         }
 
-        // In production this would send an email/SMS reminder
-        console.log(
-          `[BOOKING REMINDER] Sending reminder for booking ${booking.id} ` +
-            `(${booking.customerName}) at ${booking.startsAt.toISOString()} ` +
-            `for ${booking.client.businessName}`
-        );
+        // Send the reminder email via SendGrid
+        if (booking.customerEmail) {
+          await sendBookingReminderEmail(
+            booking.customerEmail,
+            booking.customerName,
+            booking.client.businessName,
+            booking.startsAt.toLocaleDateString(),
+            booking.startsAt.toLocaleTimeString()
+          );
+        }
 
         // Record the reminder activity
         await prisma.activityEvent.create({
