@@ -72,4 +72,5 @@ export interface Testimonial {
   quote: string;
   rating: number;
   vertical: string;
+  result?: string;
 }

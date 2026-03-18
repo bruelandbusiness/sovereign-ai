@@ -2,7 +2,7 @@
 
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, ArrowRight } from "lucide-react";
+import { Loader2, Zap, Shield } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -43,11 +43,11 @@ export function AuditForm({ onSubmit, isLoading }: AuditFormProps) {
     <FadeInView>
       <Card className="mx-auto w-full max-w-lg border-border/50 bg-card">
         <CardHeader className="text-center">
-          <CardTitle className="font-display text-xl font-bold">
-            Get Your Marketing Score
+          <CardTitle className="font-display text-2xl font-bold">
+            Enter Your Business Info Below
           </CardTitle>
-          <CardDescription>
-            Takes 30 seconds. No credit card required.
+          <CardDescription className="text-base">
+            We&apos;ll analyze your entire online presence in seconds
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -60,6 +60,7 @@ export function AuditForm({ onSubmit, isLoading }: AuditFormProps) {
                 {...register("business_name")}
                 aria-invalid={!!errors.business_name}
               />
+              <p className="text-xs text-muted-foreground">As it appears on Google</p>
               {errors.business_name && (
                 <p className="text-xs text-destructive">{errors.business_name.message}</p>
               )}
@@ -73,6 +74,7 @@ export function AuditForm({ onSubmit, isLoading }: AuditFormProps) {
                 {...register("city")}
                 aria-invalid={!!errors.city}
               />
+              <p className="text-xs text-muted-foreground">We&apos;ll analyze local competitors in your area</p>
               {errors.city && (
                 <p className="text-xs text-destructive">{errors.city.message}</p>
               )}
@@ -104,6 +106,7 @@ export function AuditForm({ onSubmit, isLoading }: AuditFormProps) {
                   </Select>
                 )}
               />
+              <p className="text-xs text-muted-foreground">For industry-specific benchmarks</p>
               {errors.vertical && (
                 <p className="text-xs text-destructive">{errors.vertical.message}</p>
               )}
@@ -118,6 +121,7 @@ export function AuditForm({ onSubmit, isLoading }: AuditFormProps) {
                 {...register("email")}
                 aria-invalid={!!errors.email}
               />
+              <p className="text-xs text-muted-foreground">We&apos;ll send your detailed report here</p>
               {errors.email && (
                 <p className="text-xs text-destructive">{errors.email.message}</p>
               )}
@@ -127,7 +131,7 @@ export function AuditForm({ onSubmit, isLoading }: AuditFormProps) {
               type="submit"
               size="lg"
               disabled={isLoading}
-              className="mt-2 w-full"
+              className="btn-shine mt-2 w-full text-base"
             >
               {isLoading ? (
                 <>
@@ -136,15 +140,22 @@ export function AuditForm({ onSubmit, isLoading }: AuditFormProps) {
                 </>
               ) : (
                 <>
-                  Get My Free Marketing Score
-                  <ArrowRight className="h-4 w-4" />
+                  <Zap className="h-4 w-4" />
+                  Scan My Marketing Now
                 </>
               )}
             </GradientButton>
 
-            <p className="text-center text-xs text-muted-foreground">
-              Your data is 100% private. We never share or sell your information.
-            </p>
+            <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-muted-foreground">
+              <span className="text-emerald-400">&#10003; Free forever</span>
+              <span className="text-emerald-400">&#10003; No credit card</span>
+              <span className="text-emerald-400">&#10003; Results in 30 seconds</span>
+            </div>
+
+            <div className="flex items-center justify-center gap-2 rounded-lg border border-border/50 bg-card/50 px-4 py-2.5 text-xs text-muted-foreground">
+              <Shield className="h-3.5 w-3.5 text-primary" />
+              Your data is encrypted and never shared with third parties.
+            </div>
           </form>
         </CardContent>
       </Card>

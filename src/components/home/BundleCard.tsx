@@ -1,11 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Check } from "lucide-react";
+import { Check, ArrowRight } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { GradientButton } from "@/components/shared/GradientButton";
 import { PriceDisplay } from "@/components/shared/PriceDisplay";
-import { getServiceById, formatPrice } from "@/lib/constants";
+import { getServiceById } from "@/lib/constants";
 import type { Bundle } from "@/types/services";
 import { cn } from "@/lib/utils";
 
@@ -23,10 +23,16 @@ export function BundleCard({ bundle, onSelect }: BundleCardProps) {
     <motion.div
       whileHover={{ y: -4 }}
       transition={{ duration: 0.2 }}
-      className={cn("relative h-full", bundle.popular && "z-10")}
+      className={cn(
+        "relative h-full",
+        bundle.popular && "z-10 md:scale-105"
+      )}
     >
       {bundle.popular && (
-        <div className="absolute -top-3.5 left-1/2 z-20 -translate-x-1/2">
+        <div className="absolute -top-5 left-1/2 z-20 -translate-x-1/2 flex flex-col items-center gap-1">
+          <span className="rounded-full bg-primary/20 px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
+            Recommended
+          </span>
           <span className="rounded-full gradient-bg px-4 py-1 text-xs font-semibold text-white shadow-lg">
             Most Popular
           </span>
@@ -37,11 +43,11 @@ export function BundleCard({ bundle, onSelect }: BundleCardProps) {
         className={cn(
           "flex h-full flex-col border bg-card",
           bundle.popular
-            ? "border-primary/40 shadow-lg shadow-primary/5 ring-1 ring-primary/20"
-            : "border-border/50"
+            ? "border-primary/40 shadow-lg shadow-primary/5 ring-1 ring-primary/20 glow-pulse"
+            : "border-border/50 card-hover-lift"
         )}
       >
-        <CardHeader className="text-center">
+        <CardHeader className={cn("text-center", bundle.popular && "pt-10")}>
           <h3 className="font-display text-xl font-bold">{bundle.name}</h3>
           <p className="mt-1 text-sm text-muted-foreground">
             {bundle.description}
@@ -52,6 +58,11 @@ export function BundleCard({ bundle, onSelect }: BundleCardProps) {
             {bundle.savings && (
               <span className="mt-2 inline-block rounded-full bg-accent/10 px-3 py-0.5 text-xs font-medium text-accent">
                 {bundle.savings}
+              </span>
+            )}
+            {bundle.popular && (
+              <span className="mt-2 text-xs text-muted-foreground">
+                94% of clients choose this plan
               </span>
             )}
           </div>
@@ -72,14 +83,24 @@ export function BundleCard({ bundle, onSelect }: BundleCardProps) {
             )}
           </ul>
 
-          <GradientButton
-            variant={bundle.popular ? "gradient" : "outline"}
-            size="lg"
-            className="w-full"
-            onClick={onSelect}
-          >
-            Get Started
-          </GradientButton>
+          <div className="flex flex-col gap-3">
+            <GradientButton
+              variant={bundle.popular ? "gradient" : "outline"}
+              size="lg"
+              className={cn("w-full", bundle.popular && "btn-shine")}
+              onClick={onSelect}
+            >
+              Start Your 48-Hour Setup
+              <ArrowRight className="h-4 w-4" />
+            </GradientButton>
+
+            <p className="text-center text-[11px] text-muted-foreground">
+              Includes free onboarding ($2,500 value)
+            </p>
+            <p className="text-center text-[11px] text-muted-foreground">
+              No long-term contracts. Cancel anytime.
+            </p>
+          </div>
         </CardContent>
       </Card>
     </motion.div>

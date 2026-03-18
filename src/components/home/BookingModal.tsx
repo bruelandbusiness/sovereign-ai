@@ -2,6 +2,7 @@
 
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowRight, Lock, Check } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -26,6 +27,12 @@ const planOptions = [
   { value: "growth", label: "Growth Bundle" },
   { value: "empire", label: "Empire Bundle" },
   { value: "custom", label: "Custom / Not Sure" },
+];
+
+const callIncludes = [
+  "Custom AI marketing roadmap",
+  "Competitor analysis",
+  "ROI projection for your business",
 ];
 
 interface BookingModalProps {
@@ -64,13 +71,33 @@ export function BookingModal({ open, onOpenChange }: BookingModalProps) {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="font-display text-lg font-bold">
-            Book a Strategy Call
+            Book Your Free Growth Strategy Call
           </DialogTitle>
-          <DialogDescription>
-            Tell us about your business and we&apos;ll prepare a custom AI
-            marketing plan before our call.
+          <DialogDescription className="flex flex-col gap-1">
+            <span className="text-sm font-medium text-accent">
+              Valued at $2,500 &mdash; Yours Free
+            </span>
+            <span>
+              Tell us about your business and we&apos;ll prepare a custom AI
+              marketing plan before our call.
+            </span>
           </DialogDescription>
         </DialogHeader>
+
+        {/* What's included */}
+        <div className="rounded-lg border border-border/50 bg-muted/30 p-3">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            What&apos;s included
+          </p>
+          <ul className="space-y-1.5">
+            {callIncludes.map((item) => (
+              <li key={item} className="flex items-center gap-2 text-sm">
+                <Check className="h-3.5 w-3.5 shrink-0 text-accent" />
+                <span className="text-foreground">{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
           {/* Name */}
@@ -162,13 +189,26 @@ export function BookingModal({ open, onOpenChange }: BookingModalProps) {
             )}
           </div>
 
+          {/* Trust line */}
+          <div className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
+            <Lock className="h-3.5 w-3.5" />
+            Your information is 100% confidential
+          </div>
+
           <GradientButton
             type="submit"
             size="lg"
-            className="mt-2 w-full"
+            className="btn-shine mt-1 w-full"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Submitting..." : "Book My Free Call"}
+            {isSubmitting ? (
+              "Submitting..."
+            ) : (
+              <>
+                Book My Free Strategy Call
+                <ArrowRight className="h-4 w-4" />
+              </>
+            )}
           </GradientButton>
         </form>
       </DialogContent>

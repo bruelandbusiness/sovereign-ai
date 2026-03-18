@@ -391,27 +391,60 @@ export const TESTIMONIALS: Testimonial[] = [
     business: "Rodriguez HVAC",
     location: "Phoenix, AZ",
     quote:
-      "We went from 15 leads a month to over 80. The AI voice agent alone paid for the entire Growth bundle in the first week.",
+      "We went from 15 leads/month to 87 in 60 days. The AI voice agent alone books 23 appointments per week.",
     rating: 5,
     vertical: "HVAC",
+    result: "87 leads/mo",
   },
   {
     name: "Sarah Chen",
     business: "Apex Roofing Solutions",
     location: "Dallas, TX",
     quote:
-      "Our Google reviews went from 23 to 147 in 4 months. We're now the #1 rated roofer in our area and the leads just keep coming.",
+      "From 23 Google reviews to 189 in 4 months. Revenue up 340% since switching to Sovereign AI.",
     rating: 5,
     vertical: "Roofing",
+    result: "340% revenue increase",
   },
   {
     name: "James Thompson",
     business: "Thompson Plumbing",
     location: "Atlanta, GA",
     quote:
-      "I was spending $8k/month on marketing with mediocre results. Sovereign AI cut my cost per lead by 60% while tripling my volume.",
+      "Cut cost per lead from $147 to $31. ROI on our Growth Bundle is 11.2x every single month.",
     rating: 5,
     vertical: "Plumbing",
+    result: "11.2x ROI",
+  },
+  {
+    name: "David Park",
+    business: "Park Electric",
+    location: "Denver, CO",
+    quote:
+      "Went from zero online presence to #1 on Google in our area within 90 days. Getting 12+ calls a day now.",
+    rating: 5,
+    vertical: "Electrical",
+    result: "#1 on Google",
+  },
+  {
+    name: "Maria Santos",
+    business: "Santos Landscaping",
+    location: "Miami, FL",
+    quote:
+      "The onboarding took 20 minutes. Within 48 hours we had our first AI-generated lead. Now we're booked out 3 weeks.",
+    rating: 5,
+    vertical: "Landscaping",
+    result: "Booked 3 weeks out",
+  },
+  {
+    name: "Tom Williams",
+    business: "Williams Roofing",
+    location: "Chicago, IL",
+    quote:
+      "We tried 4 marketing agencies before Sovereign AI. None came close. Our close rate went from 12% to 38%.",
+    rating: 5,
+    vertical: "Roofing",
+    result: "38% close rate",
   },
 ];
 
@@ -419,26 +452,30 @@ export const HOW_IT_WORKS = [
   {
     step: "01",
     title: "Pick Your Services",
+    time: "5 min",
     description:
-      "Choose individual AI services or a bundle that fits your goals and budget.",
+      "Tell us your goals in a 15-minute call. We'll recommend the perfect AI stack for your business and budget.",
   },
   {
     step: "02",
     title: "48-Hour Deployment",
+    time: "48 hrs",
     description:
-      "Our team configures and deploys your AI systems within 48 hours of onboarding.",
+      "Our team configures, tests, and launches your AI systems. You'll receive a live dashboard within 48 hours.",
   },
   {
     step: "03",
     title: "AI Works 24/7",
+    time: "Ongoing",
     description:
-      "Your AI marketing systems run around the clock, generating leads and growing your business.",
+      "Your AI systems generate leads, answer calls, send emails, manage reviews, and optimize campaigns around the clock.",
   },
   {
     step: "04",
     title: "Scale What Works",
+    time: "Monthly",
     description:
-      "Track results in your dashboard and add more services as you grow.",
+      "Track every metric in your dashboard. Double down on what's working. Add services as you grow. Cancel anytime.",
   },
 ];
 

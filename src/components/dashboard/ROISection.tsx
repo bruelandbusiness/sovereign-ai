@@ -1,6 +1,6 @@
 "use client";
 
-import { TrendingUp, DollarSign, BarChart3 } from "lucide-react";
+import { TrendingUp, DollarSign, BarChart3, ArrowUpRight, Users } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { GradientText } from "@/components/shared/GradientText";
 import { AnimatedCounter } from "@/components/shared/AnimatedCounter";
@@ -57,16 +57,42 @@ export function ROISection() {
               </div>
             </div>
 
-            {/* ROI */}
+            {/* ROI — huge and animated */}
             <div className="flex flex-col items-center justify-center rounded-xl gradient-bg-subtle p-6">
               <p className="text-sm font-medium text-muted-foreground">
                 Return on Investment
               </p>
-              <GradientText as="p" className="text-5xl font-bold tracking-tight">
+              <GradientText as="p" className="text-6xl font-bold tracking-tight sm:text-7xl">
                 <AnimatedCounter target={ROI} suffix="x" decimals={1} />
               </GradientText>
               <p className="mt-1 text-xs text-muted-foreground">
                 {formatPrice(REVENUE)} earned on {formatPrice(INVESTMENT)} invested
+              </p>
+            </div>
+          </div>
+
+          {/* Comparison, trend, and benchmark */}
+          <div className="mt-6 grid gap-4 sm:grid-cols-3">
+            <div className="flex items-center gap-3 rounded-lg border border-border/50 bg-card/50 p-3">
+              <Users className="h-5 w-5 shrink-0 text-primary" />
+              <p className="text-sm text-muted-foreground">
+                That&apos;s like hiring{" "}
+                <span className="font-semibold text-foreground">3 full-time marketers</span>{" "}
+                for the price of one
+              </p>
+            </div>
+            <div className="flex items-center gap-3 rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
+              <ArrowUpRight className="h-5 w-5 shrink-0 text-emerald-400" />
+              <p className="text-sm text-muted-foreground">
+                <span className="font-semibold text-emerald-400">&#8593; 2.3x improvement</span>{" "}
+                from last month
+              </p>
+            </div>
+            <div className="flex items-center gap-3 rounded-lg border border-border/50 bg-card/50 p-3">
+              <BarChart3 className="h-5 w-5 shrink-0 text-amber-400" />
+              <p className="text-sm text-muted-foreground">
+                Average ROI for HVAC businesses:{" "}
+                <span className="font-semibold text-foreground">8.7x</span>
               </p>
             </div>
           </div>

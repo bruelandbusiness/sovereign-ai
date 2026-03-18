@@ -33,7 +33,7 @@ export function HowItWorks() {
           {/* Connecting line (desktop only) */}
           <div className="pointer-events-none absolute top-10 right-12 left-12 hidden h-px bg-gradient-to-r from-primary/40 via-accent/40 to-primary/40 md:block" />
 
-          {HOW_IT_WORKS.map((step, index) => (
+          {HOW_IT_WORKS.map((step) => (
             <motion.div
               key={step.step}
               variants={staggerItem}
@@ -46,7 +46,14 @@ export function HowItWorks() {
                 </span>
               </div>
 
-              <h3 className="mt-4 font-display text-lg font-semibold">
+              {/* Time indicator */}
+              <div className="mt-2">
+                <span className="inline-block rounded-full bg-accent/10 px-3 py-0.5 text-xs font-semibold text-accent">
+                  {step.time}
+                </span>
+              </div>
+
+              <h3 className="mt-3 font-display text-lg font-semibold">
                 {step.title}
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">

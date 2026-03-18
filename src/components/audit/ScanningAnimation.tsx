@@ -2,15 +2,22 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Loader2 } from "lucide-react";
+import { Check, Loader2, Lightbulb } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 import { GradientOrb } from "@/components/layout/GradientOrb";
 
 const stages = [
-  "Checking Google Business Profile...",
-  "Analyzing online reviews...",
-  "Scanning SEO signals...",
-  "Comparing against competitors...",
+  "Scanning your Google Business Profile for completeness, photos, hours, and contact info...",
+  "Analyzing your review profile across Google, Yelp, and Facebook...",
+  "Checking keyword rankings for 8 high-intent search terms in your area...",
+  "Benchmarking against the top 5 competitors in your market...",
+];
+
+const didYouKnow = [
+  "92% of consumers read online reviews before choosing a local business",
+  "The top 3 Google results get 75% of all clicks",
+  "Businesses with 50+ reviews earn 4x more revenue",
+  "63% of consumers will call a business directly from Google",
 ];
 
 const STAGE_DURATION = 750;
@@ -100,18 +107,18 @@ export function ScanningAnimation({
           </div>
 
           {/* Stage checklist */}
-          <div className="flex w-full max-w-sm flex-col gap-3">
+          <div className="flex w-full max-w-md flex-col gap-3">
             {stages.map((stage, i) => {
               const isComplete = i < currentStage || (i === stages.length - 1 && progress >= 100);
               const isActive = i === currentStage && progress < 100;
 
               return (
                 <motion.div
-                  key={stage}
+                  key={i}
                   initial={{ opacity: 0, x: -12 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.15, duration: 0.3 }}
-                  className="flex items-center gap-3 text-sm"
+                  className="flex items-start gap-3 text-sm"
                 >
                   <AnimatePresence mode="wait">
                     {isComplete ? (
@@ -119,7 +126,7 @@ export function ScanningAnimation({
                         key="check"
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/20"
+                        className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/20"
                       >
                         <Check className="h-3 w-3 text-emerald-400" />
                       </motion.div>
@@ -128,22 +135,22 @@ export function ScanningAnimation({
                         key="loading"
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        className="flex h-5 w-5 shrink-0 items-center justify-center"
+                        className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center"
                       >
                         <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
                       </motion.div>
                     ) : (
-                      <div className="h-5 w-5 shrink-0 rounded-full border border-border/50" />
+                      <div className="mt-0.5 h-5 w-5 shrink-0 rounded-full border border-border/50" />
                     )}
                   </AnimatePresence>
                   <span
-                    className={
+                    className={`text-left ${
                       isComplete
                         ? "text-foreground"
                         : isActive
                         ? "text-foreground"
                         : "text-muted-foreground"
-                    }
+                    }`}
                   >
                     {stage}
                   </span>
@@ -151,6 +158,24 @@ export function ScanningAnimation({
               );
             })}
           </div>
+
+          {/* Did you know? */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentStage}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+              className="mt-8 flex items-center gap-2 rounded-lg border border-border/50 bg-card/50 px-4 py-3 text-sm text-muted-foreground backdrop-blur-sm"
+            >
+              <Lightbulb className="h-4 w-4 shrink-0 text-amber-400" />
+              <span>
+                <span className="font-medium text-foreground">Did you know?</span>{" "}
+                {didYouKnow[currentStage]}
+              </span>
+            </motion.div>
+          </AnimatePresence>
         </motion.div>
       </Container>
     </section>
