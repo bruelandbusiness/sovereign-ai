@@ -1,0 +1,7 @@
+{
+  "parser": "react",
+  "include": ["src/components/**/*.tsx"],
+  "storybook": {
+    "url": ""
+  }
+}

@@ -1,0 +1,147 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-warning: var(--warning);
+  --color-success: var(--success);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* Sovereign AI — Dark-only design system */
+:root {
+  /* Core backgrounds */
+  --background: #0a0a0f;
+  --foreground: #ececef;
+  --card: #101018;
+  --card-foreground: #ececef;
+  --popover: #101018;
+  --popover-foreground: #ececef;
+
+  /* Primary — bright blue */
+  --primary: #4c85ff;
+  --primary-foreground: #ffffff;
+
+  /* Secondary */
+  --secondary: #1c1c22;
+  --secondary-foreground: #ececef;
+
+  /* Muted */
+  --muted: #1c1c22;
+  --muted-foreground: #858590;
+
+  /* Accent — teal/mint */
+  --accent: #22d3a1;
+  --accent-foreground: #ffffff;
+
+  /* Destructive */
+  --destructive: #ef4444;
+
+  /* Warning */
+  --warning: #f5a623;
+
+  /* Success */
+  --success: #22d3aa;
+
+  /* Borders */
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.08);
+  --ring: #4c85ff;
+
+  /* Radius */
+  --radius: 0.625rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+/* Gradient utilities */
+@layer utilities {
+  .gradient-text {
+    background: linear-gradient(135deg, #4c85ff, #22d3a1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-bg {
+    background: linear-gradient(135deg, #4c85ff, #22d3a1);
+  }
+
+  .gradient-bg-subtle {
+    background: linear-gradient(135deg, rgba(76, 133, 255, 0.15), rgba(34, 211, 161, 0.15));
+  }
+
+  .gradient-border {
+    border-image: linear-gradient(135deg, #4c85ff, #22d3a1) 1;
+  }
+
+  .glow-primary {
+    box-shadow: 0 0 20px rgba(76, 133, 255, 0.2);
+  }
+
+  .glow-accent {
+    box-shadow: 0 0 20px rgba(34, 211, 161, 0.2);
+  }
+}
+
+/* Custom animations */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.9); opacity: 0.5; }
+  50% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.5; }
+}
