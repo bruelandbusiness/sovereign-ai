@@ -36,11 +36,14 @@ export function Footer() {
               <Link href="/#services" className="block text-muted-foreground transition-colors hover:text-foreground">
                 How It Works
               </Link>
-              <Link href="/dashboard" className="block text-muted-foreground transition-colors hover:text-foreground">
-                Dashboard
-              </Link>
               <Link href="/onboarding" className="block text-muted-foreground transition-colors hover:text-foreground">
                 Get Started
+              </Link>
+              <Link href="/legal/privacy" className="block text-muted-foreground transition-colors hover:text-foreground">
+                Privacy Policy
+              </Link>
+              <Link href="/legal/terms" className="block text-muted-foreground transition-colors hover:text-foreground">
+                Terms
               </Link>
             </div>
           </div>

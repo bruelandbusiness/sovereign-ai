@@ -1,9 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateMagicLink } from "@/lib/auth";
 import { sendMagicLinkEmail } from "@/lib/email";
+import { rateLimitByIP } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limit: 5 magic links per IP per hour
+    const ip = request.headers.get("x-forwarded-for")?.split(",")[0] || "unknown";
+    const { allowed } = rateLimitByIP(ip, "magic-link", 5);
+    if (!allowed) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     const { email } = await request.json();
 
     if (!email || typeof email !== "string") {

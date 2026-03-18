@@ -53,8 +53,19 @@ export async function POST(request: NextRequest) {
       event = JSON.parse(body);
     }
 
-    if (event.type === "checkout.session.completed") {
-      await handleCheckoutCompleted(event.data.object);
+    switch (event.type) {
+      case "checkout.session.completed":
+        await handleCheckoutCompleted(event.data.object);
+        break;
+      case "customer.subscription.updated":
+        await handleSubscriptionUpdated(event.data.object);
+        break;
+      case "customer.subscription.deleted":
+        await handleSubscriptionDeleted(event.data.object);
+        break;
+      case "invoice.payment_failed":
+        await handlePaymentFailed(event.data.object);
+        break;
     }
 
     return NextResponse.json({ received: true });
@@ -164,4 +175,84 @@ async function handleCheckoutCompleted(session: {
     businessName || "your business",
     authResult.url
   );
+}
+
+async function handleSubscriptionUpdated(sub: {
+  id: string;
+  customer?: string;
+  status?: string;
+  current_period_end?: number;
+  items?: { data: { price: { unit_amount: number } }[] };
+}) {
+  const subscription = await prisma.subscription.findFirst({
+    where: { stripeSubId: sub.id },
+  });
+  if (!subscription) return;
+
+  const amount = sub.items?.data?.[0]?.price?.unit_amount || subscription.monthlyAmount;
+
+  await prisma.subscription.update({
+    where: { id: subscription.id },
+    data: {
+      status: sub.status === "active" ? "active" : sub.status === "past_due" ? "past_due" : subscription.status,
+      monthlyAmount: amount,
+      currentPeriodEnd: sub.current_period_end
+        ? new Date(sub.current_period_end * 1000)
+        : subscription.currentPeriodEnd,
+    },
+  });
+}
+
+async function handleSubscriptionDeleted(sub: { id: string }) {
+  const subscription = await prisma.subscription.findFirst({
+    where: { stripeSubId: sub.id },
+    include: { client: true },
+  });
+  if (!subscription) return;
+
+  await prisma.subscription.update({
+    where: { id: subscription.id },
+    data: { status: "canceled" },
+  });
+
+  // Deactivate all services
+  await prisma.clientService.updateMany({
+    where: { clientId: subscription.clientId, status: "active" },
+    data: { status: "canceled" },
+  });
+
+  await prisma.activityEvent.create({
+    data: {
+      clientId: subscription.clientId,
+      type: "seo_update",
+      title: "Subscription canceled",
+      description: "Your subscription has been canceled. Services have been deactivated.",
+    },
+  });
+}
+
+async function handlePaymentFailed(invoice: {
+  customer?: string;
+  subscription?: string;
+}) {
+  if (!invoice.subscription) return;
+
+  const subscription = await prisma.subscription.findFirst({
+    where: { stripeSubId: invoice.subscription },
+  });
+  if (!subscription) return;
+
+  await prisma.subscription.update({
+    where: { id: subscription.id },
+    data: { status: "past_due" },
+  });
+
+  await prisma.activityEvent.create({
+    data: {
+      clientId: subscription.clientId,
+      type: "seo_update",
+      title: "Payment failed",
+      description: "Your payment failed. Please update your payment method to avoid service interruption.",
+    },
+  });
 }

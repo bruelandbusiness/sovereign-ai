@@ -12,6 +12,7 @@ interface SessionUser {
   id: string;
   email: string;
   name: string | null;
+  role: string;
   client: {
     id: string;
     businessName: string;

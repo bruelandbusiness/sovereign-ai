@@ -1,6 +1,6 @@
 "use client";
 
-import { Target, ArrowRight, Sparkles, LogOut } from "lucide-react";
+import { Target, ArrowRight, Sparkles, LogOut, CreditCard } from "lucide-react";
 import Link from "next/link";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -66,10 +66,18 @@ export default function DashboardPage() {
             <div className="flex-1">
               <DashboardHeader profile={displayProfile} />
             </div>
-            <Button variant="ghost" size="sm" onClick={signOut} className="shrink-0">
-              <LogOut className="mr-1.5 h-4 w-4" />
-              Sign Out
-            </Button>
+            <div className="flex items-center gap-2 shrink-0">
+              <Link href="/dashboard/billing">
+                <Button variant="ghost" size="sm">
+                  <CreditCard className="mr-1.5 h-4 w-4" />
+                  Billing
+                </Button>
+              </Link>
+              <Button variant="ghost" size="sm" onClick={signOut}>
+                <LogOut className="mr-1.5 h-4 w-4" />
+                Sign Out
+              </Button>
+            </div>
           </div>
 
           {/* Motivational goal banner */}

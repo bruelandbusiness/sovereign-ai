@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { DM_Sans, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SessionProvider } from "@/lib/auth-context";
+import { ToastProvider } from "@/components/ui/toast-context";
+import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -69,7 +71,10 @@ export default function RootLayout({
         className={`${dmSans.variable} ${plusJakarta.variable} ${jetbrainsMono.variable} font-sans antialiased`}
       >
         <SessionProvider>
-          <TooltipProvider>{children}</TooltipProvider>
+          <ToastProvider>
+            <TooltipProvider>{children}</TooltipProvider>
+            <Toaster />
+          </ToastProvider>
         </SessionProvider>
       </body>
     </html>

@@ -13,6 +13,7 @@ model Account {
   id        String   @id @default(cuid())
   email     String   @unique
   name      String?
+  role      String   @default("client") // client | admin
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -59,14 +60,16 @@ model Client {
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
-  account       Account         @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  subscription  Subscription?
-  services      ClientService[]
-  leads         Lead[]
-  activities    ActivityEvent[]
-  chatbotConfig ChatbotConfig?
+  account         Account          @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  subscription    Subscription?
+  services        ClientService[]
+  leads           Lead[]
+  activities      ActivityEvent[]
+  chatbotConfig   ChatbotConfig?
   reviewCampaigns ReviewCampaign[]
-  contentJobs   ContentJob[]
+  contentJobs     ContentJob[]
+  emailCampaigns  EmailCampaign[]
+  bookings        Booking[]
 }
 
 model Subscription {
@@ -97,6 +100,7 @@ model ClientService {
   client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
 
   @@unique([clientId, serviceId])
+  @@index([clientId])
 }
 
 // ─── Leads & Activity ───────────────────────────────────────
@@ -114,6 +118,9 @@ model Lead {
   updatedAt DateTime @updatedAt
 
   client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
+  @@index([createdAt])
 }
 
 model ActivityEvent {
@@ -125,6 +132,8 @@ model ActivityEvent {
   createdAt   DateTime @default(now())
 
   client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId, createdAt])
 }
 
 // ─── AI Chatbot ─────────────────────────────────────────────
@@ -154,6 +163,8 @@ model ChatbotConversation {
   updatedAt   DateTime @updatedAt
 
   chatbot ChatbotConfig @relation(fields: [chatbotId], references: [id], onDelete: Cascade)
+
+  @@index([chatbotId])
 }
 
 // ─── Review Automation ──────────────────────────────────────
@@ -175,6 +186,8 @@ model ReviewCampaign {
   updatedAt     DateTime @updatedAt
 
   client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
 }
 
 // ─── Content Engine ─────────────────────────────────────────
@@ -192,4 +205,49 @@ model ContentJob {
   updatedAt DateTime @updatedAt
 
   client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
+}
+
+// ─── Email Automation ───────────────────────────────────────
+
+model EmailCampaign {
+  id          String   @id @default(cuid())
+  clientId    String
+  name        String
+  subject     String
+  body        String   // HTML content
+  type        String   @default("drip") // drip | broadcast | reengagement
+  status      String   @default("draft") // draft | active | paused | completed
+  recipients  Int      @default(0)
+  opens       Int      @default(0)
+  clicks      Int      @default(0)
+  sentAt      DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
+}
+
+// ─── Booking System ─────────────────────────────────────────
+
+model Booking {
+  id            String   @id @default(cuid())
+  clientId      String
+  customerName  String
+  customerEmail String?
+  customerPhone String?
+  serviceType   String?
+  startsAt      DateTime
+  endsAt        DateTime
+  status        String   @default("confirmed") // confirmed | completed | canceled | no_show
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId, startsAt])
 }

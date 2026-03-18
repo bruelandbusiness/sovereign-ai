@@ -2,6 +2,8 @@ import { prisma } from "@/lib/db";
 import { provisionChatbot } from "./chatbot";
 import { provisionReviews } from "./reviews";
 import { provisionContent } from "./content";
+import { provisionEmail } from "./email";
+import { provisionBooking } from "./booking";
 
 /**
  * Activate a service for a client. Auto-provisions services that can be
@@ -25,6 +27,12 @@ export async function activateService(clientId: string, serviceId: string) {
         break;
       case "content":
         await provisionContent(clientId);
+        break;
+      case "email":
+        await provisionEmail(clientId);
+        break;
+      case "booking":
+        await provisionBooking(clientId);
         break;
       default:
         // All other services are marked active for manual fulfillment

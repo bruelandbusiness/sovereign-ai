@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { prisma } from "@/lib/db";
+import { rateLimit } from "@/lib/rate-limit";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -9,6 +10,16 @@ interface ChatMessage {
 }
 
 const anthropic = new Anthropic(); // uses ANTHROPIC_API_KEY env var
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
+
+export async function OPTIONS() {
+  return new Response(null, { status: 204, headers: corsHeaders });
+}
 
 export async function POST(request: Request) {
   try {
@@ -22,14 +33,24 @@ export async function POST(request: Request) {
     if (!chatbotId || typeof chatbotId !== "string") {
       return NextResponse.json(
         { error: "chatbotId is required" },
-        { status: 400 }
+        { status: 400, headers: corsHeaders }
       );
     }
 
     if (!message || typeof message !== "string") {
       return NextResponse.json(
         { error: "message is required" },
-        { status: 400 }
+        { status: 400, headers: corsHeaders }
+      );
+    }
+
+    // Rate limit: 30 messages per conversation per hour
+    const rateLimitKey = `chat:${conversationId || chatbotId}`;
+    const { allowed } = rateLimit(rateLimitKey, 30, 30 / 3600);
+    if (!allowed) {
+      return NextResponse.json(
+        { error: "Rate limit exceeded. Please wait before sending more messages." },
+        { status: 429, headers: corsHeaders }
       );
     }
 
@@ -41,14 +62,14 @@ export async function POST(request: Request) {
     if (!config) {
       return NextResponse.json(
         { error: "Chatbot not found" },
-        { status: 404 }
+        { status: 404, headers: corsHeaders }
       );
     }
 
     if (!config.isActive) {
       return NextResponse.json(
         { error: "Chatbot is currently inactive" },
-        { status: 403 }
+        { status: 403, headers: corsHeaders }
       );
     }
 
@@ -122,15 +143,15 @@ export async function POST(request: Request) {
       finalConversationId = newConversation.id;
     }
 
-    return NextResponse.json({
-      reply,
-      conversationId: finalConversationId,
-    });
+    return NextResponse.json(
+      { reply, conversationId: finalConversationId },
+      { headers: corsHeaders }
+    );
   } catch (error) {
     console.error("Chatbot chat error:", error);
     return NextResponse.json(
       { error: "Failed to generate response" },
-      { status: 500 }
+      { status: 500, headers: corsHeaders }
     );
   }
 }

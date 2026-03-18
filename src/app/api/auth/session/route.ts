@@ -13,6 +13,7 @@ export async function GET() {
       id: session.account.id,
       email: session.account.email,
       name: session.account.name,
+      role: session.account.role,
       client: session.account.client
         ? {
             id: session.account.client.id,
