@@ -2,7 +2,7 @@
 
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, Building2 } from "lucide-react";
+import { ArrowRight, Building2, HelpCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -49,6 +49,16 @@ export function Step1BusinessInfo({
 
   return (
     <form onSubmit={handleSubmit(onNext)} className="flex flex-col gap-6">
+      {/* Welcome header */}
+      <div className="text-center">
+        <h1 className="font-display text-xl font-bold sm:text-2xl">
+          Let&apos;s Get Your AI Marketing Running
+        </h1>
+        <p className="mt-1.5 text-sm text-muted-foreground">
+          We&apos;ll have your first campaign live within 48 hours
+        </p>
+      </div>
+
       <div className="flex items-center gap-3 border-b border-border/40 pb-4">
         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
           <Building2 className="h-5 w-5 text-primary" />
@@ -213,6 +223,14 @@ export function Step1BusinessInfo({
             {...register("serviceAreaRadius")}
           />
         </div>
+      </div>
+
+      {/* Help text */}
+      <div className="flex items-start gap-2 rounded-lg border border-white/5 bg-white/[0.02] p-3">
+        <HelpCircle className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+        <p className="text-xs text-muted-foreground">
+          Not sure about something? Skip it — your account manager will help fill in the gaps.
+        </p>
       </div>
 
       <div className="flex justify-end pt-2">

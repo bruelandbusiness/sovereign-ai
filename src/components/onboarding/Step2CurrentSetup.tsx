@@ -2,7 +2,7 @@
 
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, ArrowRight, ClipboardList } from "lucide-react";
+import { ArrowLeft, ArrowRight, ClipboardList, Lightbulb } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -61,6 +61,14 @@ export function Step2CurrentSetup({
 
   return (
     <form onSubmit={handleSubmit(onNext)} className="flex flex-col gap-6">
+      {/* Contextual tip */}
+      <div className="flex items-start gap-2.5 rounded-lg border border-primary/20 bg-primary/5 p-3">
+        <Lightbulb className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+        <p className="text-xs text-muted-foreground">
+          This helps us identify quick wins for your business — the more detail, the faster your results.
+        </p>
+      </div>
+
       <div className="flex items-center gap-3 border-b border-border/40 pb-4">
         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
           <ClipboardList className="h-5 w-5 text-primary" />
@@ -93,6 +101,9 @@ export function Step2CurrentSetup({
             placeholder="e.g. $2,000"
             {...register("monthlyMarketingBudget")}
           />
+          <p className="text-xs text-muted-foreground/70">
+            Most home service businesses spend $500-$2,000/mo on marketing
+          </p>
         </div>
       </div>
 

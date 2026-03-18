@@ -1,6 +1,7 @@
 "use client";
 
-import { ArrowRight } from "lucide-react";
+import { useMemo } from "react";
+import { ArrowRight, Gift } from "lucide-react";
 import type { Bundle } from "@/types/services";
 import { formatPrice, getServiceById } from "@/lib/constants";
 import { IconBadge } from "@/components/shared/IconBadge";
@@ -18,12 +19,23 @@ export function MarketplaceBundleCard({ bundle }: MarketplaceBundleCardProps) {
     .map((id) => getServiceById(id))
     .filter(Boolean);
 
+  const individualTotal = useMemo(
+    () =>
+      bundle.services.reduce((sum, id) => {
+        const svc = getServiceById(id);
+        return sum + (svc?.price ?? 0);
+      }, 0),
+    [bundle.services]
+  );
+
+  const monthlySavings = individualTotal - bundle.price;
+
   return (
     <div
       className={cn(
         "group relative flex flex-col rounded-xl border bg-card p-6 transition-all duration-300 hover:-translate-y-1",
         bundle.popular
-          ? "border-primary/40 glow-primary"
+          ? "border-primary/40 glow-pulse scale-[1.03] z-10"
           : "border-border/60 hover:border-primary/30 hover:glow-primary"
       )}
     >
@@ -46,14 +58,27 @@ export function MarketplaceBundleCard({ bundle }: MarketplaceBundleCardProps) {
 
       {/* Price */}
       <div className="mb-4 text-center">
+        {/* Individual price strikethrough */}
+        <p className="mb-1 text-sm text-muted-foreground/60 line-through">
+          {formatPrice(individualTotal)}/mo individually
+        </p>
         <div className="flex items-baseline justify-center gap-1">
           <span className="text-3xl font-bold">
             {formatPrice(bundle.price)}
           </span>
           <span className="text-sm text-muted-foreground">/mo</span>
         </div>
-        <span className="mt-1 inline-block text-sm font-medium text-accent">
-          {bundle.savings}
+        {/* "You save $X/mo" in accent/green */}
+        <span className="mt-1 inline-block text-sm font-semibold text-accent">
+          You save {formatPrice(monthlySavings)}/mo
+        </span>
+      </div>
+
+      {/* Free onboarding callout */}
+      <div className="mb-4 flex items-center justify-center gap-2 rounded-md border border-accent/20 bg-accent/5 px-3 py-2">
+        <Gift className="h-4 w-4 text-accent" />
+        <span className="text-xs font-medium text-accent">
+          Free onboarding ($2,500 value)
         </span>
       </div>
 
@@ -82,15 +107,18 @@ export function MarketplaceBundleCard({ bundle }: MarketplaceBundleCardProps) {
       </div>
 
       {/* CTA */}
-      <div className="mt-auto">
+      <div className="mt-auto space-y-2">
         <GradientButton
           size="lg"
-          className="w-full"
+          className={cn("w-full", bundle.popular && "btn-shine")}
           variant={bundle.popular ? "gradient" : "outline"}
         >
           Get Started
           <ArrowRight className="h-4 w-4" />
         </GradientButton>
+        <p className="text-center text-xs text-muted-foreground">
+          Cancel anytime &mdash; no contracts
+        </p>
       </div>
     </div>
   );

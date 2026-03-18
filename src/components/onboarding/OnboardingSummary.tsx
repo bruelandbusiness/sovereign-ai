@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { ArrowLeft, CheckCircle2, Loader2 } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Loader2, ShieldCheck, Clock, Rocket, BarChart3 } from "lucide-react";
 import { GradientButton } from "@/components/shared/GradientButton";
 import { GradientText } from "@/components/shared/GradientText";
 import { SERVICES, VERTICALS, formatPrice } from "@/lib/constants";
@@ -39,6 +39,16 @@ export function OnboardingSummary({
 
   return (
     <div className="flex flex-col gap-6">
+      {/* 30-Day Money-Back Guarantee badge */}
+      <div className="flex justify-center">
+        <div className="inline-flex items-center gap-2 rounded-full border border-green-500/30 bg-green-500/10 px-4 py-2">
+          <ShieldCheck className="h-4 w-4 text-green-400" />
+          <span className="text-sm font-semibold text-green-300">
+            30-Day Money-Back Guarantee
+          </span>
+        </div>
+      </div>
+
       <div className="text-center">
         <h2 className="font-display text-xl font-bold">
           Review Your <GradientText>Onboarding Info</GradientText>
@@ -146,14 +156,49 @@ export function OnboardingSummary({
               </div>
             );
           })}
-          <div className="mt-2 flex items-center justify-between border-t border-border pt-3">
-            <span className="text-sm font-semibold">Estimated Monthly Total</span>
-            <span className="text-lg font-bold">
-              <GradientText>{formatPrice(estimatedTotal)}</GradientText>
-              <span className="text-sm font-normal text-muted-foreground">
-                /mo
+          {/* Prominent total price section */}
+          <div className="mt-2 rounded-lg border border-primary/20 bg-gradient-to-r from-primary/10 to-emerald-500/10 p-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-semibold">Estimated Monthly Total</span>
+              <span className="text-xl font-bold">
+                <GradientText>{formatPrice(estimatedTotal)}</GradientText>
+                <span className="text-sm font-normal text-muted-foreground">
+                  /mo
+                </span>
               </span>
-            </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* What happens after you submit - timeline */}
+      <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
+        <p className="mb-3 text-center text-sm font-semibold text-foreground">
+          What happens after you submit
+        </p>
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex flex-1 flex-col items-center gap-1.5 text-center">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/15">
+              <Clock className="h-4 w-4 text-primary" />
+            </div>
+            <p className="text-xs font-medium text-foreground">Team Review</p>
+            <p className="text-[10px] text-muted-foreground">1 hour</p>
+          </div>
+          <div className="h-[1px] flex-shrink-0 w-8 bg-primary/30" />
+          <div className="flex flex-1 flex-col items-center gap-1.5 text-center">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/15">
+              <Rocket className="h-4 w-4 text-primary" />
+            </div>
+            <p className="text-xs font-medium text-foreground">Setup Begins</p>
+            <p className="text-[10px] text-muted-foreground">24 hours</p>
+          </div>
+          <div className="h-[1px] flex-shrink-0 w-8 bg-primary/30" />
+          <div className="flex flex-1 flex-col items-center gap-1.5 text-center">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/15">
+              <BarChart3 className="h-4 w-4 text-primary" />
+            </div>
+            <p className="text-xs font-medium text-foreground">Live &amp; Reporting</p>
+            <p className="text-[10px] text-muted-foreground">48 hours</p>
           </div>
         </div>
       </div>
@@ -199,35 +244,40 @@ export function OnboardingSummary({
       </div>
 
       {/* Actions */}
-      <div className="flex items-center justify-between pt-2">
-        <GradientButton
-          type="button"
-          variant="outline"
-          size="lg"
-          onClick={onBack}
-          disabled={isSubmitting}
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back
-        </GradientButton>
-        <GradientButton
-          type="button"
-          size="lg"
-          onClick={onConfirm}
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Submitting...
-            </>
-          ) : (
-            <>
-              <CheckCircle2 className="h-4 w-4" />
-              Confirm &amp; Submit
-            </>
-          )}
-        </GradientButton>
+      <div className="flex flex-col gap-3 pt-2">
+        <div className="flex items-center justify-between">
+          <GradientButton
+            type="button"
+            variant="outline"
+            size="lg"
+            onClick={onBack}
+            disabled={isSubmitting}
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back
+          </GradientButton>
+          <GradientButton
+            type="button"
+            size="lg"
+            onClick={onConfirm}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Submitting...
+              </>
+            ) : (
+              <>
+                <CheckCircle2 className="h-4 w-4" />
+                Confirm &amp; Submit
+              </>
+            )}
+          </GradientButton>
+        </div>
+        <p className="text-center text-xs text-muted-foreground">
+          No contracts. Cancel anytime.
+        </p>
       </div>
     </div>
   );

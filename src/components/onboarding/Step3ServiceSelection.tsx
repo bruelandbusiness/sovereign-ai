@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { ArrowLeft, ArrowRight, ShoppingCart } from "lucide-react";
+import Link from "next/link";
+import { ArrowLeft, ArrowRight, ShoppingCart, Sparkles, Tag } from "lucide-react";
 import { GradientButton } from "@/components/shared/GradientButton";
 import { SERVICES, formatPrice } from "@/lib/constants";
 import { ServiceToggle } from "./ServiceToggle";
@@ -29,6 +30,20 @@ export function Step3ServiceSelection({
       0
     );
   }, [selectedServices]);
+
+  // Calculate bundle savings estimate (roughly 40% if 3+ services)
+  const bundleSavings = useMemo(() => {
+    if (selectedServices.length >= 3) {
+      return Math.round(estimatedTotal * 0.4);
+    }
+    return 0;
+  }, [selectedServices.length, estimatedTotal]);
+
+  // Mark first 4 services as recommended
+  const recommendedServiceIds = useMemo(
+    () => SERVICES.slice(0, 4).map((s) => s.id),
+    []
+  );
 
   const handleToggle = (serviceId: string, checked: boolean) => {
     setError(null);
@@ -59,6 +74,14 @@ export function Step3ServiceSelection({
         </div>
       </div>
 
+      {/* Hint */}
+      <div className="flex items-center gap-2 rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2">
+        <Sparkles className="h-3.5 w-3.5 shrink-0 text-primary" />
+        <p className="text-xs text-muted-foreground">
+          Businesses like yours typically choose 3-5 services
+        </p>
+      </div>
+
       {/* Running total sticky summary */}
       <div className="sticky top-16 z-10 -mx-1 rounded-lg border border-border bg-card/95 px-4 py-3 backdrop-blur-md">
         <div className="flex items-center justify-between">
@@ -72,6 +95,21 @@ export function Step3ServiceSelection({
             {formatPrice(estimatedTotal)}
             <span className="font-normal text-muted-foreground">/mo estimated</span>
           </span>
+        </div>
+        {/* Bundle savings link */}
+        <div className="mt-1.5 flex items-center justify-between">
+          <Link
+            href="/marketplace#bundles"
+            className="flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+          >
+            <Tag className="h-3 w-3" />
+            Save up to 40% with a bundle &rarr;
+          </Link>
+          {bundleSavings > 0 && (
+            <span className="text-xs font-medium text-green-400">
+              You could save {formatPrice(bundleSavings)}/mo with a bundle
+            </span>
+          )}
         </div>
       </div>
 
@@ -87,6 +125,7 @@ export function Step3ServiceSelection({
             service={service}
             checked={selectedServices.includes(service.id)}
             onToggle={(checked) => handleToggle(service.id, checked)}
+            recommended={recommendedServiceIds.includes(service.id)}
           />
         ))}
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Check } from "lucide-react";
+import { Check, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { OnboardingStep } from "@/types/onboarding";
 
@@ -17,8 +17,21 @@ interface StepIndicatorProps {
 }
 
 export function StepIndicator({ currentStep, className }: StepIndicatorProps) {
+  const progressPercent = currentStep * 25;
+
   return (
     <div className={cn("w-full", className)}>
+      {/* Time estimate */}
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          <Clock className="h-3.5 w-3.5" />
+          <span>~5 minutes</span>
+        </div>
+        <span className="text-xs font-medium text-primary">
+          {progressPercent}% Complete
+        </span>
+      </div>
+
       <div className="flex items-center justify-between">
         {STEPS.map((step, index) => {
           const isCompleted = currentStep > step.number;
@@ -94,6 +107,14 @@ export function StepIndicator({ currentStep, className }: StepIndicatorProps) {
             </div>
           );
         })}
+      </div>
+
+      {/* Gradient progress bar */}
+      <div className="mt-4 h-1 w-full overflow-hidden rounded-full bg-white/5">
+        <div
+          className="gradient-bg h-full rounded-full transition-all duration-700 ease-out"
+          style={{ width: `${progressPercent}%` }}
+        />
       </div>
     </div>
   );

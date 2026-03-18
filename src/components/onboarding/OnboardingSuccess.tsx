@@ -3,11 +3,53 @@
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { CheckCircle2, ArrowRight, Rocket, Clock, Zap } from "lucide-react";
+import { CheckCircle2, ArrowRight, Rocket, Clock, Zap, Mail, UserCheck } from "lucide-react";
 import { GradientButton } from "@/components/shared/GradientButton";
 import { GradientText } from "@/components/shared/GradientText";
 import { SERVICES, formatPrice } from "@/lib/constants";
 import type { OnboardingFormData } from "@/types/onboarding";
+
+/* CSS confetti keyframes — injected via a <style> tag to avoid creating new files */
+const confettiStyles = `
+@keyframes confetti-fall-1 {
+  0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) translateX(80px) rotate(720deg); opacity: 0; }
+}
+@keyframes confetti-fall-2 {
+  0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) translateX(-60px) rotate(-540deg); opacity: 0; }
+}
+@keyframes confetti-fall-3 {
+  0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) translateX(40px) rotate(360deg); opacity: 0; }
+}
+@keyframes success-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(34, 197, 94, 0.2); }
+  50% { box-shadow: 0 0 50px rgba(34, 197, 94, 0.4), 0 0 80px rgba(76, 133, 255, 0.15); }
+}
+.confetti-piece {
+  position: fixed;
+  top: -10px;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 50;
+}
+.confetti-1 { left: 10%; background: #4c85ff; animation: confetti-fall-1 3s ease-out forwards; animation-delay: 0.1s; }
+.confetti-2 { left: 20%; background: #22d3a1; animation: confetti-fall-2 2.8s ease-out forwards; animation-delay: 0.3s; }
+.confetti-3 { left: 30%; background: #f59e0b; animation: confetti-fall-3 3.2s ease-out forwards; animation-delay: 0.0s; }
+.confetti-4 { left: 40%; background: #ec4899; animation: confetti-fall-1 2.6s ease-out forwards; animation-delay: 0.5s; }
+.confetti-5 { left: 50%; background: #8b5cf6; animation: confetti-fall-2 3.4s ease-out forwards; animation-delay: 0.2s; }
+.confetti-6 { left: 60%; background: #4c85ff; animation: confetti-fall-3 2.9s ease-out forwards; animation-delay: 0.4s; }
+.confetti-7 { left: 70%; background: #22d3a1; animation: confetti-fall-1 3.1s ease-out forwards; animation-delay: 0.6s; }
+.confetti-8 { left: 80%; background: #f59e0b; animation: confetti-fall-2 2.7s ease-out forwards; animation-delay: 0.15s; }
+.confetti-9 { left: 90%; background: #ec4899; animation: confetti-fall-3 3.3s ease-out forwards; animation-delay: 0.35s; }
+.confetti-10 { left: 15%; background: #8b5cf6; animation: confetti-fall-1 2.5s ease-out forwards; animation-delay: 0.55s; }
+.confetti-11 { left: 45%; background: #4c85ff; animation: confetti-fall-2 3.0s ease-out forwards; animation-delay: 0.25s; width: 6px; height: 12px; }
+.confetti-12 { left: 75%; background: #22d3a1; animation: confetti-fall-3 2.8s ease-out forwards; animation-delay: 0.45s; width: 10px; height: 6px; }
+.success-glow-ring { animation: success-glow 2s ease-in-out infinite; }
+`;
 
 interface OnboardingSuccessProps {
   formData: OnboardingFormData;
@@ -29,34 +71,46 @@ export function OnboardingSuccess({ formData }: OnboardingSuccessProps) {
 
   return (
     <div className="flex flex-col items-center text-center">
-      {/* Animated check */}
+      {/* Confetti animation */}
+      <style dangerouslySetInnerHTML={{ __html: confettiStyles }} />
+      {Array.from({ length: 12 }).map((_, i) => (
+        <div key={i} className={`confetti-piece confetti-${i + 1}`} />
+      ))}
+
+      {/* Animated check — more dramatic with scale and glow */}
       <motion.div
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.1 }}
+        transition={{ type: "spring", stiffness: 200, damping: 12, delay: 0.1 }}
         className="mb-6"
       >
         <div className="relative">
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ delay: 0.2, duration: 0.4 }}
-            className="flex h-20 w-20 items-center justify-center rounded-full bg-green-500/10"
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="success-glow-ring flex h-24 w-24 items-center justify-center rounded-full bg-green-500/10"
           >
             <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.4, type: "spring", stiffness: 300 }}
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ delay: 0.4, type: "spring", stiffness: 300, damping: 15 }}
             >
-              <CheckCircle2 className="h-10 w-10 text-green-500" />
+              <CheckCircle2 className="h-12 w-12 text-green-500" />
             </motion.div>
           </motion.div>
-          {/* Decorative ring */}
+          {/* Decorative rings */}
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1.3, opacity: 0 }}
-            transition={{ delay: 0.5, duration: 0.8 }}
+            animate={{ scale: 1.5, opacity: 0 }}
+            transition={{ delay: 0.5, duration: 1.0 }}
             className="absolute inset-0 rounded-full border-2 border-green-500/30"
+          />
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1.8, opacity: 0 }}
+            transition={{ delay: 0.7, duration: 1.2 }}
+            className="absolute inset-0 rounded-full border border-primary/20"
           />
         </div>
       </motion.div>
@@ -67,7 +121,7 @@ export function OnboardingSuccess({ formData }: OnboardingSuccessProps) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.5 }}
       >
-        <h2 className="font-display text-2xl font-bold">
+        <h2 className="font-display text-2xl font-bold sm:text-3xl">
           We&apos;ve Received Your{" "}
           <GradientText>Onboarding Info</GradientText>
         </h2>
@@ -77,11 +131,40 @@ export function OnboardingSuccess({ formData }: OnboardingSuccessProps) {
         </p>
       </motion.div>
 
+      {/* Account manager timeline */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.65, duration: 0.5 }}
+        className="mt-5 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-2"
+      >
+        <UserCheck className="h-4 w-4 text-primary" />
+        <span className="text-xs font-medium text-foreground sm:text-sm">
+          Your dedicated account manager will reach out within 1 hour
+        </span>
+      </motion.div>
+
+      {/* Email preview */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.75, duration: 0.5 }}
+        className="mt-4 w-full max-w-md"
+      >
+        <div className="flex items-center gap-2.5 rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3">
+          <Mail className="h-4 w-4 shrink-0 text-muted-foreground" />
+          <p className="text-xs text-muted-foreground">
+            Check your inbox — we just sent your welcome kit to{" "}
+            <span className="font-medium text-foreground">{formData.step1.email}</span>
+          </p>
+        </div>
+      </motion.div>
+
       {/* Stats */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.7, duration: 0.5 }}
+        transition={{ delay: 0.85, duration: 0.5 }}
         className="mt-8 grid w-full max-w-sm gap-4 sm:grid-cols-2"
       >
         <div className="rounded-lg border border-border p-4">
@@ -111,7 +194,7 @@ export function OnboardingSuccess({ formData }: OnboardingSuccessProps) {
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.9, duration: 0.5 }}
+        transition={{ delay: 1.0, duration: 0.5 }}
         className="mt-8 w-full max-w-md"
       >
         <div className="rounded-lg border border-primary/20 bg-primary/5 p-5">
@@ -161,7 +244,7 @@ export function OnboardingSuccess({ formData }: OnboardingSuccessProps) {
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.1, duration: 0.5 }}
+        transition={{ delay: 1.2, duration: 0.5 }}
         className="mt-8"
       >
         <Link href="/">

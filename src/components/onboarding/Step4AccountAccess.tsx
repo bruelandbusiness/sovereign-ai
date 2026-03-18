@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, ArrowRight, KeyRound, Shield } from "lucide-react";
+import { ArrowLeft, ArrowRight, KeyRound, ShieldCheck, Lock } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -110,17 +110,30 @@ export function Step4AccountAccess({
         />
       </div>
 
-      {/* Privacy reassurance */}
-      <div className="flex items-start gap-3 rounded-lg border border-green-500/20 bg-green-500/5 p-4">
-        <Shield className="mt-0.5 h-5 w-5 shrink-0 text-green-600 dark:text-green-400" />
-        <div>
-          <p className="text-sm font-medium text-green-700 dark:text-green-300">
-            Your data is secure
-          </p>
-          <p className="text-xs text-green-600/80 dark:text-green-400/80">
-            All information is encrypted and used exclusively to configure your
-            AI marketing systems. We never share or sell your access credentials.
-          </p>
+      {/* Update later reassurance */}
+      <div className="flex items-center gap-2 rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2">
+        <Lock className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+        <p className="text-xs text-muted-foreground">
+          You can always update these later from your dashboard.
+        </p>
+      </div>
+
+      {/* Privacy reassurance - upgraded */}
+      <div className="rounded-xl border border-green-500/20 bg-green-500/5 p-5">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-green-500/15">
+            <ShieldCheck className="h-5 w-5 text-green-400" />
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-green-300">
+              Your data is secure
+            </p>
+            <p className="mt-0.5 text-xs text-green-400/80">
+              We use bank-level 256-bit encryption. All information is used exclusively
+              to configure your AI marketing systems. We never share or sell your
+              access credentials.
+            </p>
+          </div>
         </div>
       </div>
 
