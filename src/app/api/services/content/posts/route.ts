@@ -1,6 +1,13 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+
+const createContentJobSchema = z.object({
+  type: z.string().max(50).optional(),
+  title: z.string().min(1, "title is required").max(500),
+  keywords: z.string().max(1000).optional().nullable(),
+});
 
 export async function GET() {
   const session = await getSession();
@@ -39,19 +46,22 @@ export async function POST(request: Request) {
 
   const clientId = session.account.client.id;
 
-  let body: { type?: string; title?: string; keywords?: string };
+  let rawBody: unknown;
   try {
-    body = await request.json();
+    rawBody = await request.json();
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  if (!body.title) {
+  const parsed = createContentJobSchema.safeParse(rawBody);
+  if (!parsed.success) {
     return NextResponse.json(
-      { error: "title is required" },
+      { error: "Invalid input", details: parsed.error.flatten().fieldErrors },
       { status: 400 }
     );
   }
+
+  const body = parsed.data;
 
   const job = await prisma.contentJob.create({
     data: {

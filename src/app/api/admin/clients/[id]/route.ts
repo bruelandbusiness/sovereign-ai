@@ -1,14 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
+import { requireAdmin } from "@/lib/require-admin";
+import { AuthError } from "@/lib/require-client";
 import { prisma } from "@/lib/db";
+import { logAudit } from "@/lib/audit";
+import { z } from "zod";
+
+const clientUpdateSchema = z.object({
+  businessName: z.string().min(1).max(200).optional(),
+  ownerName: z.string().min(1).max(200).optional(),
+  phone: z.string().max(30).optional().nullable(),
+  city: z.string().max(100).optional().nullable(),
+  state: z.string().max(100).optional().nullable(),
+  vertical: z.string().max(100).optional().nullable(),
+  website: z.string().url().max(500).optional().nullable().or(z.literal("")),
+  serviceAreaRadius: z.string().max(50).optional().nullable(),
+});
 
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getSession();
-  if (!session || session.account.role !== "admin") {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  try {
+    await requireAdmin();
+  } catch (e) {
+    if (e instanceof AuthError) {
+      return NextResponse.json({ error: e.message }, { status: e.status });
+    }
+    throw e;
   }
 
   const { id } = await params;
@@ -94,29 +112,33 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getSession();
-  if (!session || session.account.role !== "admin") {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  let accountId: string;
+  try {
+    const admin = await requireAdmin();
+    accountId = admin.accountId;
+  } catch (e) {
+    if (e instanceof AuthError) {
+      return NextResponse.json({ error: e.message }, { status: e.status });
+    }
+    throw e;
   }
 
   const { id } = await params;
   const body = await request.json();
 
-  const allowedFields = [
-    "businessName",
-    "ownerName",
-    "phone",
-    "city",
-    "state",
-    "vertical",
-    "website",
-    "serviceAreaRadius",
-  ];
+  const parsed = clientUpdateSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: "Invalid input", details: parsed.error.flatten().fieldErrors },
+      { status: 400 }
+    );
+  }
 
-  const updateData: Record<string, string> = {};
-  for (const field of allowedFields) {
-    if (field in body) {
-      updateData[field] = body[field];
+  // Only include fields that were actually provided
+  const updateData: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(parsed.data)) {
+    if (value !== undefined) {
+      updateData[key] = value;
     }
   }
 
@@ -130,6 +152,14 @@ export async function PUT(
   const updated = await prisma.client.update({
     where: { id },
     data: updateData,
+  });
+
+  await logAudit({
+    accountId,
+    action: "update",
+    resource: "client",
+    resourceId: id,
+    metadata: { changes: Object.keys(updateData) },
   });
 
   return NextResponse.json({ client: updated });

@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
-import Anthropic from "@anthropic-ai/sdk";
-
-const anthropic = new Anthropic();
+import { guardedAnthropicCall, GovernanceBlockedError } from "@/lib/governance/ai-guard";
+import { extractTextContent, handleAnthropicError, sanitizeForPrompt } from "@/lib/ai-utils";
 
 export async function POST(request: Request) {
   const session = await getSession();
@@ -28,27 +27,37 @@ export async function POST(request: Request) {
       ? `${client.city}, ${client.state}`
       : "your area";
 
+  const safeBusiness = sanitizeForPrompt(businessName, 200);
+  const safeVertical = sanitizeForPrompt(vertical, 100);
+  const safeTopic = sanitizeForPrompt(topic, 200);
+  const safeCampaignType = sanitizeForPrompt(campaignType, 50);
+  const safeLocation = sanitizeForPrompt(location, 200);
+
   try {
-    const response = await anthropic.messages.create({
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: 1500,
-      system: `You are an email marketing expert. Write compelling email copy for a ${vertical} business called ${businessName}.`,
-      messages: [
-        {
-          role: "user",
-          content: `Write a ${campaignType} email about "${topic}" for ${businessName}, a ${vertical} business in ${location}.
+    const response = await guardedAnthropicCall({
+      clientId: client.id,
+      action: "email.generate",
+      description: `Generate ${safeCampaignType} email about ${safeTopic}`,
+      params: {
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 1500,
+        system: `You are an email marketing expert. Write compelling email copy for a ${safeVertical} business called ${safeBusiness}.`,
+        messages: [
+          {
+            role: "user",
+            content: `Write a ${safeCampaignType} email about "${safeTopic}" for ${safeBusiness}, a ${safeVertical} business in ${safeLocation}.
 
 Return ONLY a JSON object with two fields:
 - "subject": a compelling email subject line
 - "body": the full email body as HTML (use <h2>, <p>, <ul>, <li> tags for structure)
 
 The email should be professional, engaging, and include a call-to-action. Do not include any text outside the JSON object.`,
-        },
-      ],
+          },
+        ],
+      },
     });
 
-    const rawText =
-      response.content[0].type === "text" ? response.content[0].text : "";
+    const rawText = extractTextContent(response, "{}");
 
     // Parse the JSON response from Claude
     let subject: string;
@@ -66,10 +75,17 @@ The email should be professional, engaging, and include a call-to-action. Do not
 
     return NextResponse.json({ subject, body: emailBody });
   } catch (error) {
+    if (error instanceof GovernanceBlockedError) {
+      return NextResponse.json(
+        { error: `Email generation blocked: ${error.reason}` },
+        { status: 429 }
+      );
+    }
     console.error("Email generation failed:", error);
+    const aiError = handleAnthropicError(error);
     return NextResponse.json(
-      { error: "Failed to generate email content" },
-      { status: 500 }
+      { error: aiError.message, retryable: aiError.retryable },
+      { status: aiError.status }
     );
   }
 }

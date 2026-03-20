@@ -204,12 +204,12 @@ export function BookingDashboard() {
     <div className="space-y-8">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Link href="/dashboard">
-          <Button variant="ghost" size="icon-sm">
+        <Link href="/dashboard" aria-label="Back to dashboard">
+          <Button variant="ghost" size="icon-sm" aria-hidden="true" tabIndex={-1}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
         </Link>
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-500/10">
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-500/10" aria-hidden="true">
           <Calendar className="h-5 w-5 text-teal-400" />
         </div>
         <div>
@@ -310,13 +310,13 @@ export function BookingDashboard() {
                               {booking.customerName}
                             </p>
                             <Badge variant={statusConfig.variant}>
-                              <StatusIcon className="mr-1 h-3 w-3" />
+                              <StatusIcon className="mr-1 h-3 w-3" aria-hidden="true" />
                               {statusConfig.label}
                             </Badge>
                           </div>
                           <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                             <span className="flex items-center gap-1">
-                              <Clock className="h-3 w-3" />
+                              <Clock className="h-3 w-3" aria-hidden="true" />
                               {formatDateTime(booking.startsAt)} -{" "}
                               {formatTime(booking.endsAt)}
                             </span>

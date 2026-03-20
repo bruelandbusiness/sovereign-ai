@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import * as Sentry from "@sentry/nextjs";
 import { Header } from "@/components/layout/Header";
 import { Container } from "@/components/layout/Container";
 
@@ -13,7 +14,10 @@ export default function DashboardError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("Dashboard error:", error);
+    Sentry.captureException(error, {
+      tags: { boundary: "dashboard-error" },
+      extra: { digest: error.digest },
+    });
   }, [error]);
 
   return (

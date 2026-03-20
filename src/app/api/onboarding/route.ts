@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { createAccountWithMagicLink } from "@/lib/auth";
 import { sendWelcomeEmail } from "@/lib/email";
+import { logger } from "@/lib/logger";
 
 const API_URL = process.env.API_URL || "http://localhost:8000";
 
@@ -82,7 +83,7 @@ export async function POST(request: NextRequest) {
           authResult.url
         );
       } catch (error) {
-        console.error("Failed to create account:", error);
+        logger.errorWithCause("[onboarding] Failed to create account", error);
       }
     }
 

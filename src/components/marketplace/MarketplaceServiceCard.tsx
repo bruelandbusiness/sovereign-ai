@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Check, ArrowRight, TrendingUp } from "lucide-react";
 import type { Service } from "@/types/services";
 import { formatPrice } from "@/lib/constants";
+import { getServiceIcon } from "@/lib/service-icons";
 import { IconBadge } from "@/components/shared/IconBadge";
 import { GradientButton } from "@/components/shared/GradientButton";
 import { Badge } from "@/components/ui/badge";
@@ -54,7 +55,7 @@ export function MarketplaceServiceCard({
       {/* Header */}
       <div className="mb-4 flex items-start gap-4">
         <IconBadge
-          icon={service.icon}
+          icon={getServiceIcon(service.id)}
           color={cn(service.color, "text-foreground")}
           size="lg"
         />

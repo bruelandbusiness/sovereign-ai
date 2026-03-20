@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import Anthropic from "@anthropic-ai/sdk";
 import { verifyCronSecret } from "@/lib/cron";
-
-const anthropic = new Anthropic();
+import { guardedAnthropicCall } from "@/lib/governance/ai-guard";
+import { extractTextContent, sanitizeForPrompt } from "@/lib/ai-utils";
 
 async function generateContentForJob(jobId: string) {
   const job = await prisma.contentJob.findUnique({
@@ -29,10 +28,15 @@ async function generateContentForJob(jobId: string) {
       .filter(Boolean)
       .join(", ");
 
-    const prompt = `You are an expert SEO content writer. Write a high-quality, SEO-optimized blog post for a ${client.vertical || "local"} business called "${client.businessName}"${locationContext ? ` located in ${locationContext}` : ""}.
+    const safeBusinessName = sanitizeForPrompt(client.businessName, 200);
+    const safeVertical = sanitizeForPrompt(client.vertical || "local", 100);
+    const safeTitle = sanitizeForPrompt(job.title || "Untitled", 200);
+    const safeKeywords = job.keywords ? sanitizeForPrompt(job.keywords, 200) : "";
 
-Title: ${job.title}
-${job.keywords ? `Target Keywords: ${job.keywords}` : ""}
+    const prompt = `You are an expert SEO content writer. Write a high-quality, SEO-optimized blog post for a ${safeVertical} business called "${safeBusinessName}"${locationContext ? ` located in ${sanitizeForPrompt(locationContext, 200)}` : ""}.
+
+Title: ${safeTitle}
+${safeKeywords ? `Target Keywords: ${safeKeywords}` : ""}
 
 Requirements:
 - Write in a professional yet approachable tone
@@ -45,14 +49,18 @@ Requirements:
 
 Return ONLY the blog post content in markdown format.`;
 
-    const response = await anthropic.messages.create({
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: 2000,
-      messages: [{ role: "user", content: prompt }],
+    const response = await guardedAnthropicCall({
+      clientId: client.id,
+      action: "cron.content_generate",
+      description: `Cron: generate blog post "${safeTitle}"`,
+      params: {
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 2000,
+        messages: [{ role: "user", content: prompt }],
+      },
     });
 
-    const generatedContent =
-      response.content[0].type === "text" ? response.content[0].text : "";
+    const generatedContent = extractTextContent(response, "");
 
     await prisma.contentJob.update({
       where: { id: job.id },

@@ -1,15 +1,14 @@
 import { NextResponse } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
 import { prisma } from "@/lib/db";
 import { rateLimit } from "@/lib/rate-limit";
+import { guardedAnthropicCall, GovernanceBlockedError } from "@/lib/governance/ai-guard";
+import { extractTextContent } from "@/lib/ai-utils";
 
 interface ChatMessage {
   role: "user" | "assistant";
   content: string;
   timestamp: string;
 }
-
-const anthropic = new Anthropic(); // uses ANTHROPIC_API_KEY env var
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -101,17 +100,20 @@ export async function POST(request: Request) {
       { role: "user" as const, content: message },
     ];
 
-    // Call Claude API
-    const response = await anthropic.messages.create({
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: 300,
-      system: config.systemPrompt,
-      messages: apiMessages,
+    // Call Claude API via governance guard
+    const response = await guardedAnthropicCall({
+      clientId: config.clientId,
+      action: "chatbot.response",
+      description: "Chatbot conversation response",
+      params: {
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 300,
+        system: config.systemPrompt,
+        messages: apiMessages,
+      },
     });
 
-    // Extract the text reply from the response
-    const replyBlock = response.content.find((block) => block.type === "text");
-    const reply = replyBlock && replyBlock.type === "text" ? replyBlock.text : "";
+    const reply = extractTextContent(response, "");
 
     // Update the conversation history
     const now = new Date().toISOString();
@@ -148,6 +150,12 @@ export async function POST(request: Request) {
       { headers: corsHeaders }
     );
   } catch (error) {
+    if (error instanceof GovernanceBlockedError) {
+      return NextResponse.json(
+        { error: "AI usage limit reached. Please try again later." },
+        { status: 429, headers: corsHeaders }
+      );
+    }
     console.error("Chatbot chat error:", error);
     return NextResponse.json(
       { error: "Failed to generate response" },

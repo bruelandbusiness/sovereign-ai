@@ -1,11 +1,26 @@
 import { NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
+import { requireAdmin } from "@/lib/require-admin";
+import { AuthError } from "@/lib/require-client";
 import { prisma } from "@/lib/db";
+import { logAudit } from "@/lib/audit";
+import { z } from "zod";
+
+const ticketUpdateSchema = z.object({
+  ticketId: z.string().min(1, "ticketId is required"),
+  status: z
+    .enum(["open", "in_progress", "resolved", "closed"])
+    .optional(),
+  message: z.string().min(1).max(5000).optional(),
+});
 
 export async function GET() {
-  const session = await getSession();
-  if (!session || session.account.role !== "admin") {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  try {
+    await requireAdmin();
+  } catch (e) {
+    if (e instanceof AuthError) {
+      return NextResponse.json({ error: e.message }, { status: e.status });
+    }
+    throw e;
   }
 
   const tickets = await prisma.supportTicket.findMany({
@@ -32,20 +47,50 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  const session = await getSession();
-  if (!session || session.account.role !== "admin") {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  let accountId: string;
+  try {
+    const admin = await requireAdmin();
+    accountId = admin.accountId;
+  } catch (e) {
+    if (e instanceof AuthError) {
+      return NextResponse.json({ error: e.message }, { status: e.status });
+    }
+    throw e;
   }
 
-  const body = await request.json();
-  const { ticketId, status, message } = body as {
-    ticketId?: string;
-    status?: string;
-    message?: string;
-  };
+  let rawBody: unknown;
+  try {
+    rawBody = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
 
-  if (!ticketId) {
-    return NextResponse.json({ error: "ticketId required" }, { status: 400 });
+  const parsed = ticketUpdateSchema.safeParse(rawBody);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: "Invalid input", details: parsed.error.flatten().fieldErrors },
+      { status: 400 }
+    );
+  }
+
+  const { ticketId, status, message } = parsed.data;
+
+  // Verify ticket exists before updating
+  const existing = await prisma.supportTicket.findUnique({
+    where: { id: ticketId },
+  });
+  if (!existing) {
+    return NextResponse.json(
+      { error: "Ticket not found" },
+      { status: 404 }
+    );
+  }
+
+  if (!status && !message) {
+    return NextResponse.json(
+      { error: "At least one of status or message is required" },
+      { status: 400 }
+    );
   }
 
   if (status) {
@@ -64,6 +109,17 @@ export async function PUT(request: Request) {
       },
     });
   }
+
+  await logAudit({
+    accountId,
+    action: "update",
+    resource: "support_ticket",
+    resourceId: ticketId,
+    metadata: {
+      ...(status ? { statusChange: { from: existing.status, to: status } } : {}),
+      ...(message ? { adminReply: true } : {}),
+    },
+  });
 
   return NextResponse.json({ success: true });
 }

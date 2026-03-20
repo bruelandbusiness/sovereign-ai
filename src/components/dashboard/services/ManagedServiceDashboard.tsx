@@ -18,6 +18,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { getServiceById } from "@/lib/constants";
+import { getServiceIcon } from "@/lib/service-icons";
 
 // ── Types ────────────────────────────────────────────────────
 
@@ -76,7 +77,7 @@ export function ManagedServiceDashboard({ serviceId }: { serviceId: string }) {
     );
   }
 
-  const Icon = service.icon;
+  const Icon = getServiceIcon(serviceId);
 
   // Derive displayed values
   const displayNotes =
@@ -138,12 +139,12 @@ export function ManagedServiceDashboard({ serviceId }: { serviceId: string }) {
     <div className="space-y-8">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Link href="/dashboard">
-          <Button variant="ghost" size="icon-sm">
+        <Link href="/dashboard" aria-label="Back to dashboard">
+          <Button variant="ghost" size="icon-sm" aria-hidden="true" tabIndex={-1}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
         </Link>
-        <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${service.color}`}>
+        <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${service.color}`} aria-hidden="true">
           <Icon className="h-5 w-5" />
         </div>
         <div>

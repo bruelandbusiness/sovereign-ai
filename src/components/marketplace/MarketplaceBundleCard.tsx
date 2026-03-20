@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { ArrowRight, Gift } from "lucide-react";
 import type { Bundle } from "@/types/services";
 import { formatPrice, getServiceById } from "@/lib/constants";
+import { getServiceIcon } from "@/lib/service-icons";
 import { IconBadge } from "@/components/shared/IconBadge";
 import { GradientButton } from "@/components/shared/GradientButton";
 import { Badge } from "@/components/ui/badge";
@@ -93,7 +94,7 @@ export function MarketplaceBundleCard({ bundle }: MarketplaceBundleCardProps) {
               <Tooltip key={service.id}>
                 <TooltipTrigger>
                   <IconBadge
-                    icon={service.icon}
+                    icon={getServiceIcon(service.id)}
                     color={cn(service.color, "text-foreground")}
                     size="sm"
                     className="transition-transform duration-200 hover:scale-110"

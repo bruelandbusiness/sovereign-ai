@@ -69,12 +69,14 @@ export function OnboardingChecklist() {
           <div className="flex items-center gap-1">
             <button
               onClick={() => setCollapsed(!collapsed)}
-              className="rounded p-1 text-muted-foreground hover:text-foreground"
+              className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              aria-label={collapsed ? "Expand checklist" : "Collapse checklist"}
+              aria-expanded={!collapsed}
             >
               {collapsed ? (
-                <ChevronDown className="h-4 w-4" />
+                <ChevronDown className="h-4 w-4" aria-hidden="true" />
               ) : (
-                <ChevronUp className="h-4 w-4" />
+                <ChevronUp className="h-4 w-4" aria-hidden="true" />
               )}
             </button>
             <button
@@ -82,9 +84,10 @@ export function OnboardingChecklist() {
                 localStorage.setItem("checklist-dismissed", "true");
                 setDismissed(true);
               }}
-              className="rounded p-1 text-muted-foreground hover:text-foreground"
+              className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              aria-label="Dismiss checklist"
             >
-              <X className="h-4 w-4" />
+              <X className="h-4 w-4" aria-hidden="true" />
             </button>
           </div>
         </div>

@@ -1,5 +1,3 @@
-import type { LucideIcon } from "lucide-react";
-
 export type ServiceId =
   | "lead-gen"
   | "voice-agent"
@@ -43,7 +41,6 @@ export interface Service {
   price: number;
   priceSuffix?: string;
   setupFee?: number;
-  icon: LucideIcon;
   color: string;
   features: string[];
   category: ServiceCategory;

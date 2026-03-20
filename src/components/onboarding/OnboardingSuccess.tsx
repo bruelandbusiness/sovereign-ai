@@ -247,7 +247,7 @@ export function OnboardingSuccess({ formData }: OnboardingSuccessProps) {
         transition={{ delay: 1.2, duration: 0.5 }}
         className="mt-8"
       >
-        <Link href="/">
+        <Link href="/dashboard">
           <GradientButton size="lg">
             Go to Dashboard
             <ArrowRight className="h-4 w-4" />

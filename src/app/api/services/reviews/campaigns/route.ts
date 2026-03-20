@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+
+const createReviewCampaignSchema = z.object({
+  customerName: z.string().min(1, "customerName is required").max(200),
+  customerEmail: z.string().email().max(320),
+  customerPhone: z.string().max(30).optional().nullable(),
+  reviewUrl: z.string().url().max(2048).optional().nullable(),
+});
 
 export async function GET() {
   const session = await getSession();
@@ -41,15 +49,16 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const body = await request.json();
-    const { customerName, customerEmail, customerPhone, reviewUrl } = body;
-
-    if (!customerName || !customerEmail) {
+    const rawBody = await request.json();
+    const parsed = createReviewCampaignSchema.safeParse(rawBody);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "customerName and customerEmail are required" },
+        { error: "Invalid input", details: parsed.error.flatten().fieldErrors },
         { status: 400 }
       );
     }
+
+    const { customerName, customerEmail, customerPhone, reviewUrl } = parsed.data;
 
     const clientId = session.account.client.id;
 

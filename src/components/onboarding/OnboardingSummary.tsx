@@ -5,6 +5,7 @@ import { ArrowLeft, CheckCircle2, Loader2, ShieldCheck, Clock, Rocket, BarChart3
 import { GradientButton } from "@/components/shared/GradientButton";
 import { GradientText } from "@/components/shared/GradientText";
 import { SERVICES, VERTICALS, formatPrice } from "@/lib/constants";
+import { getServiceIcon } from "@/lib/service-icons";
 import type { OnboardingFormData } from "@/types/onboarding";
 
 interface OnboardingSummaryProps {
@@ -139,14 +140,14 @@ export function OnboardingSummary({
         </h3>
         <div className="flex flex-col gap-2">
           {selectedServices.map((service) => {
-            const Icon = service.icon;
+            const Icon = getServiceIcon(service.id);
             return (
               <div
                 key={service.id}
                 className="flex items-center justify-between"
               >
                 <div className="flex items-center gap-2">
-                  <Icon className="h-4 w-4 text-primary" />
+                  <Icon className="h-4 w-4 text-primary" aria-hidden="true" />
                   <span className="text-sm">{service.name}</span>
                 </div>
                 <span className="text-sm font-medium">

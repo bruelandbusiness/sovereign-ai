@@ -1,14 +1,26 @@
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 export function buildReactivationEmail(
   step: 1 | 2 | 3,
   ownerName: string,
   businessName: string
 ) {
+  const safeName = escapeHtml(ownerName);
+  const safeBusiness = escapeHtml(businessName);
+
   const templates = {
     1: {
-      subject: `We miss you, ${ownerName} — here's what your competitors are doing`,
+      subject: `We miss you, ${safeName} — here's what your competitors are doing`,
       body: `
-        <p style="color: #333; font-size: 16px; line-height: 1.5;">Hi ${ownerName},</p>
-        <p style="color: #333; font-size: 16px; line-height: 1.5;">We noticed you recently canceled your Sovereign AI subscription for <strong>${businessName}</strong>.</p>
+        <p style="color: #333; font-size: 16px; line-height: 1.5;">Hi ${safeName},</p>
+        <p style="color: #333; font-size: 16px; line-height: 1.5;">We noticed you recently canceled your Sovereign AI subscription for <strong>${safeBusiness}</strong>.</p>
         <p style="color: #333; font-size: 16px; line-height: 1.5;">While your AI systems have been paused, your competitors' haven't. In the last 7 days, businesses in your area using AI marketing have generated an average of <strong>23 new leads</strong>.</p>
         <p style="color: #333; font-size: 16px; line-height: 1.5;">If there was something we could have done better, we'd love to hear about it. Reply to this email or book a quick call:</p>
         <div style="text-align: center; margin: 32px 0;">
@@ -19,10 +31,10 @@ export function buildReactivationEmail(
       `,
     },
     2: {
-      subject: `${businessName} — your leads pipeline is drying up`,
+      subject: `${safeBusiness} — your leads pipeline is drying up`,
       body: `
-        <p style="color: #333; font-size: 16px; line-height: 1.5;">Hi ${ownerName},</p>
-        <p style="color: #333; font-size: 16px; line-height: 1.5;">It's been 2 weeks since your AI marketing systems went offline. Here's what that typically means for businesses like ${businessName}:</p>
+        <p style="color: #333; font-size: 16px; line-height: 1.5;">Hi ${safeName},</p>
+        <p style="color: #333; font-size: 16px; line-height: 1.5;">It's been 2 weeks since your AI marketing systems went offline. Here's what that typically means for businesses like ${safeBusiness}:</p>
         <ul style="color: #333; font-size: 16px; line-height: 1.8;">
           <li>Lead volume drops 40-60% within 30 days</li>
           <li>Google rankings start declining after 2 weeks of no content</li>
@@ -38,9 +50,9 @@ export function buildReactivationEmail(
       `,
     },
     3: {
-      subject: `Last chance: 20% off to reactivate ${businessName}`,
+      subject: `Last chance: 20% off to reactivate ${safeBusiness}`,
       body: `
-        <p style="color: #333; font-size: 16px; line-height: 1.5;">Hi ${ownerName},</p>
+        <p style="color: #333; font-size: 16px; line-height: 1.5;">Hi ${safeName},</p>
         <p style="color: #333; font-size: 16px; line-height: 1.5;">It's been 30 days, and we want to make it easy to come back.</p>
         <div style="background: linear-gradient(135deg, #4c85ff11, #22d3a111); border: 2px solid #4c85ff33; border-radius: 12px; padding: 24px; margin: 24px 0; text-align: center;">
           <p style="color: #4c85ff; font-size: 24px; font-weight: 700; margin: 0;">20% OFF</p>

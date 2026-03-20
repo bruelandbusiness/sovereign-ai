@@ -3,74 +3,64 @@ import { prisma } from "@/lib/db";
 import { createAccountWithMagicLink } from "@/lib/auth";
 import { sendWelcomeEmail } from "@/lib/email";
 import { activateServices } from "@/lib/services/activator";
-
-const API_URL = process.env.API_URL || "http://localhost:8000";
+import { logger } from "@/lib/logger";
+import { stripe, assertStripeConfigured } from "@/lib/stripe";
+import type Stripe from "stripe";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.text();
-    const signature = request.headers.get("stripe-signature") || "";
+    const signature = request.headers.get("stripe-signature");
 
-    // Forward to Python backend for Stripe signature verification
-    let event: {
-      type: string;
-      data: {
-        object: {
-          id: string;
-          customer?: string;
-          customer_email?: string;
-          metadata?: Record<string, string>;
-          subscription?: string;
-          amount_total?: number;
-        };
-      };
-    };
-
-    try {
-      const response = await fetch(
-        `${API_URL}/api/payments/webhooks/stripe`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "stripe-signature": signature,
-          },
-          body,
-        }
+    if (!signature) {
+      return NextResponse.json(
+        { detail: "Missing stripe-signature header" },
+        { status: 400 }
       );
-
-      if (!response.ok) {
-        return NextResponse.json(
-          { detail: "Webhook verification failed" },
-          { status: response.status }
-        );
-      }
-
-      event = await response.json();
-    } catch {
-      // If Python backend is down, try to parse the event directly
-      // (for development — in production, always verify signatures)
-      event = JSON.parse(body);
     }
+
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+    if (!webhookSecret) {
+      logger.error("[payments/webhooks/stripe] STRIPE_WEBHOOK_SECRET not configured");
+      return NextResponse.json(
+        { detail: "Webhook not configured" },
+        { status: 500 }
+      );
+    }
+
+    assertStripeConfigured();
+
+    let event: Stripe.Event;
+    try {
+      event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+    } catch (err) {
+      logger.errorWithCause("[payments/webhooks/stripe] Signature verification failed", err);
+      return NextResponse.json(
+        { detail: "Webhook signature verification failed" },
+        { status: 400 }
+      );
+    }
+
+    const obj = event.data.object;
 
     switch (event.type) {
       case "checkout.session.completed":
-        await handleCheckoutCompleted(event.data.object);
+        await handleCheckoutCompleted(obj as unknown as CheckoutSession);
         break;
       case "customer.subscription.updated":
-        await handleSubscriptionUpdated(event.data.object);
+        await handleSubscriptionUpdated(obj as unknown as SubscriptionEvent);
         break;
       case "customer.subscription.deleted":
-        await handleSubscriptionDeleted(event.data.object);
+        await handleSubscriptionDeleted(obj as unknown as { id: string });
         break;
       case "invoice.payment_failed":
-        await handlePaymentFailed(event.data.object);
+        await handlePaymentFailed(obj as unknown as InvoiceEvent);
         break;
     }
 
     return NextResponse.json({ received: true });
   } catch (error) {
-    console.error("Webhook error:", error);
+    logger.errorWithCause("[payments/webhooks/stripe] Webhook error", error);
     return NextResponse.json(
       { detail: "Webhook processing failed" },
       { status: 500 }
@@ -78,17 +68,32 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function handleCheckoutCompleted(session: {
+interface CheckoutSession {
   id: string;
   customer?: string;
   customer_email?: string;
   metadata?: Record<string, string>;
   subscription?: string;
   amount_total?: number;
-}) {
+}
+
+interface SubscriptionEvent {
+  id: string;
+  customer?: string;
+  status?: string;
+  current_period_end?: number;
+  items?: { data: { price: { unit_amount: number } }[] };
+}
+
+interface InvoiceEvent {
+  customer?: string;
+  subscription?: string;
+}
+
+async function handleCheckoutCompleted(session: CheckoutSession) {
   const email = session.customer_email || session.metadata?.email;
   if (!email) {
-    console.error("No email in checkout session:", session.id);
+    logger.error("[payments/webhooks/stripe] No email in checkout session", { sessionId: session.id });
     return;
   }
 
@@ -177,13 +182,7 @@ async function handleCheckoutCompleted(session: {
   );
 }
 
-async function handleSubscriptionUpdated(sub: {
-  id: string;
-  customer?: string;
-  status?: string;
-  current_period_end?: number;
-  items?: { data: { price: { unit_amount: number } }[] };
-}) {
+async function handleSubscriptionUpdated(sub: SubscriptionEvent) {
   const subscription = await prisma.subscription.findFirst({
     where: { stripeSubId: sub.id },
   });
@@ -231,10 +230,7 @@ async function handleSubscriptionDeleted(sub: { id: string }) {
   });
 }
 
-async function handlePaymentFailed(invoice: {
-  customer?: string;
-  subscription?: string;
-}) {
+async function handlePaymentFailed(invoice: InvoiceEvent) {
   if (!invoice.subscription) return;
 
   const subscription = await prisma.subscription.findFirst({

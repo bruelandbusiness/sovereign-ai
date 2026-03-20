@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getSession } from "@/lib/auth";
 
 const API_URL = process.env.API_URL || "http://localhost:8000";
 
 export async function POST(request: NextRequest) {
+  const session = await getSession();
+  if (!session?.account) {
+    return NextResponse.json({ detail: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const body = await request.json();
     const response = await fetch(`${API_URL}/api/payments/portal`, {

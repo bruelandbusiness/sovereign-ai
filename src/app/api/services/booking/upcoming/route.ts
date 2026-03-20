@@ -1,6 +1,17 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+
+const createBookingSchema = z.object({
+  customerName: z.string().min(1, "customerName is required").max(200),
+  customerEmail: z.string().email().max(320).optional().nullable(),
+  customerPhone: z.string().max(30).optional().nullable(),
+  serviceType: z.string().max(100).optional().nullable(),
+  startsAt: z.string().min(1, "startsAt is required").max(100),
+  endsAt: z.string().min(1, "endsAt is required").max(100),
+  notes: z.string().max(5000).optional().nullable(),
+});
 
 export async function GET() {
   const session = await getSession();
@@ -43,27 +54,22 @@ export async function POST(request: Request) {
 
   const clientId = session.account.client.id;
 
-  let body: {
-    customerName?: string;
-    customerEmail?: string;
-    customerPhone?: string;
-    serviceType?: string;
-    startsAt?: string;
-    endsAt?: string;
-    notes?: string;
-  };
+  let rawBody: unknown;
   try {
-    body = await request.json();
+    rawBody = await request.json();
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  if (!body.customerName || !body.startsAt || !body.endsAt) {
+  const parsed = createBookingSchema.safeParse(rawBody);
+  if (!parsed.success) {
     return NextResponse.json(
-      { error: "customerName, startsAt, and endsAt are required" },
+      { error: "Invalid input", details: parsed.error.flatten().fieldErrors },
       { status: 400 }
     );
   }
+
+  const body = parsed.data;
 
   const booking = await prisma.booking.create({
     data: {

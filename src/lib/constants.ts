@@ -1,21 +1,8 @@
-import {
-  Zap,
-  Phone,
-  MessageSquare,
-  Search,
-  Megaphone,
-  Mail,
-  Share2,
-  Star,
-  Calendar,
-  Users,
-  Globe,
-  BarChart3,
-  FileText,
-  Shield,
-  Target,
-  Wrench,
-} from "lucide-react";
+// NOTE: lucide-react icon imports have been moved to @/lib/service-icons.ts
+// to prevent icon components from being bundled into server-side API routes
+// that import this module only for data lookups (getServiceById, getBundleById).
+// Client components that need service icons should use getServiceIcon() from
+// @/lib/service-icons.ts.
 import type { Service, Bundle, Vertical, Testimonial } from "@/types/services";
 
 export const SERVICES: Service[] = [
@@ -27,7 +14,7 @@ export const SERVICES: Service[] = [
       "AI-powered outbound prospecting that finds, qualifies, and nurtures leads for your business 24/7. Cold email, SMS, and multi-channel sequences that book appointments while you sleep.",
     price: 2500,
     priceSuffix: "/mo",
-    icon: Zap,
+
     color: "bg-blue-500/10",
     category: "generation",
     popular: true,
@@ -48,7 +35,7 @@ export const SERVICES: Service[] = [
       "Intelligent AI phone agents that answer calls, qualify leads, book appointments, and handle customer inquiries with human-like conversation.",
     price: 1800,
     priceSuffix: "/mo",
-    icon: Phone,
+
     color: "bg-purple-500/10",
     category: "engagement",
     popular: true,
@@ -69,7 +56,7 @@ export const SERVICES: Service[] = [
       "Custom-trained AI chatbot for your website, trained on your specific business knowledge to answer questions and capture leads.",
     price: 997,
     priceSuffix: "/mo",
-    icon: MessageSquare,
+
     color: "bg-cyan-500/10",
     category: "engagement",
     features: [
@@ -89,7 +76,7 @@ export const SERVICES: Service[] = [
       "AI-powered SEO that targets high-intent local keywords, optimizes your Google Business Profile, and builds authority through strategic content.",
     price: 2000,
     priceSuffix: "/mo",
-    icon: Search,
+
     color: "bg-green-500/10",
     category: "generation",
     popular: true,
@@ -110,7 +97,7 @@ export const SERVICES: Service[] = [
       "AI-optimized Google and Facebook ad campaigns that continuously learn and improve to lower your cost per lead.",
     price: 1500,
     priceSuffix: "/mo + ad spend",
-    icon: Megaphone,
+
     color: "bg-orange-500/10",
     category: "generation",
     features: [
@@ -130,7 +117,7 @@ export const SERVICES: Service[] = [
       "Automated email sequences that nurture leads, re-engage past customers, and drive repeat business with AI-written content.",
     price: 1200,
     priceSuffix: "/mo",
-    icon: Mail,
+
     color: "bg-indigo-500/10",
     category: "engagement",
     features: [
@@ -150,7 +137,7 @@ export const SERVICES: Service[] = [
       "AI-generated social media content, scheduling, and community management across all major platforms.",
     price: 1500,
     priceSuffix: "/mo",
-    icon: Share2,
+
     color: "bg-pink-500/10",
     category: "engagement",
     features: [
@@ -170,7 +157,7 @@ export const SERVICES: Service[] = [
       "Automated review request campaigns that boost your Google rating and respond intelligently to all reviews.",
     price: 797,
     priceSuffix: "/mo",
-    icon: Star,
+
     color: "bg-amber-500/10",
     category: "management",
     features: [
@@ -190,7 +177,7 @@ export const SERVICES: Service[] = [
       "Smart scheduling system that lets leads book appointments directly, sends reminders, and reduces no-shows.",
     price: 497,
     priceSuffix: "/mo",
-    icon: Calendar,
+
     color: "bg-teal-500/10",
     category: "management",
     features: [
@@ -210,7 +197,7 @@ export const SERVICES: Service[] = [
       "AI-powered CRM that automatically tracks, scores, and manages your entire customer pipeline from lead to close.",
     price: 1200,
     priceSuffix: "/mo",
-    icon: Users,
+
     color: "bg-violet-500/10",
     category: "management",
     features: [
@@ -231,7 +218,7 @@ export const SERVICES: Service[] = [
     price: 500,
     priceSuffix: "/mo",
     setupFee: 3500,
-    icon: Globe,
+
     color: "bg-emerald-500/10",
     category: "intelligence",
     features: [
@@ -251,7 +238,7 @@ export const SERVICES: Service[] = [
       "AI-powered analytics dashboard that tracks every marketing channel, identifies trends, and recommends optimizations.",
     price: 997,
     priceSuffix: "/mo",
-    icon: BarChart3,
+
     color: "bg-sky-500/10",
     category: "intelligence",
     features: [
@@ -271,7 +258,7 @@ export const SERVICES: Service[] = [
       "AI-generated blog posts, service pages, and marketing content optimized for SEO and conversion. 8 published articles per month.",
     price: 1800,
     priceSuffix: "/mo",
-    icon: FileText,
+
     color: "bg-rose-500/10",
     category: "intelligence",
     features: [
@@ -291,7 +278,7 @@ export const SERVICES: Service[] = [
       "24/7 brand monitoring and reputation management. Detects negative mentions and responds before they escalate.",
     price: 1200,
     priceSuffix: "/mo",
-    icon: Shield,
+
     color: "bg-red-500/10",
     category: "management",
     features: [
@@ -311,7 +298,7 @@ export const SERVICES: Service[] = [
       "AI-powered retargeting campaigns that bring back website visitors and past leads with personalized ads.",
     price: 1000,
     priceSuffix: "/mo + ad spend",
-    icon: Target,
+
     color: "bg-lime-500/10",
     category: "generation",
     features: [
@@ -331,7 +318,7 @@ export const SERVICES: Service[] = [
       "Custom AI automation solutions tailored to your specific business needs. From workflow automation to custom integrations.",
     price: 5000,
     priceSuffix: "/mo",
-    icon: Wrench,
+
     color: "bg-gray-500/10",
     category: "intelligence",
     features: [

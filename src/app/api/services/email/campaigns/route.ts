@@ -1,6 +1,14 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+
+const createCampaignSchema = z.object({
+  name: z.string().min(1, "name is required").max(200),
+  subject: z.string().min(1, "subject is required").max(500),
+  body: z.string().max(50000).optional(),
+  type: z.string().max(50).optional(),
+});
 
 export async function GET() {
   const session = await getSession();
@@ -41,19 +49,22 @@ export async function POST(request: Request) {
 
   const clientId = session.account.client.id;
 
-  let reqBody: { name?: string; subject?: string; body?: string; type?: string };
+  let rawBody: unknown;
   try {
-    reqBody = await request.json();
+    rawBody = await request.json();
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  if (!reqBody.name || !reqBody.subject) {
+  const parsed = createCampaignSchema.safeParse(rawBody);
+  if (!parsed.success) {
     return NextResponse.json(
-      { error: "name and subject are required" },
+      { error: "Invalid input", details: parsed.error.flatten().fieldErrors },
       { status: 400 }
     );
   }
+
+  const reqBody = parsed.data;
 
   const campaign = await prisma.emailCampaign.create({
     data: {

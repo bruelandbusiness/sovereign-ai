@@ -25,6 +25,7 @@ export function rateLimit(
   key: string,
   maxTokens: number,
   refillRate: number, // tokens per second
+  _options?: { degradeGracefully?: boolean },
 ): { allowed: boolean; remaining: number } {
   const now = Date.now();
   let bucket = buckets.get(key);
@@ -56,7 +57,8 @@ export function rateLimit(
 export function rateLimitByIP(
   ip: string,
   action: string,
-  maxPerHour: number
+  maxPerHour: number,
+  _options?: { degradeGracefully?: boolean }
 ): { allowed: boolean; remaining: number } {
   const key = `${action}:${ip}`;
   return rateLimit(key, maxPerHour, maxPerHour / 3600);

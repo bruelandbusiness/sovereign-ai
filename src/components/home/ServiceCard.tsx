@@ -5,6 +5,7 @@ import { Check } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { IconBadge } from "@/components/shared/IconBadge";
 import { PriceDisplay } from "@/components/shared/PriceDisplay";
+import { getServiceIcon } from "@/lib/service-icons";
 import type { Service } from "@/types/services";
 import { cn } from "@/lib/utils";
 
@@ -28,7 +29,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
       >
         <CardHeader>
           <div className="flex items-start justify-between">
-            <IconBadge icon={service.icon} color={service.color} size="lg" />
+            <IconBadge icon={getServiceIcon(service.id)} color={service.color} size="lg" />
             {service.popular && (
               <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
                 Popular

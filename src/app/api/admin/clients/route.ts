@@ -1,11 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
+import { requireAdmin } from "@/lib/require-admin";
+import { AuthError } from "@/lib/require-client";
 import { prisma } from "@/lib/db";
+import { logAudit } from "@/lib/audit";
+import { z } from "zod";
+
+const clientCreateSchema = z.object({
+  email: z.string().email().max(255),
+  businessName: z.string().min(1).max(200),
+  ownerName: z.string().min(1).max(200),
+  phone: z.string().max(30).optional().nullable(),
+  city: z.string().max(100).optional().nullable(),
+  state: z.string().max(100).optional().nullable(),
+  vertical: z.string().max(100).optional().nullable(),
+  website: z.string().url().max(500).optional().nullable().or(z.literal("")),
+  serviceAreaRadius: z.string().max(50).optional().nullable(),
+});
 
 export async function GET(request: NextRequest) {
-  const session = await getSession();
-  if (!session || session.account.role !== "admin") {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  try {
+    await requireAdmin();
+  } catch (e) {
+    if (e instanceof AuthError) {
+      return NextResponse.json({ error: e.message }, { status: e.status });
+    }
+    throw e;
   }
 
   const { searchParams } = new URL(request.url);
@@ -52,4 +71,82 @@ export async function GET(request: NextRequest) {
       servicesCount: c._count.services,
     })),
   });
+}
+
+export async function POST(request: NextRequest) {
+  let accountId: string;
+  try {
+    const admin = await requireAdmin();
+    accountId = admin.accountId;
+  } catch (e) {
+    if (e instanceof AuthError) {
+      return NextResponse.json({ error: e.message }, { status: e.status });
+    }
+    throw e;
+  }
+
+  const body = await request.json();
+  const parsed = clientCreateSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: "Invalid input", details: parsed.error.flatten().fieldErrors },
+      { status: 400 }
+    );
+  }
+
+  const { email, businessName, ownerName, phone, city, state, vertical, website, serviceAreaRadius } =
+    parsed.data;
+
+  // Check if account already exists
+  const existingAccount = await prisma.account.findUnique({ where: { email } });
+  if (existingAccount) {
+    return NextResponse.json(
+      { error: "An account with this email already exists" },
+      { status: 409 }
+    );
+  }
+
+  // Create account and client in a transaction
+  const result = await prisma.$transaction(async (tx) => {
+    const account = await tx.account.create({
+      data: { email, name: ownerName, role: "client" },
+    });
+
+    const client = await tx.client.create({
+      data: {
+        accountId: account.id,
+        businessName,
+        ownerName,
+        phone: phone || null,
+        city: city || null,
+        state: state || null,
+        vertical: vertical || null,
+        website: website || null,
+        serviceAreaRadius: serviceAreaRadius || null,
+      },
+    });
+
+    return { account, client };
+  });
+
+  await logAudit({
+    accountId,
+    action: "create",
+    resource: "client",
+    resourceId: result.client.id,
+    metadata: { email, businessName },
+  });
+
+  return NextResponse.json(
+    {
+      client: {
+        id: result.client.id,
+        businessName: result.client.businessName,
+        ownerName: result.client.ownerName,
+        email: result.account.email,
+        createdAt: result.client.createdAt,
+      },
+    },
+    { status: 201 }
+  );
 }

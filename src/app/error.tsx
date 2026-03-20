@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import * as Sentry from "@sentry/nextjs";
 import { Container } from "@/components/layout/Container";
 
 export default function GlobalError({
@@ -12,7 +13,10 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("Unhandled error:", error);
+    Sentry.captureException(error, {
+      tags: { boundary: "app-error" },
+      extra: { digest: error.digest },
+    });
   }, [error]);
 
   return (

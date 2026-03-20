@@ -52,8 +52,11 @@ export default function BillingPage() {
 
   const statusColors: Record<string, string> = {
     active: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+    trial: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+    canceling: "bg-amber-500/10 text-amber-400 border-amber-500/20",
     past_due: "bg-amber-500/10 text-amber-400 border-amber-500/20",
     canceled: "bg-red-500/10 text-red-400 border-red-500/20",
+    expired: "bg-red-500/10 text-red-400 border-red-500/20",
   };
 
   return (

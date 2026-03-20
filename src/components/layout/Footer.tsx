@@ -18,7 +18,7 @@ export function Footer() {
           </div>
 
           {/* Links */}
-          <div className="grid grid-cols-3 gap-4 text-xs">
+          <nav aria-label="Footer navigation" className="grid grid-cols-3 gap-4 text-xs">
             <div className="space-y-2.5">
               <p className="font-semibold text-foreground">Product</p>
               <Link href="/audit" className="block text-muted-foreground transition-colors hover:text-foreground">
@@ -67,20 +67,20 @@ export function Footer() {
                 Get Started
               </Link>
             </div>
-          </div>
+          </nav>
 
           {/* Trust */}
           <div className="space-y-3">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Shield className="h-3.5 w-3.5 text-accent" />
+              <Shield className="h-3.5 w-3.5 text-accent" aria-hidden="true" />
               30-Day Money-Back Guarantee
             </div>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Shield className="h-3.5 w-3.5 text-accent" />
+              <Shield className="h-3.5 w-3.5 text-accent" aria-hidden="true" />
               No Long-Term Contracts
             </div>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Shield className="h-3.5 w-3.5 text-accent" />
+              <Shield className="h-3.5 w-3.5 text-accent" aria-hidden="true" />
               256-Bit Data Encryption
             </div>
           </div>

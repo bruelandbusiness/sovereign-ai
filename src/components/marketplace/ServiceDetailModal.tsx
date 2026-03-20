@@ -3,6 +3,7 @@
 import { Check, ArrowRight, ArrowLeft, Phone, Shield, Quote } from "lucide-react";
 import type { Service } from "@/types/services";
 import { formatPrice, TESTIMONIALS } from "@/lib/constants";
+import { getServiceIcon } from "@/lib/service-icons";
 import { IconBadge } from "@/components/shared/IconBadge";
 import { GradientButton } from "@/components/shared/GradientButton";
 import { GradientText } from "@/components/shared/GradientText";
@@ -50,7 +51,7 @@ export function ServiceDetailModal({
         <DialogHeader>
           <div className="flex items-center gap-4">
             <IconBadge
-              icon={service.icon}
+              icon={getServiceIcon(service.id)}
               color={cn(service.color, "text-foreground")}
               size="lg"
             />

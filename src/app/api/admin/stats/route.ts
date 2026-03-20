@@ -1,11 +1,16 @@
 import { NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
+import { requireAdmin } from "@/lib/require-admin";
+import { AuthError } from "@/lib/require-client";
 import { prisma } from "@/lib/db";
 
 export async function GET() {
-  const session = await getSession();
-  if (!session || session.account.role !== "admin") {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  try {
+    await requireAdmin();
+  } catch (e) {
+    if (e instanceof AuthError) {
+      return NextResponse.json({ error: e.message }, { status: e.status });
+    }
+    throw e;
   }
 
   const [totalClients, activeServices, subscriptions, recentClients] =

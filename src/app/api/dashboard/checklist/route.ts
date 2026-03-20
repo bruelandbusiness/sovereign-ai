@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
+import { requireClient, AuthError } from "@/lib/require-client";
 import { prisma } from "@/lib/db";
+import { z } from "zod";
+
+const checklistSchema = z.object({
+  stepKey: z.string().min(1).max(100),
+  completed: z.boolean(),
+});
 
 const DEFAULT_STEPS = [
   { stepKey: "gbp", label: "Set up Google Business Profile" },
@@ -11,73 +17,96 @@ const DEFAULT_STEPS = [
 ];
 
 export async function GET() {
-  const session = await getSession();
-  if (!session?.account.client) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-  const clientId = session.account.client.id;
+  try {
+    const { clientId } = await requireClient();
 
-  // Ensure all default steps exist
-  const existing = await prisma.onboardingStep.findMany({
-    where: { clientId },
-  });
-  const existingKeys = new Set(existing.map((s) => s.stepKey));
-
-  const toCreate = DEFAULT_STEPS.filter((s) => !existingKeys.has(s.stepKey));
-  if (toCreate.length > 0) {
-    await prisma.onboardingStep.createMany({
-      data: toCreate.map((s) => ({ clientId, stepKey: s.stepKey })),
+    // Ensure all default steps exist
+    const existing = await prisma.onboardingStep.findMany({
+      where: { clientId },
+      take: 50,
     });
+    const existingKeys = new Set(existing.map((s) => s.stepKey));
+
+    const toCreate = DEFAULT_STEPS.filter((s) => !existingKeys.has(s.stepKey));
+    if (toCreate.length > 0) {
+      await prisma.onboardingStep.createMany({
+        data: toCreate.map((s) => ({ clientId, stepKey: s.stepKey })),
+      });
+    }
+
+    const steps = await prisma.onboardingStep.findMany({
+      where: { clientId },
+      orderBy: { createdAt: "asc" },
+      take: 50,
+    });
+
+    return NextResponse.json(
+      steps.map((s) => ({
+        id: s.id,
+        stepKey: s.stepKey,
+        label: DEFAULT_STEPS.find((d) => d.stepKey === s.stepKey)?.label || s.stepKey,
+        completed: s.completed,
+        completedAt: s.completedAt?.toISOString() ?? null,
+      }))
+    );
+  } catch (error) {
+    if (error instanceof AuthError)
+      return NextResponse.json(
+        { error: error.message },
+        { status: error.status },
+      );
+    console.error("[checklist] GET failed:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch checklist" },
+      { status: 500 }
+    );
   }
-
-  const steps = await prisma.onboardingStep.findMany({
-    where: { clientId },
-    orderBy: { createdAt: "asc" },
-  });
-
-  return NextResponse.json(
-    steps.map((s) => ({
-      id: s.id,
-      stepKey: s.stepKey,
-      label: DEFAULT_STEPS.find((d) => d.stepKey === s.stepKey)?.label || s.stepKey,
-      completed: s.completed,
-      completedAt: s.completedAt?.toISOString() ?? null,
-    }))
-  );
 }
 
 export async function PUT(request: Request) {
-  const session = await getSession();
-  if (!session?.account.client) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  try {
+    const { clientId } = await requireClient();
+
+    const body = await request.json();
+    const parsed = checklistSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Validation failed", details: parsed.error.flatten().fieldErrors },
+        { status: 400 }
+      );
+    }
+    const { stepKey, completed } = parsed.data;
+
+    const step = await prisma.onboardingStep.upsert({
+      where: { clientId_stepKey: { clientId, stepKey } },
+      create: {
+        clientId,
+        stepKey,
+        completed: !!completed,
+        completedAt: completed ? new Date() : null,
+      },
+      update: {
+        completed: !!completed,
+        completedAt: completed ? new Date() : null,
+      },
+    });
+
+    return NextResponse.json({
+      id: step.id,
+      stepKey: step.stepKey,
+      completed: step.completed,
+      completedAt: step.completedAt?.toISOString() ?? null,
+    });
+  } catch (error) {
+    if (error instanceof AuthError)
+      return NextResponse.json(
+        { error: error.message },
+        { status: error.status },
+      );
+    console.error("[checklist] PUT failed:", error);
+    return NextResponse.json(
+      { error: "Failed to update checklist" },
+      { status: 500 }
+    );
   }
-  const clientId = session.account.client.id;
-
-  const body = await request.json();
-  const { stepKey, completed } = body as { stepKey: string; completed: boolean };
-
-  if (!stepKey) {
-    return NextResponse.json({ error: "stepKey required" }, { status: 400 });
-  }
-
-  const step = await prisma.onboardingStep.upsert({
-    where: { clientId_stepKey: { clientId, stepKey } },
-    create: {
-      clientId,
-      stepKey,
-      completed: !!completed,
-      completedAt: completed ? new Date() : null,
-    },
-    update: {
-      completed: !!completed,
-      completedAt: completed ? new Date() : null,
-    },
-  });
-
-  return NextResponse.json({
-    id: step.id,
-    stepKey: step.stepKey,
-    completed: step.completed,
-    completedAt: step.completedAt?.toISOString() ?? null,
-  });
 }

@@ -5,6 +5,7 @@ import { ArrowRight } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { FadeInView } from "@/components/shared/FadeInView";
 import { getServiceById } from "@/lib/constants";
+import { getServiceIcon } from "@/lib/service-icons";
 import { cn } from "@/lib/utils";
 import type { ServiceId } from "@/types/services";
 
@@ -26,7 +27,7 @@ export function ActiveServicesCard({ serviceIds = [] }: ActiveServicesCardProps)
             {(serviceIds as ServiceId[]).map((id) => {
               const service = getServiceById(id);
               if (!service) return null;
-              const Icon = service.icon;
+              const Icon = getServiceIcon(id);
 
               return (
                 <div

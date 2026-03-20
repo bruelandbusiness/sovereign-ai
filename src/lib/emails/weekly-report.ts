@@ -1,3 +1,12 @@
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 export function buildWeeklyReportEmail(data: {
   businessName: string;
   ownerName: string;
@@ -19,7 +28,10 @@ export function buildWeeklyReportEmail(data: {
     estimatedRevenue,
   } = data;
 
-  const subject = `Weekly Report: ${leads} Leads, ${reviews} Reviews — ${businessName}`;
+  const safeName = escapeHtml(ownerName);
+  const safeBusiness = escapeHtml(businessName);
+
+  const subject = `Weekly Report: ${leads} Leads, ${reviews} Reviews — ${safeBusiness}`;
 
   const html = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 560px; margin: 0 auto; padding: 40px 20px;">
@@ -28,8 +40,8 @@ export function buildWeeklyReportEmail(data: {
         <p style="color: #666; font-size: 14px; margin-top: 8px;">Sovereign AI Performance Summary</p>
       </div>
 
-      <p style="color: #333; font-size: 16px; line-height: 1.5;">Hi ${ownerName},</p>
-      <p style="color: #333; font-size: 16px; line-height: 1.5;">Here's what your AI marketing systems accomplished for <strong>${businessName}</strong> this week:</p>
+      <p style="color: #333; font-size: 16px; line-height: 1.5;">Hi ${safeName},</p>
+      <p style="color: #333; font-size: 16px; line-height: 1.5;">Here's what your AI marketing systems accomplished for <strong>${safeBusiness}</strong> this week:</p>
 
       <div style="background: #f8f9fa; border-radius: 12px; padding: 24px; margin: 24px 0;">
         <table style="width: 100%; border-collapse: collapse;">

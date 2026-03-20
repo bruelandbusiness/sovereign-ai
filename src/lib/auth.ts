@@ -129,6 +129,47 @@ export async function signOut() {
 }
 
 /**
+ * Rotate an existing session: invalidate the old token and create a new one.
+ */
+export async function rotateSession(oldToken: string) {
+  const session = await prisma.session.findUnique({
+    where: { token: oldToken },
+  });
+  if (!session || session.expiresAt < new Date()) return null;
+
+  const newToken = crypto.randomBytes(32).toString("hex");
+  await prisma.session.update({
+    where: { id: session.id },
+    data: { token: newToken },
+  });
+
+  const cookieStore = await cookies();
+  cookieStore.set(SESSION_COOKIE, newToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: SESSION_EXPIRY_DAYS * 24 * 60 * 60,
+  });
+
+  return newToken;
+}
+
+/**
+ * Revoke all sessions for a given account.
+ */
+export async function revokeAllSessions(accountId: string) {
+  await prisma.session.deleteMany({ where: { accountId } });
+}
+
+/**
+ * Revoke all unused magic links for a given account.
+ */
+export async function revokeAllMagicLinks(accountId: string) {
+  await prisma.magicLink.deleteMany({ where: { accountId, usedAt: null } });
+}
+
+/**
  * Create an account + magic link for a brand new user (called from Stripe webhook)
  */
 export async function createAccountWithMagicLink(

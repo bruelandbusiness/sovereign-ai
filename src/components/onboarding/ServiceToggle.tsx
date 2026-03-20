@@ -2,6 +2,7 @@
 
 import { Switch } from "@/components/ui/switch";
 import { formatPrice } from "@/lib/constants";
+import { getServiceIcon } from "@/lib/service-icons";
 import { cn } from "@/lib/utils";
 import type { Service } from "@/types/services";
 
@@ -18,7 +19,7 @@ export function ServiceToggle({
   onToggle,
   recommended,
 }: ServiceToggleProps) {
-  const Icon = service.icon;
+  const Icon = getServiceIcon(service.id);
 
   return (
     <div className="relative">
