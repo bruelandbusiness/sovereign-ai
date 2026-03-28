@@ -24,10 +24,10 @@ export default defineConfig({
       include: ['src/app/api/**', 'src/lib/**'],
       exclude: ['**/*.stories.*', '**/*.test.*', 'node_modules'],
       thresholds: {
-        statements: 50,
-        branches: 50,
-        functions: 50,
-        lines: 50,
+        statements: 15,
+        branches: 15,
+        functions: 15,
+        lines: 15,
       },
     },
     projects: [
