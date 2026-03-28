@@ -98,6 +98,7 @@
     "eslint-config-next": "16.1.7",
     "eslint-plugin-storybook": "^10.2.19",
     "jsdom": "^29.0.1",
+    "magicast": "^0.3.5",
     "playwright": "^1.58.2",
     "shadcn": "^4.1.1",
     "storybook": "^10.2.19",
