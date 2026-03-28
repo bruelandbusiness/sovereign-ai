@@ -1,0 +1,1 @@
+../plugins/superpowers/commands/write-plan.md

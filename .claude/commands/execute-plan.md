@@ -1,0 +1,1 @@
+../plugins/superpowers/commands/execute-plan.md

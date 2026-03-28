@@ -1,0 +1,703 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "../styles/design-tokens.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  /* --- Existing shadcn mappings --- */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-body);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-warning: var(--warning);
+  --color-success: var(--success);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* === Sovereign Empire Design Tokens === */
+
+  /* Background colors: bg-bg-primary, bg-bg-secondary, etc. */
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-tertiary: var(--bg-tertiary);
+  --color-bg-surface: var(--bg-surface);
+
+  /* Text colors: text-text-primary, text-text-secondary, etc. */
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-text-muted: var(--text-muted);
+
+  /* Accent colors: bg-accent-primary, text-accent-primary, border-accent-border, etc. */
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-subtle: var(--accent-subtle);
+  --color-accent-border: var(--accent-border);
+
+  /* Status colors: bg-status-success, text-status-danger, etc. */
+  --color-status-success: var(--status-success);
+  --color-status-warning: var(--status-warning);
+  --color-status-danger: var(--status-danger);
+  --color-status-info: var(--status-info);
+
+  /* Revenue: bg-revenue, text-revenue */
+  --color-revenue: var(--revenue);
+
+  /* Border colors: border-border-subtle, border-border-default, border-border-strong */
+  --color-border-subtle: var(--border-subtle);
+  --color-border-default: var(--border-default);
+  --color-border-strong: var(--border-strong);
+
+  /* Font families: font-display, font-body, font-mono
+     next/font injects --font-display, --font-sans, --font-mono on <body>.
+     These fallback stacks ensure Tailwind utilities resolve even before
+     the next/font class applies (e.g. in :root-level contexts). */
+  --font-display: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Border radius: rounded-card, rounded-sm, etc. (sovereign tokens) */
+  --radius-card: var(--radius-md);
+
+  /* Box shadows: shadow-sm, shadow-md, shadow-lg, shadow-glow */
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-glow: var(--shadow-glow);
+
+  /* Font sizes: text-xs through text-6xl (sovereign scale) */
+  --text-xs: var(--text-xs);
+  --text-sm: var(--text-sm);
+  --text-base: var(--text-base);
+  --text-lg: var(--text-lg);
+  --text-xl: var(--text-xl);
+  --text-2xl: var(--text-2xl);
+  --text-3xl: var(--text-3xl);
+  --text-4xl: var(--text-4xl);
+  --text-5xl: var(--text-5xl);
+  --text-6xl: var(--text-6xl);
+}
+
+/* Sovereign AI — Dark-only design system */
+:root {
+  /* Core backgrounds */
+  --background: #0a0a0f;
+  --foreground: #ececef;
+  --card: #101018;
+  --card-foreground: #ececef;
+  --popover: #101018;
+  --popover-foreground: #ececef;
+
+  /* Primary — bright blue */
+  --primary: #4c85ff;
+  --primary-foreground: #ffffff;
+
+  /* Secondary */
+  --secondary: #1c1c22;
+  --secondary-foreground: #ececef;
+
+  /* Muted */
+  --muted: #1c1c22;
+  --muted-foreground: #a1a1b5;
+
+  /* Accent — teal/mint */
+  --accent: #22d3a1;
+  --accent-foreground: #ffffff;
+
+  /* Destructive */
+  --destructive: #ef4444;
+
+  /* Warning */
+  --warning: #f5a623;
+
+  /* Success */
+  --success: #22d3aa;
+
+  /* Borders */
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.08);
+  --ring: #4c85ff;
+
+  /* Radius */
+  --radius: 0.625rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+/* Smooth scrolling only when user has no motion preference */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer base {
+  /* Global focus-visible indicator for all interactive elements */
+  a:focus-visible,
+  button:focus-visible,
+  [role="button"]:focus-visible,
+  [role="radio"]:focus-visible,
+  [role="checkbox"]:focus-visible,
+  [role="tab"]:focus-visible,
+  [role="switch"]:focus-visible,
+  [role="menuitem"]:focus-visible,
+  [role="option"]:focus-visible,
+  [tabindex]:focus-visible:not([tabindex="-1"]),
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  summary:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background rounded-sm;
+  }
+}
+
+/* Skeleton shimmer for loading states */
+@keyframes skeleton-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 25%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  border-radius: 0.5rem;
+}
+
+/* Page enter animation */
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-enter {
+  animation: page-enter 0.4s ease-out;
+}
+
+/* Gradient utilities */
+@layer utilities {
+  .gradient-text {
+    background: linear-gradient(135deg, #4c85ff, #22d3a1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-bg {
+    /* Darkened green endpoint (#168968) ensures ≥3:1 contrast with white text (WCAG AA large text) */
+    background: linear-gradient(135deg, #4c85ff, #168968);
+  }
+
+  .gradient-bg-subtle {
+    background: linear-gradient(135deg, rgba(76, 133, 255, 0.15), rgba(34, 211, 161, 0.15));
+  }
+
+  .glow-primary {
+    box-shadow: 0 0 20px rgba(76, 133, 255, 0.2);
+  }
+
+  /* Background texture — subtle dot grid for depth on dark surfaces */
+  .bg-dot-grid {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* Background texture — subtle noise grain */
+  .bg-noise {
+    position: relative;
+  }
+  .bg-noise::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Improved form input styling */
+  .input-sovereign {
+    height: 2.75rem;
+    width: 100%;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);
+    padding: 0.5rem 0.875rem;
+    font-size: 1rem; /* 16px prevents iOS Safari auto-zoom on focus */
+    color: var(--foreground);
+    transition: all 0.2s ease;
+  }
+  @media (min-width: 640px) {
+    .input-sovereign {
+      font-size: 0.875rem;
+    }
+  }
+  .input-sovereign::placeholder {
+    color: var(--muted-foreground);
+  }
+  .input-sovereign:focus {
+    outline: none;
+    border-color: #4c85ff;
+    box-shadow: 0 0 0 3px rgba(76, 133, 255, 0.15), 0 0 12px rgba(76, 133, 255, 0.1);
+    background: rgba(255, 255, 255, 0.06);
+  }
+  .input-sovereign:hover:not(:focus) {
+    border-color: rgba(255, 255, 255, 0.18);
+  }
+  .input-sovereign.input-error {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+  }
+}
+
+/* Custom animations */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.9); opacity: 0.5; }
+  50% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.5; }
+}
+
+@keyframes btn-shine-sweep {
+  0% { left: -75%; }
+  100% { left: 125%; }
+}
+
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shine::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.25),
+    transparent
+  );
+  animation: btn-shine-sweep 3s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.3); }
+}
+
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* Glassmorphism card — improved border visibility */
+.glass-card {
+  background: rgba(16, 16, 24, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Glow pulse animation for popular pricing card */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(76, 133, 255, 0.15); }
+  50% { box-shadow: 0 0 40px rgba(76, 133, 255, 0.3), 0 0 60px rgba(34, 211, 161, 0.1); }
+}
+.glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+/* Animated gradient glow for primary CTA */
+@keyframes cta-glow {
+  0%, 100% {
+    box-shadow:
+      0 0 12px rgba(76, 133, 255, 0.4),
+      0 0 32px rgba(76, 133, 255, 0.15);
+  }
+  50% {
+    box-shadow:
+      0 0 20px rgba(76, 133, 255, 0.6),
+      0 0 48px rgba(34, 211, 161, 0.25),
+      0 0 64px rgba(76, 133, 255, 0.1);
+  }
+}
+.cta-glow {
+  animation: cta-glow 2.5s ease-in-out infinite;
+}
+
+/* Pulsing border animation for sticky mobile CTA */
+@keyframes sticky-pulse {
+  0%, 100% {
+    box-shadow: 0 -2px 16px rgba(76, 133, 255, 0.2);
+  }
+  50% {
+    box-shadow: 0 -4px 24px rgba(76, 133, 255, 0.45), 0 -2px 12px rgba(34, 211, 161, 0.2);
+  }
+}
+.sticky-pulse {
+  animation: sticky-pulse 2s ease-in-out infinite;
+}
+
+/* Premium card hover — enhanced with glow */
+.card-hover-lift {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+.card-hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35), 0 0 20px rgba(76, 133, 255, 0.08);
+  border-color: rgba(76, 133, 255, 0.3);
+}
+
+/* Testimonial card hover */
+.testimonial-card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+.testimonial-card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3), 0 0 12px rgba(76, 133, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Trust signal card hover */
+.trust-card-hover {
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+.trust-card-hover:hover {
+  background: rgba(16, 16, 24, 0.8);
+  border-color: rgba(76, 133, 255, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* 404 floating animation */
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.float-gentle {
+  animation: float-gentle 4s ease-in-out infinite;
+}
+
+/* Error page pulse ring */
+@keyframes error-ring-pulse {
+  0% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 0.2; }
+  100% { transform: scale(1); opacity: 0.5; }
+}
+.error-ring-pulse {
+  animation: error-ring-pulse 2.5s ease-in-out infinite;
+}
+
+/* Hero glow blobs — GPU-composited via transform + opacity only */
+@keyframes hero-glow-pulse-blue {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+@keyframes hero-glow-pulse-green {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.2); opacity: 0.9; }
+}
+.hero-glow-blue {
+  animation: hero-glow-pulse-blue 8s ease-in-out infinite;
+}
+.hero-glow-green {
+  animation: hero-glow-pulse-green 10s ease-in-out 2s infinite;
+}
+
+/* Gradient text animation for hero headline */
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Social proof bar slide-in */
+@keyframes slide-up-fade {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.slide-up-fade {
+  animation: slide-up-fade 0.5s ease-out both;
+}
+.slide-up-fade-delay-1 {
+  animation: slide-up-fade 0.5s ease-out 0.1s both;
+}
+.slide-up-fade-delay-2 {
+  animation: slide-up-fade 0.5s ease-out 0.2s both;
+}
+
+/* Respect prefers-reduced-motion for all animations */
+@media (prefers-reduced-motion: reduce) {
+  .btn-shine::after,
+  .pulse-dot,
+  .glow-pulse,
+  .cta-glow,
+  .sticky-pulse,
+  .float-gentle,
+  .error-ring-pulse,
+  .skeleton,
+  .page-enter,
+  .slide-up-fade,
+  .slide-up-fade-delay-1,
+  .slide-up-fade-delay-2,
+  .hero-glow-blue,
+  .hero-glow-green {
+    animation: none !important;
+  }
+  .animate-spin {
+    animation: none !important;
+  }
+  .card-hover-lift:hover,
+  .testimonial-card-hover:hover,
+  .trust-card-hover:hover {
+    transform: none !important;
+  }
+}
+
+/* Empty state entrance animation — fade in with subtle scale */
+@keyframes empty-state-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+.empty-state-enter {
+  animation: empty-state-enter 0.5s ease-out;
+}
+
+/* === Dashboard UX micro-interactions === */
+
+/* Subtle scale-in for notification badge */
+@keyframes badge-pop {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.badge-pop {
+  animation: badge-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Checkmark celebration for completed checklist items */
+@keyframes check-bounce {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.check-bounce {
+  animation: check-bounce 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Smooth reveal for copy-to-clipboard confirmations */
+@keyframes copy-confirm {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.copy-confirm {
+  animation: copy-confirm 0.2s ease-out;
+}
+
+/* New lead highlight pulse */
+@keyframes lead-highlight {
+  0% { background-color: rgba(59, 130, 246, 0.15); }
+  50% { background-color: rgba(59, 130, 246, 0.08); }
+  100% { background-color: rgba(59, 130, 246, 0.15); }
+}
+.lead-highlight {
+  animation: lead-highlight 2s ease-in-out 3;
+}
+
+/* Subtle hover lift for dashboard cards */
+.card-interactive {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+/* Switch toggle transition enhancement */
+[data-slot="switch"] {
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+[data-slot="switch"][data-state="checked"] {
+  box-shadow: 0 0 8px rgba(76, 133, 255, 0.3);
+}
+
+/* Progress bar shine effect */
+@keyframes progress-shine {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+.progress-shine {
+  position: relative;
+  overflow: hidden;
+}
+.progress-shine::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.15),
+    transparent
+  );
+  animation: progress-shine 2s ease-in-out infinite;
+}
+
+/* Shake animation for inline validation errors */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-4px); }
+  40% { transform: translateX(4px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(2px); }
+}
+
+/* Respect reduced motion for new animations */
+@media (prefers-reduced-motion: reduce) {
+  .badge-pop,
+  .check-bounce,
+  .copy-confirm,
+  .lead-highlight,
+  .empty-state-enter,
+  .progress-shine::after {
+    animation: none !important;
+  }
+  .card-interactive:hover {
+    transform: none !important;
+  }
+  [class*="animate-"] {
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* === Mobile UX enhancements === */
+
+/* Horizontal scroll indicator for tables on mobile — subtle fade-out on right edge */
+@media (max-width: 639px) {
+  .mobile-scroll-hint {
+    position: relative;
+  }
+  .mobile-scroll-hint::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 2rem;
+    background: linear-gradient(to right, transparent, var(--background));
+    pointer-events: none;
+    opacity: 0.8;
+    z-index: 1;
+    transition: opacity 0.3s ease;
+  }
+  /* Hide indicator when fully scrolled */
+  .mobile-scroll-hint:not(:hover)::after {
+    opacity: 0.8;
+  }
+}
+
+/* Pull-to-refresh visual indicator — shows on overscroll at top on iOS/Android */
+@media (max-width: 639px) {
+  body {
+    overscroll-behavior-y: contain;
+  }
+  main {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Ensure all interactive elements have minimum touch targets on mobile */
+@media (max-width: 639px) {
+  /* Settings sub-nav links */
+  [data-slot="tabs-trigger"],
+  [role="tab"] {
+    min-height: 44px;
+  }
+}
+
+/* Enhanced select input styling for dark theme */
+select.input-sovereign {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%239494a3' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2.5rem;
+}
