@@ -58,7 +58,7 @@ jobs:
         run: npx prisma generate
 
       - name: Run tests with coverage
-        run: npx vitest run --coverage
+        run: npx vitest run --coverage --project unit --project component
 
       - name: Upload coverage report
         if: always()
