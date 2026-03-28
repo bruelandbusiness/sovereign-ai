@@ -74,8 +74,12 @@ jobs:
     needs: [lint-and-typecheck, test]
 
     env:
-      DATABASE_URL: ""
+      DATABASE_URL: "postgresql://ci:ci@localhost:5432/ci"
       SKIP_ENV_VALIDATION: "1"
+      STRIPE_SECRET_KEY: "sk_test_ci_placeholder"
+      STRIPE_WEBHOOK_SECRET: "whsec_ci_placeholder"
+      NEXTAUTH_SECRET: "ci-secret-placeholder"
+      SENDGRID_API_KEY: "SG.ci-placeholder"
 
     steps:
       - name: Checkout repository
@@ -111,8 +115,12 @@ jobs:
     needs: [build, lint-and-typecheck]
 
     env:
-      DATABASE_URL: ""
+      DATABASE_URL: "postgresql://ci:ci@localhost:5432/ci"
       SKIP_ENV_VALIDATION: "1"
+      STRIPE_SECRET_KEY: "sk_test_ci_placeholder"
+      STRIPE_WEBHOOK_SECRET: "whsec_ci_placeholder"
+      NEXTAUTH_SECRET: "ci-secret-placeholder"
+      SENDGRID_API_KEY: "SG.ci-placeholder"
 
     steps:
       - name: Checkout repository
