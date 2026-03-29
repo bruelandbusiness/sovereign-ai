@@ -17,6 +17,11 @@ export async function generateMetadata({
   return {
     title: `Free AI Marketing Audit — Exclusive Partner Offer from ${name}`,
     description: `Get a free, instant AI audit of your online marketing. Exclusive offer through our partner ${name}. See your score in 30 seconds.`,
+    openGraph: {
+      title: `Free AI Marketing Audit — Partner Offer from ${name}`,
+      description: `Get a free, instant AI audit of your online marketing. Exclusive offer through our partner ${name}.`,
+      url: `/partner/${slug}`,
+    },
   };
 }
 

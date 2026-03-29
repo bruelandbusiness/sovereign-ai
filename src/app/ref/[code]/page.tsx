@@ -1,9 +1,23 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { prisma } from "@/lib/db";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Container } from "@/components/layout/Container";
+
+export const metadata: Metadata = {
+  title: "You've Been Referred",
+  description:
+    "A trusted contractor referred you to Sovereign AI. Get AI-powered marketing that generates leads, automates reviews, and grows your business on autopilot.",
+  openGraph: {
+    title: "You've Been Referred to Sovereign AI",
+    description:
+      "Join hundreds of contractors using AI-powered marketing to generate leads and grow revenue on autopilot.",
+    url: "/ref",
+  },
+  robots: { index: false, follow: true },
+};
 
 interface ReferralPageProps {
   params: Promise<{ code: string }>;
