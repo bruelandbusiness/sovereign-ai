@@ -66,7 +66,7 @@ beforeEach(() => {
 });
 
 describe("createSession", () => {
-  it("creates a session with a 64-char hex token and 30-day expiry", async () => {
+  it("creates a session with a 64-char hex token and 7-day expiry", async () => {
     const fakeSession = {
       id: "sess-1",
       token: "abc123",
@@ -90,12 +90,12 @@ describe("createSession", () => {
     expect(callArgs.accountId).toBe("acct-1");
     expect(callArgs.ipAddress).toBe("127.0.0.1");
 
-    // Expiry should be ~30 days from now — bracket with before/after to avoid
+    // Expiry should be ~7 days from now — bracket with before/after to avoid
     // flaky failures when Date.now() drifts between implementation and assertion.
-    const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
+    const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
     const expiryMs = callArgs.expiresAt.getTime();
-    expect(expiryMs).toBeGreaterThanOrEqual(before + thirtyDaysMs - 1000);
-    expect(expiryMs).toBeLessThanOrEqual(after + thirtyDaysMs + 1000);
+    expect(expiryMs).toBeGreaterThanOrEqual(before + sevenDaysMs - 1000);
+    expect(expiryMs).toBeLessThanOrEqual(after + sevenDaysMs + 1000);
 
     expect(result).toEqual(fakeSession);
   });

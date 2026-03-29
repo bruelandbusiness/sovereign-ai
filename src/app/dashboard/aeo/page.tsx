@@ -3,7 +3,12 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Container } from "@/components/layout/Container";
-import { AEODashboard } from "@/components/dashboard/services/AEODashboard";
+import dynamic from "next/dynamic";
+
+const AEODashboard = dynamic(
+  () => import("@/components/dashboard/services/AEODashboard").then((m) => m.AEODashboard),
+  { ssr: false, loading: () => <div className="animate-pulse h-96 bg-muted rounded-lg" /> },
+);
 
 export default function AEOPage() {
   return (

@@ -137,7 +137,8 @@ export async function canSendEmail(
  */
 export async function canSendSms(
   clientId: string,
-  toPhone: string
+  toPhone: string,
+  recipientTimezone?: string
 ): Promise<ComplianceResult> {
   const checks: CheckResult[] = [];
   const config = await getComplianceConfig(clientId);
@@ -192,17 +193,18 @@ export async function canSendSms(
     }
   }
 
-  // 3. Quiet hours check
-  const timezone = config?.timezone ?? "America/Chicago";
+  // 3. Quiet hours check — use recipient timezone, fall back to config, then UTC
+  const timezone = recipientTimezone ?? config?.timezone ?? undefined;
   const startHour = config?.smsQuietStartHour ?? 8;
   const endHour = config?.smsQuietEndHour ?? 21;
 
   const quiet = isQuietHours(timezone, startHour, endHour);
+  const displayTz = timezone ?? "UTC";
   checks.push({
     check: "quiet_hours",
     passed: !quiet,
     reason: quiet
-      ? `Quiet hours: no SMS before ${startHour}:00 or after ${endHour}:00 ${timezone}`
+      ? `Quiet hours: no SMS before ${startHour}:00 or after ${endHour}:00 ${displayTz}`
       : undefined,
   });
 
@@ -216,7 +218,7 @@ export async function canSendSms(
     });
     return {
       allowed: false,
-      reason: `TCPA: Quiet hours in effect (${timezone})`,
+      reason: `TCPA: Quiet hours in effect (${displayTz})`,
       checks,
     };
   }
@@ -260,7 +262,8 @@ export async function canSendSms(
  */
 export async function canMakeCall(
   clientId: string,
-  toPhone: string
+  toPhone: string,
+  recipientTimezone?: string
 ): Promise<ComplianceResult> {
   const checks: CheckResult[] = [];
   const config = await getComplianceConfig(clientId);
@@ -315,17 +318,18 @@ export async function canMakeCall(
     }
   }
 
-  // 3. Quiet hours check
-  const timezone = config?.timezone ?? "America/Chicago";
+  // 3. Quiet hours check — use recipient timezone, fall back to config, then UTC
+  const timezone = recipientTimezone ?? config?.timezone ?? undefined;
   const startHour = config?.smsQuietStartHour ?? 8;
   const endHour = config?.smsQuietEndHour ?? 21;
 
   const quiet = isQuietHours(timezone, startHour, endHour);
+  const displayTz = timezone ?? "UTC";
   checks.push({
     check: "quiet_hours",
     passed: !quiet,
     reason: quiet
-      ? `Quiet hours: no calls before ${startHour}:00 or after ${endHour}:00 ${timezone}`
+      ? `Quiet hours: no calls before ${startHour}:00 or after ${endHour}:00 ${displayTz}`
       : undefined,
   });
 
@@ -339,7 +343,7 @@ export async function canMakeCall(
     });
     return {
       allowed: false,
-      reason: `TCPA: Quiet hours in effect (${timezone})`,
+      reason: `TCPA: Quiet hours in effect (${displayTz})`,
       checks,
     };
   }

@@ -3,7 +3,12 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Container } from "@/components/layout/Container";
-import { LTVDashboard } from "@/components/dashboard/services/LTVDashboard";
+import dynamic from "next/dynamic";
+
+const LTVDashboard = dynamic(
+  () => import("@/components/dashboard/services/LTVDashboard").then((m) => m.LTVDashboard),
+  { ssr: false, loading: () => <div className="animate-pulse h-96 bg-muted rounded-lg" /> },
+);
 
 export default function LTVPage() {
   return (

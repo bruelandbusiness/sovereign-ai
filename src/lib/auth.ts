@@ -5,7 +5,8 @@ import crypto from "crypto";
 
 const SESSION_COOKIE = "sovereign-session";
 const MAGIC_LINK_EXPIRY_MINUTES = 15;
-const SESSION_EXPIRY_DAYS = 30;
+const SESSION_EXPIRY_DAYS = 7;
+const SESSION_REFRESH_THRESHOLD_DAYS = 3;
 
 /**
  * Resolve the application's base URL consistently across all auth functions.
@@ -231,6 +232,38 @@ export async function getSession() {
 
   // Update lastUsedAt in the background (non-blocking)
   touchSession(session.id);
+
+  // Sliding window: if session is within the refresh threshold of expiry,
+  // extend it by SESSION_EXPIRY_DAYS to keep active users logged in.
+  const msUntilExpiry = session.expiresAt.getTime() - Date.now();
+  const refreshThresholdMs =
+    SESSION_REFRESH_THRESHOLD_DAYS * 24 * 60 * 60 * 1000;
+  if (msUntilExpiry < refreshThresholdMs) {
+    const newExpiry = new Date(
+      Date.now() + SESSION_EXPIRY_DAYS * 24 * 60 * 60 * 1000
+    );
+    // Extend DB expiry and cookie in the background (non-blocking)
+    prisma.session
+      .update({
+        where: { id: session.id },
+        data: { expiresAt: newExpiry },
+      })
+      .catch((err) => {
+        logger.debug("[auth] Failed to extend session expiry", {
+          sessionId: session.id,
+          error: err instanceof Error ? err.message : String(err),
+        });
+      });
+
+    const cookieStore = await cookies();
+    cookieStore.set(SESSION_COOKIE, session.token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: SESSION_EXPIRY_DAYS * 24 * 60 * 60,
+    });
+  }
 
   return session;
 }

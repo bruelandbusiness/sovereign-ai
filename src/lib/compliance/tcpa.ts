@@ -30,27 +30,27 @@ export async function checkTCPAConsent(
 }
 
 /**
- * Check if the current time falls within quiet hours for the given timezone.
+ * Check if the current time falls within quiet hours for the recipient's timezone.
  * TCPA prohibits automated SMS/calls before 8 AM or after 9 PM recipient local time.
  *
- * @param timezone - IANA timezone (e.g., "America/Chicago")
+ * @param recipientTimezone - IANA timezone of the recipient (e.g., "America/Chicago"). Defaults to "UTC".
  * @param startHour - Earliest allowed hour (default 8)
  * @param endHour - Latest allowed hour (default 21 = 9 PM)
  * @returns true if currently in quiet hours (sending NOT allowed)
  */
 export function isQuietHours(
-  timezone: string,
+  recipientTimezone?: string,
   startHour: number = 8,
   endHour: number = 21
 ): boolean {
+  const timezone = recipientTimezone ?? "UTC";
   try {
-    const now = new Date();
-    const formatter = new Intl.DateTimeFormat("en-US", {
+    const recipientHourStr = new Date().toLocaleString("en-US", {
       timeZone: timezone,
       hour: "numeric",
       hour12: false,
     });
-    const currentHour = parseInt(formatter.format(now), 10);
+    const currentHour = parseInt(recipientHourStr, 10);
 
     // Quiet hours: before startHour or at/after endHour
     return currentHour < startHour || currentHour >= endHour;
