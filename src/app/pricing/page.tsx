@@ -43,7 +43,13 @@ import { BUNDLES, SERVICES, VERTICALS, formatPrice } from "@/lib/constants";
 import { staggerContainer, staggerItem } from "@/lib/animations";
 import { cn } from "@/lib/utils";
 import { trackPricingPageView } from "@/lib/tracking";
-import { trackBillingToggle, trackGetStartedClick } from "@/lib/analytics";
+import {
+  trackBillingToggle,
+  trackGetStartedClick,
+  trackPricingPlanSelected,
+  trackCtaClickConversion,
+} from "@/lib/analytics";
+import type { PricingPlan } from "@/lib/analytics";
 
 /* ---------------------------------------------------------------------------
  * Metadata (handled via Next.js head in layout — use generateMetadata for
@@ -535,6 +541,8 @@ export default function PricingPage() {
                                     bundle.id,
                                     annual ? "annual" : "monthly",
                                   );
+                                  trackPricingPlanSelected(bundle.id as PricingPlan);
+                                  trackCtaClickConversion("pricing");
                                 }}
                               >
                                 {CTA_COPY[bundle.id] || "Start My 14-Day Trial"}

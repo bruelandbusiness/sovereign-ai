@@ -5,6 +5,7 @@ import { BookingModal } from "@/components/home/BookingModal";
 import { VideoModal } from "@/components/shared/VideoModal";
 import { ExitIntentPopup } from "@/components/shared/ExitIntentPopup";
 import { trackEvent } from "@/lib/tracking";
+import { trackDemoVideoPlayed } from "@/lib/analytics";
 
 interface HomePageClientProps {
   demoVideoId?: string;
@@ -26,6 +27,7 @@ export function HomePageClient({ demoVideoId, children }: HomePageClientProps) {
   };
   const openVideo = () => {
     trackEvent("cta_click", { source: "homepage", page: "/", cta_type: "video" });
+    trackDemoVideoPlayed();
     setVideoOpen(true);
   };
 

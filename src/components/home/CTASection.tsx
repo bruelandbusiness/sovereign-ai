@@ -7,7 +7,7 @@ import { useInView } from "react-intersection-observer";
 import { cn } from "@/lib/utils";
 import { Container } from "@/components/layout/Container";
 import { GradientButton } from "@/components/shared/GradientButton";
-import { trackCTAClick } from "@/lib/analytics";
+import { trackCTAClick, trackCtaClickConversion } from "@/lib/analytics";
 
 interface CTASectionProps {
   onCtaClick?: () => void;
@@ -145,6 +145,7 @@ export function CTASection({ onCtaClick }: CTASectionProps) {
                 )}
                 onClick={() => {
                   trackCTAClick("Claim My Free Strategy Call Now", "homepage_cta");
+                  trackCtaClickConversion("cta_section");
                   onCtaClick?.();
                 }}
               >

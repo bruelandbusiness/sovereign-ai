@@ -11,6 +11,7 @@ import { Container } from "./Container";
 import { cn } from "@/lib/utils";
 import { useSession } from "@/lib/auth-context";
 import { NotificationBell } from "@/components/dashboard/NotificationBell";
+import { trackCtaClickConversion } from "@/lib/analytics";
 
 const navLinks = [
   { href: "/services", label: "Services" },
@@ -122,14 +123,20 @@ export function Header({
                 </Link>
                 {onCtaClick ? (
                   <Button
-                    onClick={onCtaClick}
+                    onClick={() => {
+                      trackCtaClickConversion("header");
+                      onCtaClick();
+                    }}
                     className="gradient-bg text-white hover:opacity-90"
                   >
                     {ctaLabel}
                   </Button>
                 ) : (
                   <Link href="/strategy-call">
-                    <Button className="gradient-bg text-white hover:opacity-90">
+                    <Button
+                      className="gradient-bg text-white hover:opacity-90"
+                      onClick={() => trackCtaClickConversion("header")}
+                    >
                       {ctaLabel}
                     </Button>
                   </Link>
@@ -211,6 +218,7 @@ export function Header({
                 {onCtaClick ? (
                   <Button
                     onClick={() => {
+                      trackCtaClickConversion("header");
                       closeMobileMenu();
                       onCtaClick();
                     }}
@@ -224,7 +232,10 @@ export function Header({
                     onClick={() => closeMobileMenu()}
                     className="mt-2 block"
                   >
-                    <Button className="w-full gradient-bg text-white btn-shine">
+                    <Button
+                      className="w-full gradient-bg text-white btn-shine"
+                      onClick={() => trackCtaClickConversion("header")}
+                    >
                       {ctaLabel}
                     </Button>
                   </Link>

@@ -10,6 +10,7 @@ import type {
   BusinessInfoData,
   DetailsAndAccessData,
 } from "@/types/onboarding";
+import { trackOnboardingStepNumber, trackCheckoutInitiated } from "@/lib/analytics";
 
 const STORAGE_KEY = "sovereign-onboarding-v2";
 
@@ -215,6 +216,8 @@ export function useOnboarding(): UseOnboardingReturn {
         [`step${step}`]: { ...prev[`step${step}` as keyof WizardFormData], ...data },
       }));
 
+      trackOnboardingStepNumber(step);
+
       if (step < TOTAL_STEPS) {
         setStep((prev) => (prev + 1) as OnboardingStep);
       } else {
@@ -274,6 +277,9 @@ export function useOnboarding(): UseOnboardingReturn {
 
       // If a checkout URL was returned, redirect to Stripe
       if (data.checkout_url) {
+        const bundleParam = searchParams.get("bundle") || "custom";
+        const price = data.price ?? 0;
+        trackCheckoutInitiated(bundleParam, price);
         window.location.href = data.checkout_url;
         return;
       }

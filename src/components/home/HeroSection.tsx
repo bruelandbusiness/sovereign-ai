@@ -14,7 +14,7 @@ import { motion, useMotionValue, useTransform, animate } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 import { Container } from "@/components/layout/Container";
 import { GradientButton } from "@/components/shared/GradientButton";
-import { trackCTAClick } from "@/lib/analytics";
+import { trackCTAClick, trackCtaClickConversion } from "@/lib/analytics";
 
 /* ------------------------------------------------------------------ */
 /*  Animated counter with framer-motion                                */
@@ -404,6 +404,7 @@ export function HeroSection({ onCtaClick, onDemoClick }: HeroSectionProps) {
                   className="group btn-shine cta-glow px-8 py-4 text-base sm:px-10 sm:text-lg w-full sm:w-auto"
                   onClick={() => {
                     trackCTAClick("Start Getting More Leads", "homepage_hero");
+                    trackCtaClickConversion("hero");
                     onCtaClick?.();
                   }}
                 >
@@ -421,6 +422,7 @@ export function HeroSection({ onCtaClick, onDemoClick }: HeroSectionProps) {
                   className="group gap-2 w-full sm:w-auto"
                   onClick={() => {
                     trackCTAClick("Watch 2-Min Demo", "homepage_hero");
+                    trackCtaClickConversion("hero");
                     onDemoClick?.();
                   }}
                 >
