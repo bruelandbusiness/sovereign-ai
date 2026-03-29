@@ -1,130 +1,179 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, X } from "lucide-react";
+import { X } from "lucide-react";
 
-interface ProofItem {
-  name: string;
-  city?: string;
-  action: string;
-}
-
-// No fallback items — only show real activity from the API
-
-// US cities used when real leads don't have a city
 const CITIES = [
-  "Phoenix, AZ", "Dallas, TX", "Atlanta, GA", "Denver, CO", "Miami, FL",
-  "Houston, TX", "Chicago, IL", "Nashville, TN", "Charlotte, NC",
-  "Portland, OR", "San Antonio, TX", "Tampa, FL", "Austin, TX",
-  "Orlando, FL", "San Diego, CA", "Columbus, OH",
+  "Austin",
+  "Phoenix",
+  "Denver",
+  "Atlanta",
+  "Nashville",
+  "Charlotte",
+  "Tampa",
+  "Dallas",
+  "Orlando",
+  "San Diego",
 ];
 
-function randomDelay(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min)) + min;
+const NAMES = [
+  "Mike",
+  "Sarah",
+  "David",
+  "Jennifer",
+  "Chris",
+  "Amanda",
+  "Brian",
+  "Lisa",
+  "Kevin",
+  "Rachel",
+];
+
+const TIME_AGO = [
+  "2 minutes ago",
+  "5 minutes ago",
+  "12 minutes ago",
+  "1 hour ago",
+  "3 hours ago",
+];
+
+const SESSION_KEY = "social-proof-dismissed";
+
+function pick<T>(arr: readonly T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function randomTimeAgo(): string {
-  const minutes = Math.floor(Math.random() * 12) + 1;
-  return `${minutes} min ago`;
+function buildMessage(): string {
+  const templates = [
+    () => `A plumber in ${pick(CITIES)} just signed up \u2014 ${pick(TIME_AGO)}`,
+    () =>
+      `${pick(NAMES)} from ${pick(CITIES)} booked a strategy call \u2014 ${pick(TIME_AGO)}`,
+    () =>
+      `An HVAC company just activated AI Lead Generation \u2014 ${pick(TIME_AGO)}`,
+    () =>
+      `${pick(NAMES)}\u2019s roofing business got 12 new leads this week`,
+    () =>
+      `A contractor in ${pick(CITIES)} just upgraded to the Empire Bundle \u2014 ${pick(TIME_AGO)}`,
+  ];
+  return pick(templates)();
+}
+
+function randomInterval(): number {
+  return 15000 + Math.random() * 5000;
+}
+
+/** Marketing pages only — excluded path prefixes. */
+const EXCLUDED_PREFIXES = ["/dashboard", "/admin", "/app", "/settings"];
+
+function isMarketingPage(pathname: string): boolean {
+  return !EXCLUDED_PREFIXES.some((p) => pathname.startsWith(p));
 }
 
 export function SocialProofToast() {
+  const pathname = usePathname();
   const [visible, setVisible] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [message, setMessage] = useState("");
   const [dismissed, setDismissed] = useState(false);
-  const [items, setItems] = useState<ProofItem[]>([]);
-  const fetched = useRef(false);
+  const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cycleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Fetch real data on mount — component stays hidden if no real activity exists
+  // Check sessionStorage on mount
   useEffect(() => {
-    if (fetched.current) return;
-    fetched.current = true;
-
-    fetch("/api/social-proof")
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.items && data.items.length >= 3) {
-          setItems(
-            data.items.map((item: { name: string; city?: string; action: string }) => ({
-              name: item.name,
-              city: item.city || CITIES[Math.floor(Math.random() * CITIES.length)],
-              action: item.action,
-            }))
-          );
-        }
-      })
-      .catch(() => {
-        // No real data — component stays hidden
-      });
+    try {
+      if (sessionStorage.getItem(SESSION_KEY) === "true") {
+        setDismissed(true);
+      }
+    } catch {
+      // sessionStorage may be unavailable
+    }
   }, []);
 
-  const showNext = useCallback(() => {
-    if (dismissed || items.length === 0) return;
-    setCurrentIndex((prev) => (prev + 1) % items.length);
+  const showToast = useCallback(() => {
+    setMessage(buildMessage());
     setVisible(true);
 
-    // Auto-hide after 4 seconds
-    setTimeout(() => setVisible(false), 4000);
-  }, [dismissed, items.length]);
+    // Auto-dismiss after 5 seconds
+    hideTimerRef.current = setTimeout(() => {
+      setVisible(false);
+    }, 5000);
+  }, []);
 
+  const scheduleCycle = useCallback(() => {
+    cycleTimerRef.current = setTimeout(() => {
+      showToast();
+    }, randomInterval());
+  }, [showToast]);
+
+  // When a toast hides, schedule the next one
   useEffect(() => {
-    // Don't show on dashboard pages
-    if (typeof window !== "undefined" && window.location.pathname.startsWith("/dashboard")) {
-      return;
+    if (!visible && !dismissed && isMarketingPage(pathname)) {
+      scheduleCycle();
     }
+    return () => {
+      if (cycleTimerRef.current) clearTimeout(cycleTimerRef.current);
+    };
+  }, [visible, dismissed, pathname, scheduleCycle]);
 
-    // First toast after 8-15s delay
-    const initialDelay = setTimeout(() => {
-      showNext();
-    }, randomDelay(8000, 15000));
-
-    return () => clearTimeout(initialDelay);
-  }, [showNext]);
-
-  // Schedule next toast after current one hides
+  // Initial delay of 8 seconds
   useEffect(() => {
-    if (visible || dismissed) return;
+    if (dismissed || !isMarketingPage(pathname)) return;
 
-    const nextDelay = setTimeout(() => {
-      showNext();
-    }, randomDelay(20000, 45000));
+    const initialTimer = setTimeout(() => {
+      showToast();
+    }, 8000);
 
-    return () => clearTimeout(nextDelay);
-  }, [visible, dismissed, showNext]);
+    return () => clearTimeout(initialTimer);
+    // Only run on mount / pathname change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname, dismissed]);
 
-  if (items.length === 0) return null;
+  // Cleanup hide timer
+  useEffect(() => {
+    return () => {
+      if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+    };
+  }, []);
 
-  const item = items[currentIndex];
+  const handleDismiss = useCallback(() => {
+    setDismissed(true);
+    setVisible(false);
+    try {
+      sessionStorage.setItem(SESSION_KEY, "true");
+    } catch {
+      // sessionStorage may be unavailable
+    }
+  }, []);
+
+  if (dismissed || !isMarketingPage(pathname)) return null;
 
   return (
     <AnimatePresence>
-      {visible && !dismissed && item && (
+      {visible && (
         <motion.div
-          initial={{ opacity: 0, x: -80, y: 20 }}
-          animate={{ opacity: 1, x: 0, y: 0 }}
-          exit={{ opacity: 0, x: -80 }}
-          transition={{ type: "spring", stiffness: 300, damping: 25 }}
-          className="fixed bottom-6 left-6 z-40 max-w-xs rounded-xl border border-border/60 bg-background/95 p-4 shadow-lg backdrop-blur-sm"
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 24 }}
+          transition={{ type: "spring", stiffness: 350, damping: 30 }}
+          className="fixed bottom-6 left-6 z-50 max-w-xs rounded-lg border bg-card p-4 shadow-lg"
           role="status"
           aria-live="polite"
         >
           <div className="flex items-start gap-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent/15">
-              <CheckCircle2 className="h-4 w-4 text-accent" aria-hidden="true" />
-            </div>
-            <div className="min-w-0">
-              <p className="text-sm font-medium">
-                {item.name}{item.city ? ` from ${item.city}` : ""}
-              </p>
-              <p className="text-xs text-muted-foreground">{item.action}</p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                {randomTimeAgo()}
-              </p>
-            </div>
+            {/* Pulsing green dot */}
+            <span className="relative mt-1 flex h-2.5 w-2.5 shrink-0">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500" />
+            </span>
+
+            <p className="min-w-0 flex-1 text-sm leading-snug">
+              {message}
+            </p>
+
             <button
-              onClick={() => setDismissed(true)}
-              className="shrink-0 rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              onClick={handleDismiss}
+              className="shrink-0 rounded-md p-0.5 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               aria-label="Dismiss notification"
             >
               <X className="h-3.5 w-3.5" />
