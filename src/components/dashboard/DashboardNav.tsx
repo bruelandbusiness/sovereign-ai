@@ -57,6 +57,8 @@ interface NavItem {
   badge?: string;
   /** Key used to look up a dynamic count from the badge-counts map */
   badgeCountKey?: "leads" | "inbox" | "notifications" | "quotes";
+  /** Onboarding tour data attribute (e.g. "step-2") */
+  dataTour?: string;
 }
 
 interface NavSection {
@@ -158,7 +160,7 @@ const sections: NavSection[] = [
   {
     title: "Services",
     items: [
-      { href: "/dashboard/services", label: "All Services", icon: Zap },
+      { href: "/dashboard/services", label: "All Services", icon: Zap, dataTour: "step-2" },
       {
         href: "/dashboard/services/social-proof",
         label: "Social Proof",
@@ -176,6 +178,7 @@ const sections: NavSection[] = [
         icon: Users,
         serviceId: "crm",
         badgeCountKey: "leads",
+        dataTour: "step-3",
       },
       {
         href: "/dashboard/inbox",
@@ -208,7 +211,7 @@ const sections: NavSection[] = [
         badge: "New",
       },
       { href: "/dashboard/benchmarks", label: "Benchmarks", icon: LineChart },
-      { href: "/dashboard/reports", label: "Reports", icon: ClipboardList },
+      { href: "/dashboard/reports", label: "Reports", icon: ClipboardList, dataTour: "step-4" },
       { href: "/dashboard/ltv", label: "Customer LTV", icon: DollarSign },
       { href: "/dashboard/qbr", label: "QBR Reports", icon: FileText },
     ],
@@ -247,7 +250,7 @@ const sections: NavSection[] = [
     title: "System",
     items: [
       { href: "/dashboard/webhooks", label: "Webhooks", icon: Webhook },
-      { href: "/dashboard/support", label: "Support", icon: Headphones },
+      { href: "/dashboard/support", label: "Support", icon: Headphones, dataTour: "step-5" },
       { href: "/help", label: "Help Center", icon: HelpCircle },
       {
         href: "/dashboard/settings/account",
@@ -740,6 +743,7 @@ export function DashboardNav() {
                           href={item.href}
                           onClick={() => setOpen(false)}
                           aria-current={isActive ? "page" : undefined}
+                          data-tour={item.dataTour}
                           className={cn(
                             "group relative flex items-center gap-2.5 rounded-lg px-2.5 py-2.5 min-h-[44px] text-sm transition-all duration-150",
                             isActive

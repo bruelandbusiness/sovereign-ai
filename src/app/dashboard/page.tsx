@@ -22,6 +22,7 @@ import { QuickActionsBar } from "@/components/dashboard/QuickActionsBar";
 import { GoalProgress } from "@/components/dashboard/GoalProgress";
 import { HealthScore } from "@/components/dashboard/HealthScore";
 import { DashboardTour, TakeTourButton } from "@/components/dashboard/DashboardTour";
+import { OnboardingTour } from "@/components/dashboard/OnboardingTour";
 import { useDashboard } from "@/hooks/useDashboard";
 
 // Lazy-load chart panels (recharts is a large dependency)
@@ -209,7 +210,7 @@ export default function DashboardPage() {
                 <Tooltip>
                   <TooltipTrigger
                     render={
-                      <Link href="/dashboard/support" data-tour-step="support">
+                      <Link href="/dashboard/support" data-tour-step="support" data-tour="step-5">
                         <Button variant="ghost" size="icon">
                           <Headphones className="h-4 w-4" />
                           <span className="sr-only">Support</span>
@@ -328,7 +329,7 @@ export default function DashboardPage() {
                 {/* Overview Tab */}
                 <TabsContent value="overview">
                   <div className="space-y-8">
-                    <div data-tour-step="kpis">
+                    <div data-tour-step="kpis" data-tour="step-1">
                       <KPIGrid
                         kpis={kpis}
                         isLoading={kpisLoading}
@@ -338,7 +339,7 @@ export default function DashboardPage() {
                     </div>
 
                     {/* Charts — trends + source breakdown */}
-                    <div data-tour-step="reports">
+                    <div data-tour-step="reports" data-tour="step-4">
                       <DashboardCharts
                         leads={leads}
                         kpis={kpis}
@@ -347,7 +348,7 @@ export default function DashboardPage() {
                     </div>
 
                     <div className="grid gap-6 lg:grid-cols-2">
-                      <div data-tour-step="leads">
+                      <div data-tour-step="leads" data-tour="step-3">
                         <LeadTable
                           leads={leads}
                           maxHeight="380px"
@@ -638,7 +639,7 @@ export default function DashboardPage() {
 
             {/* Sidebar — desktop: fixed column, mobile: stacked below tabs */}
             <aside className="space-y-6" role="complementary" aria-label="Account summary">
-              <div data-tour-step="services">
+              <div data-tour-step="services" data-tour="step-2">
                 <ActiveServicesCard serviceIds={activeServiceIds} />
               </div>
               <SubscriptionCard subscription={subscription} />
@@ -672,6 +673,7 @@ export default function DashboardPage() {
       <KeyboardShortcutsModal open={showHelp} onClose={() => setShowHelp(false)} />
       <CommandPalette open={showCommandPalette} onClose={() => setShowCommandPalette(false)} />
       <DashboardTour />
+      <OnboardingTour />
     </div>
   );
 }
