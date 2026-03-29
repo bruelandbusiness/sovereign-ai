@@ -85,7 +85,9 @@
     { "path": "/api/cron/outreach-send", "schedule": "*/15 9-17 * * 1-5" },
     { "path": "/api/cron/outreach-enqueue", "schedule": "45 7 * * *" },
     { "path": "/api/cron/prospect-to-campaign", "schedule": "30 7 * * *" },
-    { "path": "/api/cron/abandoned-cart", "schedule": "0 */4 * * *" }
+    { "path": "/api/cron/abandoned-cart", "schedule": "0 */4 * * *" },
+    { "path": "/api/cron/welcome-drip", "schedule": "0 */6 * * *" },
+    { "path": "/api/cron/re-engagement", "schedule": "0 0 * * *" }
   ],
   "headers": [
     {
