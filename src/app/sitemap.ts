@@ -10,7 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: baseUrl,
       lastModified: now,
-      changeFrequency: "weekly",
+      changeFrequency: "daily",
       priority: 1,
     },
     {
@@ -32,6 +32,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
+      url: `${baseUrl}/contact`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
       url: `${baseUrl}/faq`,
       lastModified: now,
       changeFrequency: "monthly",
@@ -39,6 +45,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${baseUrl}/support`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/help`,
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.6,
@@ -208,13 +220,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.6,
     },
-    // Additional public pages
     {
-      url: `${baseUrl}/contact`,
+      url: `${baseUrl}/vs/servicetitan`,
       lastModified: now,
       changeFrequency: "monthly",
-      priority: 0.7,
+      priority: 0.6,
     },
+    {
+      url: `${baseUrl}/vs/jobber`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/vs/housecall-pro`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    // Additional public pages
     {
       url: `${baseUrl}/estimate`,
       lastModified: now,
@@ -239,6 +263,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.7,
     },
+    {
+      url: `${baseUrl}/partner`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/search`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/status`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.5,
+    },
     // Static blog posts
     {
       url: `${baseUrl}/blog/ai-transforming-home-service-marketing-2026`,
@@ -260,6 +302,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${baseUrl}/blog/ai-marketing-cost-home-service-businesses-2026`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/blog/ai-marketing-cost-home-service-businesses`,
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.7,
@@ -318,13 +366,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.7,
     },
-    // Onboarding & signup
     {
-      url: `${baseUrl}/onboarding`,
+      url: `${baseUrl}/blog/hvac-company-6-to-52-leads-case-study`,
       lastModified: now,
       changeFrequency: "monthly",
-      priority: 0.8,
+      priority: 0.7,
     },
+    // Signup
     {
       url: `${baseUrl}/signup`,
       lastModified: now,
@@ -338,17 +386,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.6,
     },
-    {
-      url: `${baseUrl}/agency`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
     // Knowledge & resources
     {
       url: `${baseUrl}/knowledge`,
       lastModified: now,
       changeFrequency: "weekly",
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/knowledge/tutorials`,
+      lastModified: now,
+      changeFrequency: "monthly",
       priority: 0.6,
     },
     // Legal & misc
@@ -366,6 +414,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${baseUrl}/legal`,
+      lastModified: now,
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/cookies`,
       lastModified: now,
       changeFrequency: "yearly",
       priority: 0.3,

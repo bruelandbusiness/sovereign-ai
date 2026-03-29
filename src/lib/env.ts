@@ -281,6 +281,26 @@ export const env = {
   NEXT_PUBLIC_DEMO_VIDEO_ID: integrationVar("NEXT_PUBLIC_DEMO_VIDEO_ID"),
   NEXT_PUBLIC_API_URL: optionalVar("NEXT_PUBLIC_API_URL"),
 
+  // ── PostHog Analytics ──────────────────────────────────────
+  NEXT_PUBLIC_POSTHOG_KEY: integrationVar("NEXT_PUBLIC_POSTHOG_KEY"),
+  NEXT_PUBLIC_POSTHOG_HOST: integrationVar("NEXT_PUBLIC_POSTHOG_HOST"),
+
+  // ── Contact ────────────────────────────────────────────────
+  CONTACT_FORM_RECIPIENT: optionalVar("CONTACT_FORM_RECIPIENT", "hello@trysovereignai.com"),
+
+  // ── Claude model overrides (defaults in each module) ───────
+  CLAUDE_ACQUISITION_MODEL: optionalVar("CLAUDE_ACQUISITION_MODEL"),
+  CLAUDE_AEO_MODEL: optionalVar("CLAUDE_AEO_MODEL"),
+  CLAUDE_AGENT_MODEL: optionalVar("CLAUDE_AGENT_MODEL"),
+  CLAUDE_CLASSIFIER_MODEL: optionalVar("CLAUDE_CLASSIFIER_MODEL"),
+  CLAUDE_DISCOVERY_MODEL: optionalVar("CLAUDE_DISCOVERY_MODEL"),
+  CLAUDE_OUTREACH_MODEL: optionalVar("CLAUDE_OUTREACH_MODEL"),
+  CLAUDE_PROPOSAL_MODEL: optionalVar("CLAUDE_PROPOSAL_MODEL"),
+  CLAUDE_REPORT_MODEL: optionalVar("CLAUDE_REPORT_MODEL"),
+  CLAUDE_REPUTATION_MODEL: optionalVar("CLAUDE_REPUTATION_MODEL"),
+  CLAUDE_REVIEW_MODEL: optionalVar("CLAUDE_REVIEW_MODEL"),
+  CLAUDE_VOICE_MODEL: optionalVar("CLAUDE_VOICE_MODEL"),
+
   // ── Convenience ─────────────────────────────────────────────
   NODE_ENV: process.env.NODE_ENV || "development",
   isProduction,

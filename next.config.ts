@@ -100,8 +100,8 @@ const nextConfig: NextConfig = {
 
 export default withSentryConfig(withBundleAnalyzer(nextConfig), {
   /* ── Sentry build plugin options ─────────────────────────────────────── */
-  // Suppress Sentry CLI output during builds.
-  silent: true,
+  // Suppress Sentry CLI output during builds (show in CI for diagnostics).
+  silent: !process.env.CI,
 
   // Upload wider set of client source maps for better stack traces.
   widenClientFileUpload: true,
@@ -109,4 +109,12 @@ export default withSentryConfig(withBundleAnalyzer(nextConfig), {
   // Keep the server-side Webpack plugin enabled for automatic
   // error boundaries and performance tracing.
   disableServerWebpackPlugin: false,
+
+  // Hide source maps from the browser — they are uploaded to Sentry for
+  // stack-trace deobfuscation but not served to end users.
+  hideSourceMaps: true,
+
+  // Source-map upload requires SENTRY_AUTH_TOKEN, SENTRY_ORG, and
+  // SENTRY_PROJECT environment variables to be set at build time.
+  // The Sentry webpack plugin reads these automatically.
 });
