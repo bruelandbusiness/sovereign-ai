@@ -6,86 +6,81 @@ const DashboardLoadingSkeleton = () => (
   <div className="animate-pulse h-96 bg-muted rounded-lg" />
 );
 
-const dynamicOpts = {
-  ssr: false as const,
-  loading: DashboardLoadingSkeleton,
-};
-
 const ChatbotDashboard = dynamic(
   () => import("./ChatbotDashboard").then((m) => m.ChatbotDashboard),
-  dynamicOpts,
+  { ssr: false, loading: DashboardLoadingSkeleton },
 );
 const ReviewDashboard = dynamic(
   () => import("./ReviewDashboard").then((m) => m.ReviewDashboard),
-  dynamicOpts,
+  { ssr: false, loading: DashboardLoadingSkeleton },
 );
 const ContentDashboard = dynamic(
   () => import("./ContentDashboard").then((m) => m.ContentDashboard),
-  dynamicOpts,
+  { ssr: false, loading: DashboardLoadingSkeleton },
 );
 const EmailDashboard = dynamic(
   () => import("./EmailDashboard").then((m) => m.EmailDashboard),
-  dynamicOpts,
+  { ssr: false, loading: DashboardLoadingSkeleton },
 );
 const BookingDashboard = dynamic(
   () => import("./BookingDashboard").then((m) => m.BookingDashboard),
-  dynamicOpts,
+  { ssr: false, loading: DashboardLoadingSkeleton },
 );
 const AdsDashboard = dynamic(
   () => import("./AdsDashboard").then((m) => m.AdsDashboard),
-  dynamicOpts,
+  { ssr: false, loading: DashboardLoadingSkeleton },
 );
 const SEODashboard = dynamic(
   () => import("./SEODashboard").then((m) => m.SEODashboard),
-  dynamicOpts,
+  { ssr: false, loading: DashboardLoadingSkeleton },
 );
 const SocialDashboard = dynamic(
   () => import("./SocialDashboard").then((m) => m.SocialDashboard),
-  dynamicOpts,
+  { ssr: false, loading: DashboardLoadingSkeleton },
 );
 const AnalyticsDashboard = dynamic(
   () => import("./AnalyticsDashboard").then((m) => m.AnalyticsDashboard),
-  dynamicOpts,
+  { ssr: false, loading: DashboardLoadingSkeleton },
 );
 const ReputationDashboard = dynamic(
   () => import("./ReputationDashboard").then((m) => m.ReputationDashboard),
-  dynamicOpts,
+  { ssr: false, loading: DashboardLoadingSkeleton },
 );
 const RetargetingDashboard = dynamic(
   () => import("./RetargetingDashboard").then((m) => m.RetargetingDashboard),
-  dynamicOpts,
+  { ssr: false, loading: DashboardLoadingSkeleton },
 );
 const ReceptionistDashboard = dynamic(
   () => import("./ReceptionistDashboard").then((m) => m.ReceptionistDashboard),
-  dynamicOpts,
+  { ssr: false, loading: DashboardLoadingSkeleton },
 );
 const GBPDashboard = dynamic(
   () => import("./GBPDashboard").then((m) => m.GBPDashboard),
-  dynamicOpts,
+  { ssr: false, loading: DashboardLoadingSkeleton },
 );
 const FSMDashboard = dynamic(
   () => import("./FSMDashboard").then((m) => m.FSMDashboard),
-  dynamicOpts,
+  { ssr: false, loading: DashboardLoadingSkeleton },
 );
 const ReferralProgramDashboard = dynamic(
   () => import("./ReferralProgramDashboard").then((m) => m.ReferralProgramDashboard),
-  dynamicOpts,
+  { ssr: false, loading: DashboardLoadingSkeleton },
 );
 const EstimateDashboard = dynamic(
   () => import("./EstimateDashboard").then((m) => m.EstimateDashboard),
-  dynamicOpts,
+  { ssr: false, loading: DashboardLoadingSkeleton },
 );
 const AEODashboard = dynamic(
   () => import("./AEODashboard").then((m) => m.AEODashboard),
-  dynamicOpts,
+  { ssr: false, loading: DashboardLoadingSkeleton },
 );
 const LTVDashboard = dynamic(
   () => import("./LTVDashboard").then((m) => m.LTVDashboard),
-  dynamicOpts,
+  { ssr: false, loading: DashboardLoadingSkeleton },
 );
 const ManagedServiceDashboard = dynamic(
   () => import("./ManagedServiceDashboard").then((m) => m.ManagedServiceDashboard),
-  dynamicOpts,
+  { ssr: false, loading: DashboardLoadingSkeleton },
 );
 
 /**
