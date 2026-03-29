@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { withSentryConfig } = require("@sentry/nextjs");
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true",
+});
 
 const nextConfig: NextConfig = {
   /* ── External packages for server-side bundling ──────────────────────── */
@@ -94,7 +98,7 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withSentryConfig(nextConfig, {
+export default withSentryConfig(withBundleAnalyzer(nextConfig), {
   /* ── Sentry build plugin options ─────────────────────────────────────── */
   // Suppress Sentry CLI output during builds.
   silent: true,

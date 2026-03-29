@@ -1753,6 +1753,7 @@ model AffiliateReferral {
   client    Client?          @relation(fields: [clientId], references: [id], onDelete: SetNull)
 
   @@index([affiliateId])
+  @@index([clientId])
 }
 
 model AffiliatePayout {

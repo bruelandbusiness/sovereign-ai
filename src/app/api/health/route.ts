@@ -136,7 +136,12 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  return NextResponse.json(body, { status: httpStatus });
+  return NextResponse.json(body, {
+    status: httpStatus,
+    headers: {
+      "Cache-Control": "public, s-maxage=30, stale-while-revalidate=10",
+    },
+  });
 }
 
 /** Run an async check, capture its result and elapsed time. */
