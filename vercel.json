@@ -94,7 +94,8 @@
     { "path": "/api/cron/re-engagement", "schedule": "0 0 * * *" },
     { "path": "/api/cron/quote-expiry", "schedule": "0 2 * * *" },
     { "path": "/api/cron/booking-noshow", "schedule": "*/30 * * * *" },
-    { "path": "/api/cron/backup-verify", "schedule": "0 3 * * *" }
+    { "path": "/api/cron/backup-verify", "schedule": "0 3 * * *" },
+    { "path": "/api/cron/data-retention", "schedule": "0 4 * * 0" }
   ],
   "headers": [
     {
