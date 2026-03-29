@@ -314,8 +314,13 @@ function CountBadge({ count }: { count: number }) {
   if (count <= 0) return null;
   const label = count > 99 ? "99+" : String(count);
   return (
-    <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-primary/15 px-1.5 text-[10px] font-semibold tabular-nums text-primary ring-1 ring-primary/20 transition-transform">
-      {label}
+    <span
+      aria-live="polite"
+      aria-atomic="true"
+      className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-primary/15 px-1.5 text-[10px] font-semibold tabular-nums text-primary ring-1 ring-primary/20 transition-transform"
+    >
+      <span className="sr-only">{count} new</span>
+      <span aria-hidden="true">{label}</span>
     </span>
   );
 }
@@ -332,8 +337,13 @@ function LabelBadge({ label }: { label: string }) {
 function MobileBadgeDot({ count }: { count: number }) {
   if (count <= 0) return null;
   return (
-    <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-bold text-primary-foreground">
-      {count > 99 ? "99+" : count}
+    <span
+      aria-live="polite"
+      aria-atomic="true"
+      className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-bold text-primary-foreground"
+    >
+      <span className="sr-only">{count} new</span>
+      <span aria-hidden="true">{count > 99 ? "99+" : count}</span>
     </span>
   );
 }
@@ -386,7 +396,7 @@ function UserProfileFooter({
           <span className="font-medium text-foreground/80 transition-colors group-hover:text-foreground">
             {planLabel}
           </span>
-          <span className="ml-auto text-[10px] text-muted-foreground/60 transition-colors group-hover:text-muted-foreground">
+          <span className="ml-auto text-[10px] text-muted-foreground transition-colors group-hover:text-foreground">
             Manage
           </span>
         </Link>
@@ -402,7 +412,7 @@ function UserProfileFooter({
             {displayName}
           </p>
           {profile?.businessName && (
-            <p className="truncate text-[11px] leading-tight text-muted-foreground/60">
+            <p className="truncate text-[11px] leading-tight text-muted-foreground">
               {profile.businessName}
             </p>
           )}
@@ -410,7 +420,7 @@ function UserProfileFooter({
         <Link
           href="/dashboard/settings/account"
           onClick={onClose}
-          className="flex h-11 w-11 items-center justify-center rounded-md text-muted-foreground/50 transition-colors hover:bg-muted hover:text-foreground"
+          className="flex h-11 w-11 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           aria-label="Account settings"
         >
           <LogOut className="h-4 w-4" />
@@ -436,7 +446,7 @@ function WhatsNewBanner({ onClose }: { onClose: () => void }) {
       </div>
       <div className="min-w-0 flex-1">
         <p className="text-xs font-semibold text-foreground/90">What&apos;s New</p>
-        <p className="truncate text-[10px] text-muted-foreground/70">
+        <p className="truncate text-[10px] text-muted-foreground">
           AEO Insights now available
         </p>
       </div>
@@ -635,6 +645,8 @@ export function DashboardNav() {
         <div
           className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm transition-opacity"
           onClick={closeNav}
+          role="presentation"
+          aria-hidden="true"
         />
       )}
 

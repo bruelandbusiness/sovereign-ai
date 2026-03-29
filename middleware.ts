@@ -27,16 +27,25 @@ const CSP_HEADER = [
 
 export function middleware(request: NextRequest) {
   try {
+    // ── Request ID tracking ───────────────────────────────────────────────
+    const requestId =
+      request.headers.get("x-request-id") || crypto.randomUUID();
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-request-id", requestId);
+
     const { pathname } = request.nextUrl;
 
     // ── Body size check (API routes only) ─────────────────────────────────
     if (pathname.startsWith("/api/")) {
       const contentLength = request.headers.get("content-length");
       if (contentLength && parseInt(contentLength, 10) > MAX_BODY_SIZE) {
-        return NextResponse.json(
+        const errorResponse = NextResponse.json(
           { error: "Request body too large. Maximum size is 1MB." },
           { status: 413 }
         );
+        errorResponse.headers.set("x-request-id", requestId);
+        errorResponse.headers.set("x-request-start", Date.now().toString());
+        return errorResponse;
       }
     }
 
@@ -56,10 +65,13 @@ export function middleware(request: NextRequest) {
     ) {
       const csrfError = validateOrigin(request);
       if (csrfError) {
-        return NextResponse.json(
+        const csrfResponse = NextResponse.json(
           { error: "CSRF validation failed", detail: csrfError },
           { status: 403 }
         );
+        csrfResponse.headers.set("x-request-id", requestId);
+        csrfResponse.headers.set("x-request-start", Date.now().toString());
+        return csrfResponse;
       }
     }
 
@@ -77,24 +89,41 @@ export function middleware(request: NextRequest) {
           accept.includes("application/json") &&
           !accept.includes("text/html")
         ) {
-          return NextResponse.json(
+          const authResponse = NextResponse.json(
             { error: "Authentication required" },
             { status: 401 }
           );
+          authResponse.headers.set("x-request-id", requestId);
+          authResponse.headers.set("x-request-start", Date.now().toString());
+          return authResponse;
         }
 
         const loginUrl = new URL("/login", request.url);
         loginUrl.searchParams.set("redirect", pathname);
-        return NextResponse.redirect(loginUrl);
+        const loginRedirect = NextResponse.redirect(loginUrl);
+        loginRedirect.headers.set("x-request-id", requestId);
+        loginRedirect.headers.set("x-request-start", Date.now().toString());
+        return loginRedirect;
       }
     }
 
     // Redirect logged-in users away from login
     if (pathname.startsWith("/login") && sessionToken) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
+      const dashboardRedirect = NextResponse.redirect(
+        new URL("/dashboard", request.url)
+      );
+      dashboardRedirect.headers.set("x-request-id", requestId);
+      dashboardRedirect.headers.set("x-request-start", Date.now().toString());
+      return dashboardRedirect;
     }
 
-    const response = NextResponse.next();
+    const response = NextResponse.next({
+      request: { headers: requestHeaders },
+    });
+
+    // ── Request tracking headers ──────────────────────────────────────────
+    response.headers.set("x-request-id", requestId);
+    response.headers.set("x-request-start", Date.now().toString());
 
     // ── Embed-facing API routes ───────────────────────────────────────────
     // Must not carry restrictive CORP/COOP/X-Frame-Options headers.

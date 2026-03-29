@@ -32,7 +32,7 @@ export default function DashboardLayout({
       <MobilePullIndicator />
       <DashboardNav />
       <Breadcrumbs />
-      <main id="main-content" tabIndex={-1}>{children}</main>
+      <main id="main-content" role="main" tabIndex={-1}>{children}</main>
     </NuqsAdapter>
   );
 }

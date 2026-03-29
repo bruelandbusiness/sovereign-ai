@@ -1,0 +1,47 @@
+{
+  "name": "Sovereign AI — AI-Powered Marketing for Local Businesses",
+  "short_name": "Sovereign AI",
+  "description": "Done-for-you AI marketing for HVAC, plumbing, roofing, and home service businesses. 16 AI services generating leads 24/7.",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "theme_color": "#4c85ff",
+  "background_color": "#0a0a0a",
+  "orientation": "any",
+  "scope": "/",
+  "categories": ["business", "marketing", "productivity"],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/opengraph-image",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Sovereign AI Dashboard"
+    }
+  ]
+}

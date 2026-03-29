@@ -70,7 +70,7 @@ export function DashboardHeader({ profile }: DashboardHeaderProps) {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                   <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-400" />
                 </span>
-                <span className="text-xs font-medium text-emerald-400">All systems active</span>
+                <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400">All systems active</span>
               </span>
               <span className="flex items-center gap-1 text-xs text-muted-foreground">
                 <Clock className="h-3 w-3" aria-hidden="true" />

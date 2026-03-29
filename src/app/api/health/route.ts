@@ -1,19 +1,149 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { rateLimitByIP } from "@/lib/rate-limit";
+import { getRedisClient } from "@/lib/redis";
 import { getAllCircuitBreakerStatus } from "@/lib/circuit-breaker";
 import { logger } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
-interface CheckResult {
-  status: "ok" | "error" | "timeout";
-  responseTimeMs: number;
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+type ServiceStatus = "up" | "down" | "configured" | "unconfigured" | "timeout";
+
+interface ServiceCheck {
+  status: ServiceStatus;
+  latencyMs?: number;
   message?: string;
+}
+
+interface HealthChecks {
+  database: ServiceCheck;
+  redis: ServiceCheck;
+  stripe: ServiceCheck;
+  sendgrid: ServiceCheck;
+  twilio: ServiceCheck;
   [key: string]: unknown;
 }
 
-const DB_TIMEOUT_MS = 2000;
+type OverallStatus = "healthy" | "degraded" | "unhealthy";
+
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
+
+const DB_TIMEOUT_MS = 5_000;
+
+/** Read version once at module load to avoid repeated fs access. */
+function getAppVersion(): string {
+  if (process.env.BUILD_ID) {
+    return process.env.BUILD_ID;
+  }
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const pkg = require("../../../../package.json") as { version?: string };
+    return pkg.version ?? "unknown";
+  } catch {
+    return process.env.npm_package_version ?? "unknown";
+  }
+}
+
+const APP_VERSION = getAppVersion();
+
+// ---------------------------------------------------------------------------
+// Individual checks
+// ---------------------------------------------------------------------------
+
+async function checkDatabase(): Promise<ServiceCheck> {
+  const start = performance.now();
+  try {
+    await Promise.race([
+      prisma.$queryRaw`SELECT 1`,
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("TIMEOUT")), DB_TIMEOUT_MS),
+      ),
+    ]);
+    return {
+      status: "up",
+      latencyMs: Math.round(performance.now() - start),
+    };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    return {
+      status: message === "TIMEOUT" ? "timeout" : "down",
+      latencyMs: Math.round(performance.now() - start),
+      message,
+    };
+  }
+}
+
+async function checkRedis(): Promise<ServiceCheck> {
+  const redis = getRedisClient();
+  if (!redis) {
+    return { status: "unconfigured" };
+  }
+  const start = performance.now();
+  try {
+    await Promise.race([
+      redis.ping(),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("TIMEOUT")), 3_000),
+      ),
+    ]);
+    return {
+      status: "up",
+      latencyMs: Math.round(performance.now() - start),
+    };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    return {
+      status: "down",
+      latencyMs: Math.round(performance.now() - start),
+      message,
+    };
+  }
+}
+
+function checkEnvConfigured(
+  ...envVars: string[]
+): ServiceCheck {
+  const allSet = envVars.every((v) => {
+    const val = process.env[v];
+    return val && val !== "sk_placeholder_for_build";
+  });
+  return { status: allSet ? "configured" : "unconfigured" };
+}
+
+// ---------------------------------------------------------------------------
+// Derive overall status
+// ---------------------------------------------------------------------------
+
+function deriveOverallStatus(checks: HealthChecks): OverallStatus {
+  const dbOk = checks.database.status === "up";
+
+  if (!dbOk) {
+    return "unhealthy";
+  }
+
+  // Non-critical services: redis, stripe, sendgrid, twilio
+  const nonCritical = [
+    checks.redis,
+    checks.stripe,
+    checks.sendgrid,
+    checks.twilio,
+  ];
+  const anyDown = nonCritical.some(
+    (c) => c.status === "down" || c.status === "timeout",
+  );
+
+  return anyDown ? "degraded" : "healthy";
+}
+
+// ---------------------------------------------------------------------------
+// Route handler
+// ---------------------------------------------------------------------------
 
 /**
  * GET /api/health
@@ -23,115 +153,71 @@ const DB_TIMEOUT_MS = 2000;
  * the whole endpoint.
  */
 export async function GET(request: NextRequest) {
-  // Rate limit: 60 requests per hour per IP (allows frequent monitoring but prevents abuse)
-  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  // Rate limit: 60 requests per hour per IP
+  const ip =
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
   const { allowed } = await rateLimitByIP(ip, "health-check", 60);
   if (!allowed) {
     return NextResponse.json(
       { error: "Too many requests" },
-      { status: 429 }
+      { status: 429 },
     );
   }
 
-  const checks: Record<string, CheckResult | Record<string, unknown>> = {};
-  const appVersion = process.env.npm_package_version ?? "unknown";
+  // Run async checks in parallel for speed
+  const [database, redis] = await Promise.all([
+    checkDatabase(),
+    checkRedis(),
+  ]);
 
-  // 1. Database connection (with timeout)
-  checks.database = await timedCheck(async () => {
-    const result = await Promise.race([
-      prisma.$queryRaw`SELECT 1 as ok`,
-      new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("TIMEOUT")), DB_TIMEOUT_MS),
-      ),
-    ]);
-    if (!result) throw new Error("No result from database");
-  });
+  // Synchronous env-var checks
+  const stripe = checkEnvConfigured("STRIPE_SECRET_KEY");
+  const sendgrid = checkEnvConfigured("SENDGRID_API_KEY");
+  const twilio = checkEnvConfigured("TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN");
 
-  // 2. Stripe configured
-  checks.stripe = await timedCheck(async () => {
-    const key = process.env.STRIPE_SECRET_KEY;
-    if (!key || key === "sk_placeholder_for_build") {
-      throw new Error("STRIPE_SECRET_KEY is not configured");
-    }
-  });
-
-  // 3. SendGrid configured
-  checks.sendgrid = await timedCheck(async () => {
-    const key = process.env.SENDGRID_API_KEY;
-    if (!key) {
-      throw new Error("SENDGRID_API_KEY is not configured");
-    }
-  });
-
-  // 4. Memory usage
-  const mem = process.memoryUsage();
-  checks.memory = {
-    status: "ok",
-    responseTimeMs: 0,
-    heapUsedMB: Math.round(mem.heapUsed / 1024 / 1024),
-    rssMB: Math.round(mem.rss / 1024 / 1024),
+  const checks: HealthChecks = {
+    database,
+    redis,
+    stripe,
+    sendgrid,
+    twilio,
   };
 
-  // 5. Uptime
-  const uptimeSec = Math.round(process.uptime());
-  const hours = Math.floor(uptimeSec / 3600);
-  const minutes = Math.floor((uptimeSec % 3600) / 60);
-  checks.uptime = {
-    status: "ok",
-    responseTimeMs: 0,
-    seconds: uptimeSec,
-    human: `${hours}h ${minutes}m`,
-  };
-
-  // 6. Circuit breaker status
+  // Circuit breaker status (keep existing behaviour)
   const breakerStatus = getAllCircuitBreakerStatus();
   if (Object.keys(breakerStatus).length > 0) {
     checks.circuitBreakers = breakerStatus;
   }
 
-  // Derive overall status (only from service checks, not memory/uptime)
-  const serviceChecks = [
-    checks.database as CheckResult,
-    checks.stripe as CheckResult,
-    checks.sendgrid as CheckResult,
-  ];
-  const hasError = serviceChecks.some((c) => c.status === "error");
-  const hasTimeout = serviceChecks.some((c) => c.status === "timeout");
-  const allFailed = serviceChecks.every((c) => c.status !== "ok");
+  // Memory (keep existing behaviour)
+  const mem = process.memoryUsage();
+  checks.memory = {
+    status: "up" as ServiceStatus,
+    heapUsedMB: Math.round(mem.heapUsed / 1_024 / 1_024),
+    rssMB: Math.round(mem.rss / 1_024 / 1_024),
+  };
 
-  // Database is critical — if it errors (not timeout), the system is unhealthy
-  const dbDown = (checks.database as CheckResult).status === "error";
-
-  // Check if any circuit breaker is open
-  const hasOpenBreaker = Object.values(breakerStatus).some(
-    (b) => b.state === "open"
-  );
-
-  let overall: "ok" | "degraded" | "error";
-  if (!hasError && !hasTimeout && !hasOpenBreaker) {
-    overall = "ok";
-  } else if (allFailed || dbDown) {
-    overall = "error";
-  } else {
-    overall = "degraded";
-  }
-
-  const httpStatus = overall === "error" ? 503 : 200;
+  const status = deriveOverallStatus(checks);
+  const httpStatus = status === "unhealthy" ? 503 : 200;
 
   const body = {
-    status: overall,
-    version: appVersion,
+    status,
+    version: APP_VERSION,
     timestamp: new Date().toISOString(),
+    uptime: Math.round(process.uptime()),
     checks,
   };
 
-  if (overall !== "ok") {
+  if (status !== "healthy") {
     logger.warn("Health check not fully healthy", {
-      status: overall,
+      status,
       checks: Object.fromEntries(
         Object.entries(checks)
-          .filter(([, v]) => (v as CheckResult).status !== "ok")
-          .map(([k, v]) => [k, (v as CheckResult).message]),
+          .filter(([, v]) => {
+            const s = (v as ServiceCheck).status;
+            return s && s !== "up" && s !== "configured";
+          })
+          .map(([k, v]) => [k, (v as ServiceCheck).status]),
       ),
     });
   }
@@ -142,24 +228,4 @@ export async function GET(request: NextRequest) {
       "Cache-Control": "public, s-maxage=30, stale-while-revalidate=10",
     },
   });
-}
-
-/** Run an async check, capture its result and elapsed time. */
-async function timedCheck(fn: () => Promise<void>): Promise<CheckResult> {
-  const start = performance.now();
-  try {
-    await fn();
-    return {
-      status: "ok",
-      responseTimeMs: Math.round(performance.now() - start),
-    };
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    const isTimeout = message === "TIMEOUT";
-    return {
-      status: isTimeout ? "timeout" : "error",
-      responseTimeMs: Math.round(performance.now() - start),
-      message,
-    };
-  }
 }
