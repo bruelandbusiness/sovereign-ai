@@ -220,6 +220,8 @@ model Lead {
   @@index([phone])
   @@index([updatedAt])
   @@index([status, createdAt])
+  @@index([clientId, status])
+  @@index([clientId, createdAt])
 }
 
 model ActivityEvent {
@@ -289,6 +291,7 @@ model ReviewCampaign {
 
   @@index([clientId])
   @@index([status])
+  @@index([clientId, status])
 }
 
 // ─── Content Engine ─────────────────────────────────────────
@@ -333,6 +336,7 @@ model EmailCampaign {
 
   @@index([clientId])
   @@index([status])
+  @@index([clientId, status])
 }
 
 // ─── Booking System ─────────────────────────────────────────
@@ -359,6 +363,7 @@ model Booking {
   @@index([locationId])
   @@index([status])
   @@index([status, createdAt])
+  @@index([clientId, status])
 }
 
 // ─── Blog ───────────────────────────────────────────────────
@@ -430,6 +435,7 @@ model SupportTicket {
 
   @@index([clientId])
   @@index([status])
+  @@index([clientId, status])
 }
 
 model TicketMessage {
@@ -861,6 +867,8 @@ model Invoice {
 
   @@index([clientId])
   @@index([status])
+  @@index([clientId, status])
+  @@index([clientId, createdAt])
 }
 
 // ─── Job Posting & Recruiting ───────────────────────────────
@@ -1040,6 +1048,7 @@ model PhoneCall {
 
   @@index([clientId])
   @@index([status])
+  @@index([clientId, createdAt])
 }
 
 // ─── Photo Estimate ─────────────────────────────────────────
@@ -1132,6 +1141,8 @@ model Quote {
   @@index([leadId])
   @@index([status])
   @@index([status, createdAt])
+  @@index([clientId, status])
+  @@index([clientId, createdAt])
 }
 
 // ─── Receptionist Config ────────────────────────────────────
@@ -1333,6 +1344,7 @@ model SocialPost {
 
   @@index([clientId])
   @@index([status])
+  @@index([clientId, status])
 }
 
 // ─── Template ───────────────────────────────────────────────
@@ -1369,6 +1381,7 @@ model ConversationThread {
   @@index([clientId])
   @@index([lastMessageAt])
   @@index([status])
+  @@index([clientId, status])
 }
 
 model UnifiedMessage {
@@ -1387,6 +1400,7 @@ model UnifiedMessage {
 
   @@index([clientId])
   @@index([threadId])
+  @@index([clientId, createdAt])
 }
 
 // ─── Webhook ────────────────────────────────────────────────
@@ -1680,6 +1694,7 @@ model CallLog {
 
   @@index([clientId])
   @@index([createdAt])
+  @@index([clientId, status])
 }
 
 // ─── Knowledge Base ─────────────────────────────────────────
@@ -1762,6 +1777,7 @@ model AffiliateReferral {
 
   @@index([affiliateId])
   @@index([clientId])
+  @@index([status])
 }
 
 model AffiliatePayout {
@@ -1800,6 +1816,7 @@ model ProspectLead {
   @@index([source])
   @@index([partnerSlug])
   @@index([createdAt])
+  @@index([status])
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -2135,6 +2152,7 @@ model FollowUpEntry {
   sequence FollowUpSequence @relation(fields: [sequenceId], references: [id], onDelete: Cascade)
 
   @@index([clientId])
+  @@index([sequenceId])
   @@index([status, nextStepAt])
 }
 

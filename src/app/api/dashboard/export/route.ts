@@ -29,6 +29,53 @@ export async function GET(request: NextRequest) {
     }
 
     const type = request.nextUrl.searchParams.get("type");
+    const format = request.nextUrl.searchParams.get("format") ?? "json";
+
+    if (format !== "json" && format !== "csv") {
+      return NextResponse.json(
+        { error: 'Invalid format. Use ?format=json or ?format=csv' },
+        { status: 400 },
+      );
+    }
+
+    /**
+     * Return rows as either CSV or JSON depending on the requested format.
+     */
+    function respond(
+      rows: Record<string, unknown>[],
+      resource: string,
+    ): Response {
+      if (format === "csv") {
+        const csv = toCSV(rows);
+        return new Response(csv, {
+          status: 200,
+          headers: {
+            "Content-Type": "text/csv; charset=utf-8",
+            "Content-Disposition": `attachment; filename="${resource}-${new Date().toISOString().slice(0, 10)}.csv"`,
+          },
+        });
+      }
+      return NextResponse.json({ data: rows });
+    }
+
+    async function logExport(
+      resource: string,
+      recordCount: number,
+    ): Promise<void> {
+      await prisma.auditLog.create({
+        data: {
+          action: "data_export",
+          resource,
+          resourceId: `${clientId}:${Date.now()}`,
+          accountId,
+          metadata: JSON.stringify({
+            exportType: format,
+            recordCount,
+            filters: JSON.stringify({ type: resource }),
+          }),
+        },
+      });
+    }
 
     if (type === "leads") {
       const leads = await prisma.lead.findMany({
@@ -62,29 +109,8 @@ export async function GET(request: NextRequest) {
         createdAt: lead.createdAt.toISOString(),
       }));
 
-      const csv = toCSV(rows);
-
-      await prisma.auditLog.create({
-        data: {
-          action: "data_export",
-          resource: "leads",
-          resourceId: `${clientId}:${Date.now()}`,
-          accountId,
-          metadata: JSON.stringify({
-            exportType: "csv",
-            recordCount: leads.length,
-            filters: JSON.stringify({ type: "leads" }),
-          }),
-        },
-      });
-
-      return new Response(csv, {
-        status: 200,
-        headers: {
-          "Content-Type": "text/csv; charset=utf-8",
-          "Content-Disposition": `attachment; filename="leads-${new Date().toISOString().slice(0, 10)}.csv"`,
-        },
-      });
+      await logExport("leads", leads.length);
+      return respond(rows, "leads");
     }
 
     if (type === "activities") {
@@ -109,29 +135,8 @@ export async function GET(request: NextRequest) {
         createdAt: a.createdAt.toISOString(),
       }));
 
-      const csv = toCSV(rows);
-
-      await prisma.auditLog.create({
-        data: {
-          action: "data_export",
-          resource: "activities",
-          resourceId: `${clientId}:${Date.now()}`,
-          accountId,
-          metadata: JSON.stringify({
-            exportType: "csv",
-            recordCount: activities.length,
-            filters: JSON.stringify({ type: "activities" }),
-          }),
-        },
-      });
-
-      return new Response(csv, {
-        status: 200,
-        headers: {
-          "Content-Type": "text/csv; charset=utf-8",
-          "Content-Disposition": `attachment; filename="activities-${new Date().toISOString().slice(0, 10)}.csv"`,
-        },
-      });
+      await logExport("activities", activities.length);
+      return respond(rows, "activities");
     }
 
     if (type === "invoices") {
@@ -166,29 +171,8 @@ export async function GET(request: NextRequest) {
         createdAt: inv.createdAt.toISOString(),
       }));
 
-      const csv = toCSV(rows);
-
-      await prisma.auditLog.create({
-        data: {
-          action: "data_export",
-          resource: "invoices",
-          resourceId: `${clientId}:${Date.now()}`,
-          accountId,
-          metadata: JSON.stringify({
-            exportType: "csv",
-            recordCount: invoices.length,
-            filters: JSON.stringify({ type: "invoices" }),
-          }),
-        },
-      });
-
-      return new Response(csv, {
-        status: 200,
-        headers: {
-          "Content-Type": "text/csv; charset=utf-8",
-          "Content-Disposition": `attachment; filename="invoices-${new Date().toISOString().slice(0, 10)}.csv"`,
-        },
-      });
+      await logExport("invoices", invoices.length);
+      return respond(rows, "invoices");
     }
 
     if (type === "performance") {
@@ -215,29 +199,8 @@ export async function GET(request: NextRequest) {
         createdAt: evt.createdAt.toISOString(),
       }));
 
-      const csv = toCSV(rows);
-
-      await prisma.auditLog.create({
-        data: {
-          action: "data_export",
-          resource: "performance",
-          resourceId: `${clientId}:${Date.now()}`,
-          accountId,
-          metadata: JSON.stringify({
-            exportType: "csv",
-            recordCount: events.length,
-            filters: JSON.stringify({ type: "performance" }),
-          }),
-        },
-      });
-
-      return new Response(csv, {
-        status: 200,
-        headers: {
-          "Content-Type": "text/csv; charset=utf-8",
-          "Content-Disposition": `attachment; filename="performance-${new Date().toISOString().slice(0, 10)}.csv"`,
-        },
-      });
+      await logExport("performance", events.length);
+      return respond(rows, "performance");
     }
 
     return NextResponse.json(

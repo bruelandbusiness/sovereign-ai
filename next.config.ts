@@ -56,6 +56,10 @@ const nextConfig: NextConfig = {
         key: "Permissions-Policy",
         value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
       },
+      {
+        key: "X-DNS-Prefetch-Control",
+        value: "on",
+      },
     ];
 
     return [
