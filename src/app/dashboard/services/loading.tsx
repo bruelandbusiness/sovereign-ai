@@ -1,19 +1,35 @@
-import { Skeleton } from "@/components/ui/skeleton";
-
-export default function Loading() {
+export default function ServicesLoading() {
   return (
-    <div className="space-y-6" aria-busy="true" role="status">
-      <span className="sr-only">Loading service dashboard...</span>
-      <div className="flex items-center justify-between">
-        <Skeleton className="h-8 w-48" />
-        <Skeleton className="h-10 w-32" />
+    <div
+      className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6"
+      role="status"
+      aria-busy="true"
+      aria-label="Loading services"
+    >
+      <span className="sr-only">Loading services, please wait...</span>
+
+      {/* Page header */}
+      <div className="mb-8">
+        <div className="skeleton h-7 w-44 rounded mb-2" />
+        <div className="skeleton h-4 w-72 rounded" />
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <Skeleton key={i} className="h-28 w-full" />
+
+      {/* Service cards grid */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div
+            key={i}
+            className="rounded-xl border border-border/50 bg-card p-5"
+          >
+            <div className="flex items-center gap-3 mb-3">
+              <div className="skeleton h-9 w-9 rounded-lg" />
+              <div className="skeleton h-5 w-32 rounded" />
+            </div>
+            <div className="skeleton h-4 w-full rounded mb-1" />
+            <div className="skeleton h-4 w-2/3 rounded" />
+          </div>
         ))}
       </div>
-      <Skeleton className="h-64 w-full" />
     </div>
   );
 }

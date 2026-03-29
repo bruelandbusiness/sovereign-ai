@@ -2,7 +2,13 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Support",
-  description: "Submit support tickets and get help with your Sovereign AI services.",
+  description:
+    "Submit support tickets and get help with your Sovereign AI services.",
+  openGraph: {
+    title: "Support — Sovereign AI",
+    description:
+      "Submit support tickets and get help with your Sovereign AI services.",
+  },
   robots: { index: false, follow: false },
 };
 

@@ -8,6 +8,11 @@ export const metadata: Metadata = {
   title: "Client Dashboard",
   description:
     "Track your leads, ROI, and AI marketing performance in real time. Your Sovereign AI client dashboard.",
+  openGraph: {
+    title: "Client Dashboard — Sovereign AI",
+    description:
+      "Track your leads, ROI, and AI marketing performance in real time.",
+  },
   robots: { index: false, follow: false },
 };
 

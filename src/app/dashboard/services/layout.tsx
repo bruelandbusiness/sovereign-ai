@@ -2,7 +2,13 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Services",
-  description: "Manage your active AI marketing services and view performance.",
+  description:
+    "Manage your active AI marketing services and view performance.",
+  openGraph: {
+    title: "Services — Sovereign AI",
+    description:
+      "Manage your active AI marketing services and view performance.",
+  },
   robots: { index: false, follow: false },
 };
 
