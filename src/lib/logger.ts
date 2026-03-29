@@ -236,86 +236,195 @@ import {
 } from "@sentry/core";
 
 // ---------------------------------------------------------------------------
-// Public API
+// Logger interface
 // ---------------------------------------------------------------------------
 
-export const logger = {
-  debug(message: string, context?: Record<string, unknown>) {
-    if (process.env.NODE_ENV === "development") {
-      console.debug(formatEntry(createEntry("debug", message, context)));
-    }
-  },
-  info(message: string, context?: Record<string, unknown>) {
-    console.info(formatEntry(createEntry("info", message, context)));
-  },
-  warn(message: string, context?: Record<string, unknown>) {
-    console.warn(formatEntry(createEntry("warn", message, context)));
-
-    // Forward warnings to Sentry as breadcrumbs so they appear in error context
-    try {
-      sentryAddBreadcrumb({
-        category: "logger",
-        message: scrubMessage(message),
-        level: "warning",
-        data: context ? redactContext(context) : undefined,
-      });
-    } catch {
-      // Sentry not initialised — safe to ignore
-    }
-  },
-  error(message: string, context?: Record<string, unknown>) {
-    console.error(formatEntry(createEntry("error", message, context)));
-
-    // Forward errors to Sentry as breadcrumbs. Full captureException is
-    // handled by errorWithCause below or by the monitoring module.
-    try {
-      sentryAddBreadcrumb({
-        category: "logger",
-        message: scrubMessage(message),
-        level: "error",
-        data: context ? redactContext(context) : undefined,
-      });
-    } catch {
-      // Sentry not initialised — safe to ignore
-    }
-  },
-  /**
-   * Log an error with full serialization (message, stack, custom properties).
-   * Convenience wrapper: `logger.errorWithCause("msg", err, { extra: "ctx" })`
-   *
-   * Also forwards the error to Sentry as a captured exception so it appears
-   * in the issues dashboard with full context.
-   */
+export interface Logger {
+  debug(message: string, context?: Record<string, unknown>): void;
+  info(message: string, context?: Record<string, unknown>): void;
+  warn(message: string, context?: Record<string, unknown>): void;
+  error(message: string, context?: Record<string, unknown>): void;
   errorWithCause(
     message: string,
     error: unknown,
     context?: Record<string, unknown>,
-  ) {
-    this.error(message, { ...context, error: serializeError(error) });
-
-    try {
-      const sentryError = error instanceof Error ? error : new Error(String(error));
-      sentryCaptureException(sentryError, {
-        extra: {
-          loggerMessage: scrubMessage(message),
-          ...(context ? redactContext(context) : {}),
-        },
-      });
-    } catch {
-      // Sentry not initialised — safe to ignore
-    }
-  },
-  /**
-   * Log a warning with an associated error/cause.
-   */
+  ): void;
   warnWithCause(
     message: string,
     error: unknown,
     context?: Record<string, unknown>,
-  ) {
-    this.warn(message, { ...context, error: serializeError(error) });
-  },
-};
+  ): void;
+  withContext(fields: Record<string, unknown>): Logger;
+  time(label: string): void;
+  timeEnd(label: string): void;
+}
+
+// ---------------------------------------------------------------------------
+// Merge helper — combines persistent context with per-call context
+// ---------------------------------------------------------------------------
+
+function mergeContext(
+  persistent: Record<string, unknown> | undefined,
+  perCall: Record<string, unknown> | undefined,
+): Record<string, unknown> | undefined {
+  if (!persistent && !perCall) return undefined;
+  if (!persistent) return perCall;
+  if (!perCall) return persistent;
+  return { ...persistent, ...perCall };
+}
+
+// ---------------------------------------------------------------------------
+// Logger factory
+// ---------------------------------------------------------------------------
+
+function createLogger(
+  persistentContext?: Record<string, unknown>,
+): Logger {
+  const timers = new Map<string, number>();
+
+  return {
+    debug(message: string, context?: Record<string, unknown>) {
+      if (process.env.NODE_ENV === "development") {
+        const merged = mergeContext(persistentContext, context);
+        console.debug(formatEntry(createEntry("debug", message, merged)));
+      }
+    },
+
+    info(message: string, context?: Record<string, unknown>) {
+      const merged = mergeContext(persistentContext, context);
+      console.info(formatEntry(createEntry("info", message, merged)));
+    },
+
+    warn(message: string, context?: Record<string, unknown>) {
+      const merged = mergeContext(persistentContext, context);
+      console.warn(formatEntry(createEntry("warn", message, merged)));
+
+      // Forward warnings to Sentry as breadcrumbs
+      try {
+        sentryAddBreadcrumb({
+          category: "logger",
+          message: scrubMessage(message),
+          level: "warning",
+          data: merged ? redactContext(merged) : undefined,
+        });
+      } catch {
+        // Sentry not initialised — safe to ignore
+      }
+    },
+
+    error(message: string, context?: Record<string, unknown>) {
+      const merged = mergeContext(persistentContext, context);
+      console.error(formatEntry(createEntry("error", message, merged)));
+
+      // Forward errors to Sentry as breadcrumbs
+      try {
+        sentryAddBreadcrumb({
+          category: "logger",
+          message: scrubMessage(message),
+          level: "error",
+          data: merged ? redactContext(merged) : undefined,
+        });
+      } catch {
+        // Sentry not initialised — safe to ignore
+      }
+    },
+
+    /**
+     * Log an error with full serialization (message, stack, custom
+     * properties). Also forwards to Sentry as a captured exception.
+     */
+    errorWithCause(
+      message: string,
+      error: unknown,
+      context?: Record<string, unknown>,
+    ) {
+      this.error(message, { ...context, error: serializeError(error) });
+
+      try {
+        const sentryError =
+          error instanceof Error ? error : new Error(String(error));
+        const merged = mergeContext(persistentContext, context);
+        sentryCaptureException(sentryError, {
+          extra: {
+            loggerMessage: scrubMessage(message),
+            ...(merged ? redactContext(merged) : {}),
+          },
+        });
+      } catch {
+        // Sentry not initialised — safe to ignore
+      }
+    },
+
+    /**
+     * Log a warning with an associated error/cause.
+     */
+    warnWithCause(
+      message: string,
+      error: unknown,
+      context?: Record<string, unknown>,
+    ) {
+      this.warn(message, { ...context, error: serializeError(error) });
+    },
+
+    /**
+     * Create a child logger that includes persistent context fields in
+     * every log entry. Per-call context is merged on top (per-call wins).
+     *
+     * ```ts
+     * const child = logger.withContext({ clientId: "abc" });
+     * child.info("hello"); // includes { clientId: "abc" }
+     * ```
+     */
+    withContext(fields: Record<string, unknown>): Logger {
+      const merged = persistentContext
+        ? { ...persistentContext, ...fields }
+        : { ...fields };
+      return createLogger(merged);
+    },
+
+    /**
+     * Start a named timer. Call `timeEnd` with the same label to log the
+     * elapsed duration in milliseconds.
+     */
+    time(label: string) {
+      timers.set(label, performance.now());
+    },
+
+    /**
+     * Stop a named timer and log the elapsed duration.
+     */
+    timeEnd(label: string) {
+      const start = timers.get(label);
+      if (start === undefined) {
+        this.warn(`timer "${label}" does not exist`);
+        return;
+      }
+      timers.delete(label);
+      const durationMs = Math.round((performance.now() - start) * 100) / 100;
+      this.info(`${label} completed`, { durationMs });
+    },
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Public API — singleton root logger
+// ---------------------------------------------------------------------------
+
+export const logger: Logger = createLogger();
+
+// ---------------------------------------------------------------------------
+// Request ID helper
+// ---------------------------------------------------------------------------
+
+/**
+ * Create a child logger with a `requestId` field extracted from the
+ * incoming request's `x-request-id` header (falls back to a random UUID).
+ */
+export function withRequestId(request: Request): Logger {
+  const requestId =
+    request.headers.get("x-request-id") || crypto.randomUUID();
+  return logger.withContext({ requestId });
+}
 
 // Re-export utilities for use by Sentry config and other modules
 export { redactContext, scrubMessage, maskEmail, maskPhone };

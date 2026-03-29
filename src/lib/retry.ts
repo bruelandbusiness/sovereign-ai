@@ -164,6 +164,139 @@ export async function withRetry<T>(
   throw lastError;
 }
 
+// ─── HTTP / Network retryable helpers ────────────────────────
+
+/** HTTP status codes that indicate a transient server-side or rate-limit error. */
+const RETRYABLE_STATUS_CODES = new Set([429, 500, 502, 503, 504]);
+
+/**
+ * Returns true if an HTTP status code is transient and worth retrying.
+ *
+ * Covers rate-limiting (429) and server errors (500, 502, 503, 504).
+ */
+export function isRetryableStatusCode(status: number): boolean {
+  return RETRYABLE_STATUS_CODES.has(status);
+}
+
+/** Network / timeout error signatures commonly seen in Node.js and browsers. */
+const NETWORK_ERROR_PATTERNS = [
+  "econnreset",
+  "econnrefused",
+  "etimedout",
+  "enetunreach",
+  "epipe",
+  "enotfound",
+  "fetch failed",
+  "network request failed",
+  "network error",
+  "socket hang up",
+  "timeout",
+  "aborted",
+  "request timed out",
+  "client network socket disconnected",
+] as const;
+
+/**
+ * Returns true if an error represents a transient network or HTTP failure
+ * that is safe to retry.
+ *
+ * Checks for:
+ * - Network errors (fetch failures, ECONNRESET, ETIMEDOUT, etc.)
+ * - HTTP 429, 500, 502, 503, 504 status codes (via a `status` property)
+ * - Timeout errors (AbortError, TimeoutError, message heuristics)
+ */
+export function isRetryableError(error: unknown): boolean {
+  if (!(error instanceof Error)) {
+    return false;
+  }
+
+  // Check for an HTTP status code attached to the error object
+  const status = (error as { status?: number }).status
+    ?? (error as { statusCode?: number }).statusCode
+    ?? (error as { response?: { status?: number } }).response?.status;
+
+  if (typeof status === "number" && isRetryableStatusCode(status)) {
+    return true;
+  }
+
+  // Timeout / abort errors (DOMException or Node AbortError)
+  if (
+    error.name === "AbortError" ||
+    error.name === "TimeoutError"
+  ) {
+    return true;
+  }
+
+  // Check for a `code` property (Node.js system errors)
+  const code = (error as { code?: string }).code?.toLowerCase();
+  if (
+    code === "econnreset" ||
+    code === "econnrefused" ||
+    code === "etimedout" ||
+    code === "enetunreach" ||
+    code === "epipe" ||
+    code === "enotfound"
+  ) {
+    return true;
+  }
+
+  // Fall back to message-based heuristics
+  const msg = error.message.toLowerCase();
+  return NETWORK_ERROR_PATTERNS.some((pattern) => msg.includes(pattern));
+}
+
+// ─── Convenience RetryOptions (HTTP-oriented) ───────────────
+
+/**
+ * Simplified retry options oriented toward external HTTP / API calls.
+ *
+ * Use with `withRetry` by spreading into a `RetryConfig`:
+ *
+ * ```ts
+ * const data = await withRetry(
+ *   () => fetchExternalApi(url),
+ *   retryOptionsToConfig({ maxRetries: 4, retryOn: isRetryableError }),
+ * );
+ * ```
+ */
+export interface RetryOptions {
+  /** Maximum number of retries (not counting the initial attempt). Default: 3. */
+  maxRetries?: number;
+  /** Initial delay in ms before the first retry. Default: 500. */
+  initialDelayMs?: number;
+  /** Maximum delay cap in ms. Default: 5000. */
+  maxDelayMs?: number;
+  /** Multiplier applied to the delay after each retry. Default: 2. */
+  backoffFactor?: number;
+  /**
+   * Predicate that determines if an error should trigger a retry.
+   * Default: `isRetryableError` (retries network errors and 429/5xx).
+   */
+  retryOn?: (error: unknown) => boolean;
+}
+
+/**
+ * Converts the simplified `RetryOptions` into a `RetryConfig` compatible
+ * with `withRetry`.
+ */
+export function retryOptionsToConfig(
+  options?: RetryOptions,
+): RetryConfig {
+  const maxRetries = options?.maxRetries ?? 3;
+  // backoffFactor is accepted for forward-compatibility; the core
+  // withRetry currently uses a fixed base-2 exponential curve.
+  void (options?.backoffFactor ?? 2);
+
+  return {
+    maxAttempts: maxRetries + 1, // RetryConfig counts total attempts
+    baseDelayMs: options?.initialDelayMs ?? 500,
+    maxDelayMs: options?.maxDelayMs ?? 5_000,
+    jitter: 0.2,
+    isRetryable: options?.retryOn ?? isRetryableError,
+    label: "http-retry",
+  };
+}
+
 // ─── Helpers ────────────────────────────────────────────────
 
 function sleep(ms: number): Promise<void> {

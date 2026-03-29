@@ -2,6 +2,9 @@ import { PrismaClient } from "@/generated/prisma/client";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { logger } from "@/lib/logger";
+import { captureMessage as sentryCaptureMessage } from "@sentry/core";
+
+const SLOW_QUERY_THRESHOLD_MS = 500;
 
 // NOTE: Cron routes (api/cron/*) share this same connection pool.
 // If crons run long-lived transactions, they may compete with user-facing
@@ -55,7 +58,59 @@ function getPool(): Pool {
 
 function createPrismaClient() {
   const adapter = new PrismaPg(getPool());
-  return new PrismaClient({ adapter } as never);
+  const client = new PrismaClient({ adapter } as never);
+
+  // --- Query performance monitoring via Prisma client extension ---
+  const extended = client.$extends({
+    query: {
+      $allOperations: async ({ model, operation, args, query }) => {
+        const start = performance.now();
+        const result = await query(args);
+        const duration = performance.now() - start;
+
+        // Log all queries in development for debugging
+        if (process.env.NODE_ENV === "development") {
+          logger.debug(`[prisma] ${model ?? "unknown"}.${operation} took ${duration.toFixed(0)}ms`, {
+            model: model ?? "unknown",
+            action: operation,
+            duration: Math.round(duration),
+          });
+        }
+
+        // Warn on slow queries in all environments
+        if (duration > SLOW_QUERY_THRESHOLD_MS) {
+          logger.warn(
+            `[prisma] Slow query: ${model ?? "unknown"}.${operation} took ${duration.toFixed(0)}ms`,
+            {
+              model: model ?? "unknown",
+              action: operation,
+              duration: Math.round(duration),
+            },
+          );
+
+          try {
+            sentryCaptureMessage(
+              `Slow Prisma query: ${model ?? "unknown"}.${operation}`,
+              {
+                level: "warning",
+                extra: {
+                  model: model ?? "unknown",
+                  action: operation,
+                  duration: Math.round(duration),
+                },
+              },
+            );
+          } catch {
+            // Sentry not initialised — safe to ignore
+          }
+        }
+
+        return result;
+      },
+    },
+  });
+
+  return extended as unknown as PrismaClient;
 }
 
 const globalForPrisma = globalThis as unknown as {

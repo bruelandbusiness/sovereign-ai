@@ -83,7 +83,7 @@ export async function GET(
     prisma.applicant.count({ where: { jobId } }),
   ]);
 
-  return NextResponse.json({
+  const response = NextResponse.json({
     applicants: applicants.map((a) => ({
       id: a.id,
       jobId: a.jobId,
@@ -106,6 +106,8 @@ export async function GET(
       totalPages: Math.ceil(total / limit),
     },
   });
+  response.headers.set("Cache-Control", "private, no-store");
+  return response;
 }
 
 // ---------------------------------------------------------------------------

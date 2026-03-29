@@ -235,7 +235,7 @@ export async function GET() {
       contentByTypeMap[g.type] = g._count._all;
     });
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       leads: {
         total: totalLeads,
         won: wonLeads,
@@ -304,6 +304,8 @@ export async function GET() {
       },
       generatedAt: new Date().toISOString(),
     });
+    response.headers.set("Cache-Control", "private, no-store");
+    return response;
   } catch (err) {
     if (err instanceof AuthError) {
       return NextResponse.json({ error: err.message }, { status: err.status });

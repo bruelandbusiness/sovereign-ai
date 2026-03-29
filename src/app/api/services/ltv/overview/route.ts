@@ -140,7 +140,7 @@ export async function GET() {
       totalRevenue: campaigns.reduce((sum, c) => sum + c.totalRevenue, 0),
     };
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       totalCustomers,
       totalRevenue,
       avgRevenuePerCustomer,
@@ -153,6 +153,8 @@ export async function GET() {
       reminderStats,
       campaignStats,
     });
+    response.headers.set("Cache-Control", "private, no-store");
+    return response;
   } catch {
     return NextResponse.json(
       { error: "Failed to load LTV overview" },
