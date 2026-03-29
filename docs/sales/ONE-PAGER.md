@@ -1,118 +1,121 @@
-# [PLACEHOLDER — COMPANY NAME] — One-Pager
+# Sovereign AI
 
-> **For:** Prospective Clients
-> **Version:** 1.0
-> **Last Updated:** [PLACEHOLDER — DATE]
+**AI-Powered Marketing That Builds Empires for Contractors**
 
----
-
-## Company Overview
-
-**[PLACEHOLDER — COMPANY NAME]** is an AI-powered business operations platform that helps service-based businesses automate client management, streamline communications, and scale revenue — without scaling headcount.
-
-**Founded:** [PLACEHOLDER — YEAR]
-**Headquarters:** [PLACEHOLDER — CITY, STATE]
-**Clients Served:** [PLACEHOLDER — NUMBER]+
-**Industries:** [PLACEHOLDER — e.g., Professional Services, Consulting, Agencies, Coaching, Real Estate]
+> Stop wasting money on agencies that overpromise and underdeliver. Sovereign AI combines artificial intelligence with proven marketing strategies to generate real leads, real reviews, and real revenue for your contracting business.
 
 ---
 
 ## The Problem
 
-Service-based businesses waste **[PLACEHOLDER — e.g., 15-20] hours per week** on manual operations:
+Contractors are throwing money at marketing agencies that don't understand the trades. The result?
 
-- Chasing leads through scattered spreadsheets and inboxes
-- Manually onboarding clients with error-prone processes
-- Sending repetitive emails and follow-ups by hand
-- Juggling disconnected tools that don't talk to each other
-- Missing revenue opportunities due to lack of visibility
+- Generic campaigns that attract tire-kickers, not paying customers
+- Thousands spent on SEO and ads with no measurable ROI
+- Inconsistent lead flow that makes it impossible to plan jobs and hire crews
+- Zero reviews coming in, while competitors dominate Google Maps
+- No visibility into what's working and what's wasting your budget
 
-**The result:** Burnout, lost revenue, and inability to scale.
+**The average contractor wastes $2,000-$5,000/month on marketing that doesn't move the needle.**
 
 ---
 
 ## The Solution
 
-[PLACEHOLDER — COMPANY NAME] replaces your fragmented tech stack with a single, AI-powered platform that automates the entire client lifecycle — from first contact to recurring revenue.
+Sovereign AI is a full-stack marketing engine built specifically for contractors. We use AI to target the right homeowners, generate qualified leads, automate review collection, and optimize every dollar you spend — so you can focus on running your business.
 
-### Three Bundles, Built to Scale With You
+### What Makes Us Different
 
-| | Starter | Growth | Enterprise |
-|---|---|---|---|
-| **Best For** | Solopreneurs and small teams | Growing businesses (5-25 people) | Established companies (25+) |
-| **AI Automation** | Basic workflows | Advanced multi-step automations | Custom AI pipelines |
-| **Client Portal** | Standard | Branded | Fully customized |
-| **Communications** | 1,000 emails + 500 SMS/mo | 10,000 emails + 5,000 SMS/mo | Unlimited |
-| **Analytics** | Basic dashboard | Advanced reporting | Custom dashboards + API |
-| **Support** | Email (business hours) | Email + Chat (extended hours) | Dedicated CSM + 24/7 |
-| **Monthly Investment** | $[PLACEHOLDER]/mo | $[PLACEHOLDER]/mo | Custom pricing |
+- **AI-Driven Targeting** — We find homeowners actively searching for your services in your area
+- **Built for the Trades** — Every strategy is designed for contractors, not generic small businesses
+- **Transparent Reporting** — Real-time dashboards so you always know your cost per lead and ROI
+- **Review Automation** — Automatically request and collect 5-star reviews after every job
+- **Speed to Lead** — AI-powered follow-up ensures no lead goes cold
 
 ---
 
-## Key Value Propositions
+## Proof Points
 
-### 1. Save [PLACEHOLDER — e.g., 15+] Hours Per Week
-Automate client communications, follow-ups, onboarding workflows, and reporting. Your team focuses on high-value work instead of repetitive tasks.
-
-### 2. Increase Revenue by [PLACEHOLDER — e.g., 30%]
-AI-powered lead scoring, automated follow-up sequences, and proposal generation ensure no opportunity falls through the cracks.
-
-### 3. One Platform, Not Ten Tools
-Replace your CRM + email marketing + SMS + invoicing + client portal + analytics stack with a single integrated platform. Fewer subscriptions, fewer headaches, better data.
-
----
-
-## ROI at a Glance
-
-| Metric | Before [COMPANY NAME] | After [COMPANY NAME] | Impact |
-|---|---|---|---|
-| Hours spent on admin/week | [PLACEHOLDER — e.g., 20] | [PLACEHOLDER — e.g., 5] | **[PLACEHOLDER — e.g., 75%] reduction** |
-| Lead response time | [PLACEHOLDER — e.g., 24 hours] | [PLACEHOLDER — e.g., < 5 minutes] | **[PLACEHOLDER — e.g., 99%] faster** |
-| Client onboarding time | [PLACEHOLDER — e.g., 2 weeks] | [PLACEHOLDER — e.g., 2 days] | **[PLACEHOLDER — e.g., 85%] faster** |
-| Monthly revenue per employee | $[PLACEHOLDER] | $[PLACEHOLDER] | **[PLACEHOLDER]% increase** |
-| Tool subscriptions | [PLACEHOLDER — e.g., 6 tools, $X/mo] | 1 platform, $[PLACEHOLDER]/mo | **[PLACEHOLDER]% cost savings** |
-
----
-
-## Social Proof
-
-> "[PLACEHOLDER — CLIENT QUOTE about specific results achieved.]"
-> — **[PLACEHOLDER — CLIENT NAME]**, [TITLE], [COMPANY]
-
-> "[PLACEHOLDER — CLIENT QUOTE about ease of use or time savings.]"
-> — **[PLACEHOLDER — CLIENT NAME]**, [TITLE], [COMPANY]
-
-### Trusted By
-
-[PLACEHOLDER — CLIENT LOGO 1] | [PLACEHOLDER — CLIENT LOGO 2] | [PLACEHOLDER — CLIENT LOGO 3] | [PLACEHOLDER — CLIENT LOGO 4]
-
-### By the Numbers
-
-- **[PLACEHOLDER]%** average increase in client retention
-- **[PLACEHOLDER]** hours saved per client per month
-- **[PLACEHOLDER]%** client satisfaction score (NPS)
-- **$[PLACEHOLDER]M+** in revenue managed through the platform
-
----
-
-## How It Works
-
-```
-1. CONNECT         →  2. AUTOMATE        →  3. GROW
-Import your data      Set up AI workflows    Watch your business
-and integrations      and automations        scale effortlessly
-(< 1 hour setup)      (Day 1 guided setup)   (Results in week 1)
-```
-
----
-
-## Ready to Get Started?
-
-| Action | Details |
+| Metric | Result |
 |---|---|
-| **Book a Demo** | [PLACEHOLDER — CALENDAR LINK] |
-| **Start Free Trial** | [PLACEHOLDER — TRIAL URL] |
-| **Contact Sales** | [PLACEHOLDER — EMAIL] / [PLACEHOLDER — PHONE] |
-| **Visit Website** | [PLACEHOLDER — WEBSITE URL] |
+| Leads Generated | [X,XXX]+ qualified leads delivered to clients |
+| Reviews Collected | [X,XXX]+ 5-star reviews generated across all clients |
+| Average ROI | [X]x return on marketing spend |
+| Average Cost Per Lead | $[XX] — [X]x lower than industry average |
+| Client Retention Rate | [XX]% of clients stay 12+ months |
 
-**[PLACEHOLDER — COMPANY NAME]** — Automate. Scale. Succeed.
+---
+
+## Service Tiers
+
+### Starter — $1,500/mo
+Best for solo operators and small crews getting started with digital marketing.
+
+- Google Business Profile optimization
+- Basic SEO (up to 5 service pages)
+- Automated review request system
+- Monthly performance report
+- Dedicated account manager
+
+### Growth — $3,500/mo
+Best for established contractors ready to scale lead volume.
+
+- Everything in Starter, plus:
+- Google Ads management (up to $2,000 ad spend)
+- Advanced local SEO (up to 15 service pages)
+- AI-powered lead follow-up sequences
+- Bi-weekly performance calls
+- Competitor analysis dashboard
+- Social media content (2 posts/week)
+
+### Scale — $6,000/mo
+Best for multi-crew operations looking to dominate their market.
+
+- Everything in Growth, plus:
+- Google Ads management (up to $5,000 ad spend)
+- Full website build or redesign
+- Multi-location SEO strategy
+- AI chatbot for website lead capture
+- Video content production (2 videos/month)
+- Weekly strategy calls
+- Priority support
+
+### Enterprise — $8,000+/mo
+Best for large operations and franchises expanding into new territories.
+
+- Everything in Scale, plus:
+- Unlimited ad spend management
+- Multi-market expansion strategy
+- Custom AI integrations (CRM, dispatch, etc.)
+- Dedicated marketing strategist
+- Custom reporting and analytics
+- Brand development and positioning
+- Recruitment marketing for hiring crews
+
+---
+
+## What Our Clients Say
+
+> *"[CLIENT TESTIMONIAL PLACEHOLDER — Include quote about lead quality, revenue growth, or how Sovereign AI changed their business. Aim for 2-3 sentences from a named client with their trade and location.]"*
+>
+> — **[CLIENT NAME]**, [TRADE], [CITY, STATE]
+
+---
+
+## Ready to Stop Guessing and Start Growing?
+
+Book a free strategy call and we'll show you exactly how many leads are available in your market — and what it will take to capture them.
+
+**Book a Demo:** [BOOKING LINK]
+
+---
+
+### Contact
+
+| | |
+|---|---|
+| **Name** | [SALES REP NAME] |
+| **Email** | [EMAIL ADDRESS] |
+| **Phone** | [PHONE NUMBER] |
+| **Website** | [WEBSITE URL] |
+| **Address** | [OFFICE ADDRESS] |

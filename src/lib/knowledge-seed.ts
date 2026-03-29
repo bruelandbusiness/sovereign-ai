@@ -6,12 +6,13 @@
  */
 
 export interface KnowledgeArticle {
-  id: string;
-  slug: string;
-  category: string;
-  title: string;
-  content: string;
-  order: number;
+  readonly id: string;
+  readonly slug: string;
+  readonly title: string;
+  readonly category: string;
+  readonly content: string;
+  readonly tags: readonly string[];
+  readonly order: number;
 }
 
 export const KNOWLEDGE_ARTICLES: KnowledgeArticle[] = [
@@ -21,6 +22,7 @@ export const KNOWLEDGE_ARTICLES: KnowledgeArticle[] = [
     slug: "how-to-access-your-dashboard",
     category: "getting_started",
     title: "How to Access Your Dashboard",
+    tags: ["login", "dashboard", "navigation", "magic-link", "authentication"],
     order: 1,
     content: `# How to Access Your Dashboard
 
@@ -58,6 +60,7 @@ The dashboard is fully responsive. You can access it from any modern browser on 
     slug: "understanding-your-kpi-metrics",
     category: "getting_started",
     title: "Understanding Your KPI Metrics",
+    tags: ["kpi", "metrics", "analytics", "leads", "revenue", "conversion-rate"],
     order: 2,
     content: `# Understanding Your KPI Metrics
 
@@ -97,6 +100,7 @@ Use the goal banner at the top of your dashboard to set monthly targets. Start w
     slug: "setting-up-your-first-ai-service",
     category: "getting_started",
     title: "Setting Up Your First AI Service",
+    tags: ["setup", "activation", "onboarding", "services", "configuration"],
     order: 3,
     content: `# Setting Up Your First AI Service
 
@@ -140,6 +144,7 @@ Once active, check your dashboard daily for the first week to see how the servic
     slug: "connecting-your-google-business-profile",
     category: "getting_started",
     title: "Connecting Your Google Business Profile",
+    tags: ["google", "gbp", "oauth", "integration", "permissions", "local-seo"],
     order: 4,
     content: `# Connecting Your Google Business Profile
 
@@ -188,6 +193,7 @@ If the connection fails, ensure you are signing in with the correct Google accou
     slug: "your-first-30-days-checklist",
     category: "getting_started",
     title: "Your First 30 Days Checklist",
+    tags: ["onboarding", "checklist", "first-month", "setup", "goals"],
     order: 5,
     content: `# Your First 30 Days Checklist
 
@@ -236,6 +242,7 @@ Businesses that follow this checklist typically see measurable results by the en
     slug: "how-ai-lead-generation-works",
     category: "services",
     title: "How AI Lead Generation Works",
+    tags: ["leads", "lead-capture", "lead-scoring", "nurturing", "pipeline", "crm"],
     order: 1,
     content: `# How AI Lead Generation Works
 
@@ -280,6 +287,7 @@ Every lead flows into your CRM with full attribution data — you can see exactl
     slug: "how-ai-voice-agents-answer-your-calls",
     category: "services",
     title: "How AI Voice Agents Answer Your Calls",
+    tags: ["voice", "calls", "phone", "routing", "business-hours", "missed-calls"],
     order: 2,
     content: `# How AI Voice Agents Answer Your Calls
 
@@ -327,6 +335,7 @@ Customize the Voice Agent from Dashboard > Services > Voice. You can adjust the 
     slug: "how-review-management-gets-you-5-star-reviews",
     category: "services",
     title: "How Review Management Gets You 5-Star Reviews",
+    tags: ["reviews", "auto-request", "review-response", "ratings", "reputation"],
     order: 3,
     content: `# How Review Management Gets You 5-Star Reviews
 
@@ -370,6 +379,7 @@ Consistent review management delivers compounding benefits:
     slug: "how-ai-content-engine-publishes-for-you",
     category: "services",
     title: "How AI Content Engine Publishes for You",
+    tags: ["content", "blog", "social-media", "seo", "publishing", "scheduling"],
     order: 4,
     content: `# How AI Content Engine Publishes for You
 
@@ -412,6 +422,7 @@ Content marketing is a long-term strategy with compounding returns. Each publish
     slug: "how-ai-ads-management-optimizes-your-spend",
     category: "services",
     title: "How AI Ads Management Optimizes Your Spend",
+    tags: ["ads", "campaigns", "google-ads", "meta-ads", "roas", "optimization"],
     order: 5,
     content: `# How AI Ads Management Optimizes Your Spend
 
@@ -456,6 +467,7 @@ Start conservatively and scale based on results. Once your cost per lead stabili
     slug: "understanding-your-subscription-plan",
     category: "billing",
     title: "Understanding Your Subscription Plan",
+    tags: ["subscription", "plans", "tiers", "starter", "growth", "empire"],
     order: 1,
     content: `# Understanding Your Subscription Plan
 
@@ -500,6 +512,7 @@ Check your current plan, billing date, and included services anytime at Dashboar
     slug: "how-to-upgrade-or-downgrade",
     category: "billing",
     title: "How to Upgrade or Downgrade",
+    tags: ["upgrade", "downgrade", "plan-change", "prorate", "billing"],
     order: 2,
     content: `# How to Upgrade or Downgrade
 
@@ -548,6 +561,7 @@ Our support team is available to review your account data and recommend the opti
     slug: "billing-faq-and-payment-methods",
     category: "billing",
     title: "Billing FAQ and Payment Methods",
+    tags: ["payment", "billing-cycle", "invoices", "receipts", "stripe", "faq"],
     order: 3,
     content: `# Billing FAQ and Payment Methods
 
@@ -600,6 +614,7 @@ All payment data is handled by Stripe and never touches our servers. Stripe is P
     slug: "cancellation-and-refund-policy",
     category: "billing",
     title: "Cancellation and Refund Policy",
+    tags: ["cancellation", "refund", "data-retention", "money-back", "pause"],
     order: 4,
     content: `# Cancellation and Refund Policy
 
@@ -645,6 +660,7 @@ To reactivate a canceled account within the 90-day retention window, simply log 
     slug: "common-issues-and-solutions",
     category: "troubleshooting",
     title: "Common Issues and Solutions",
+    tags: ["faq", "troubleshooting", "login", "chatbot", "data", "errors"],
     order: 1,
     content: `# Common Issues and Solutions
 
@@ -685,6 +701,7 @@ When reporting any issue to support, include the steps you took, what you expect
     slug: "how-to-contact-support",
     category: "troubleshooting",
     title: "How to Contact Support",
+    tags: ["support", "ticket", "email", "chat", "phone", "hours"],
     order: 2,
     content: `# How to Contact Support
 
@@ -740,6 +757,7 @@ For critical issues outside business hours — such as a complete platform outag
     slug: "service-status-and-uptime",
     category: "troubleshooting",
     title: "Service Status and Uptime",
+    tags: ["status", "uptime", "outage", "maintenance", "health-check"],
     order: 3,
     content: `# Service Status and Uptime
 
@@ -789,6 +807,7 @@ During incidents, we post updates to the status page every 15 to 30 minutes unti
     slug: "maximizing-your-roi",
     category: "best_practices",
     title: "Maximizing Your ROI",
+    tags: ["roi", "optimization", "multi-channel", "speed-to-lead", "revenue"],
     order: 1,
     content: `# Maximizing Your ROI
 
@@ -835,6 +854,7 @@ Use the ROI section of your dashboard to track actual revenue generated from eac
     slug: "getting-the-most-from-ai-chatbots",
     category: "best_practices",
     title: "Getting the Most from AI Chatbots",
+    tags: ["chatbot", "system-prompt", "faq-training", "tone", "optimization"],
     order: 2,
     content: `# Getting the Most from AI Chatbots
 
@@ -879,6 +899,7 @@ Use the preview feature in your dashboard to test conversations as if you were a
     slug: "review-response-best-practices",
     category: "best_practices",
     title: "Review Response Best Practices",
+    tags: ["reviews", "response", "timing", "tone", "templates", "reputation"],
     order: 3,
     content: `# Review Response Best Practices
 
@@ -914,4 +935,15 @@ Negative reviews are opportunities to demonstrate professionalism. How you respo
 
 Sovereign AI's review management generates personalized responses automatically. Review the suggested response before posting to ensure it sounds natural and addresses the specific feedback. Over time, the AI learns your preferred tone and becomes increasingly accurate. You can choose to auto-publish responses or approve each one manually based on your comfort level.`,
   },
-];
+] as const;
+
+/**
+ * Look up a single knowledge article by its URL slug.
+ *
+ * Returns `undefined` when no article matches the given slug.
+ */
+export function getArticleBySlug(
+  slug: string,
+): KnowledgeArticle | undefined {
+  return KNOWLEDGE_ARTICLES.find((article) => article.slug === slug);
+}
