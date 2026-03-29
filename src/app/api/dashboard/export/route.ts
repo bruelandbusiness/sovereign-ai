@@ -12,16 +12,16 @@ export async function GET(request: NextRequest) {
   try {
     const { clientId, accountId } = await requireClient();
 
-    // Rate limit: 10 exports per hour per account
+    // Rate limit: 5 exports per hour per account
     const rl = await rateLimit(
       `csv-export:${accountId}`,
-      10,
-      10 / 3600, // refill ~0.00278 tokens/sec = 10/hour
+      5,
+      5 / 3600, // refill ~0.00139 tokens/sec = 5/hour
     );
     if (!rl.allowed) {
       return setRateLimitHeaders(
         NextResponse.json(
-          { error: "Rate limit exceeded. Max 10 exports per hour." },
+          { error: "Rate limit exceeded. Max 5 exports per hour." },
           { status: 429 },
         ),
         rl
@@ -64,6 +64,20 @@ export async function GET(request: NextRequest) {
 
       const csv = toCSV(rows);
 
+      await prisma.auditLog.create({
+        data: {
+          action: "data_export",
+          resource: "leads",
+          resourceId: `${clientId}:${Date.now()}`,
+          accountId,
+          metadata: JSON.stringify({
+            exportType: "csv",
+            recordCount: leads.length,
+            filters: JSON.stringify({ type: "leads" }),
+          }),
+        },
+      });
+
       return new Response(csv, {
         status: 200,
         headers: {
@@ -96,6 +110,20 @@ export async function GET(request: NextRequest) {
       }));
 
       const csv = toCSV(rows);
+
+      await prisma.auditLog.create({
+        data: {
+          action: "data_export",
+          resource: "activities",
+          resourceId: `${clientId}:${Date.now()}`,
+          accountId,
+          metadata: JSON.stringify({
+            exportType: "csv",
+            recordCount: activities.length,
+            filters: JSON.stringify({ type: "activities" }),
+          }),
+        },
+      });
 
       return new Response(csv, {
         status: 200,
@@ -140,6 +168,20 @@ export async function GET(request: NextRequest) {
 
       const csv = toCSV(rows);
 
+      await prisma.auditLog.create({
+        data: {
+          action: "data_export",
+          resource: "invoices",
+          resourceId: `${clientId}:${Date.now()}`,
+          accountId,
+          metadata: JSON.stringify({
+            exportType: "csv",
+            recordCount: invoices.length,
+            filters: JSON.stringify({ type: "invoices" }),
+          }),
+        },
+      });
+
       return new Response(csv, {
         status: 200,
         headers: {
@@ -174,6 +216,20 @@ export async function GET(request: NextRequest) {
       }));
 
       const csv = toCSV(rows);
+
+      await prisma.auditLog.create({
+        data: {
+          action: "data_export",
+          resource: "performance",
+          resourceId: `${clientId}:${Date.now()}`,
+          accountId,
+          metadata: JSON.stringify({
+            exportType: "csv",
+            recordCount: events.length,
+            filters: JSON.stringify({ type: "performance" }),
+          }),
+        },
+      });
 
       return new Response(csv, {
         status: 200,

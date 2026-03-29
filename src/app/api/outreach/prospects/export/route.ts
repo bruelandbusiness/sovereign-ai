@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { requireAdmin } from "@/lib/require-admin";
 import { AuthError } from "@/lib/require-client";
+import { rateLimit, setRateLimitHeaders } from "@/lib/rate-limit";
 import type { ExportedProspect } from "@/lib/outreach/types";
 import { z } from "zod";
 
@@ -14,8 +15,10 @@ const TAG = "[api/outreach/prospects/export]";
 // ---------------------------------------------------------------------------
 
 export async function POST(request: NextRequest) {
+  let accountId: string;
   try {
-    await requireAdmin();
+    const adminSession = await requireAdmin();
+    accountId = adminSession.accountId;
   } catch (error) {
     if (error instanceof AuthError) {
       return NextResponse.json(
@@ -24,6 +27,22 @@ export async function POST(request: NextRequest) {
       );
     }
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Rate limit: 5 exports per hour per account
+  const rl = await rateLimit(
+    `prospect-export:${accountId}`,
+    5,
+    5 / 3600, // refill ~0.00139 tokens/sec = 5/hour
+  );
+  if (!rl.allowed) {
+    return setRateLimitHeaders(
+      NextResponse.json(
+        { error: "Rate limit exceeded. Max 5 exports per hour." },
+        { status: 429 },
+      ),
+      rl,
+    );
   }
 
   try {
@@ -102,6 +121,20 @@ export async function POST(request: NextRequest) {
     }));
 
     logger.info(`${TAG} Exported prospects`, { count: exported.length });
+
+    await prisma.auditLog.create({
+      data: {
+        action: "data_export",
+        resource: "prospects",
+        resourceId: `${accountId}:${Date.now()}`,
+        accountId,
+        metadata: JSON.stringify({
+          exportType: "json",
+          recordCount: exported.length,
+          filters: JSON.stringify({ vertical, city, state, status, minScore, hasEmail }),
+        }),
+      },
+    });
 
     return NextResponse.json({
       count: exported.length,

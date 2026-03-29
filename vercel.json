@@ -87,7 +87,8 @@
     { "path": "/api/cron/prospect-to-campaign", "schedule": "30 7 * * *" },
     { "path": "/api/cron/abandoned-cart", "schedule": "0 */4 * * *" },
     { "path": "/api/cron/welcome-drip", "schedule": "0 */6 * * *" },
-    { "path": "/api/cron/re-engagement", "schedule": "0 0 * * *" }
+    { "path": "/api/cron/re-engagement", "schedule": "0 0 * * *" },
+    { "path": "/api/cron/quote-expiry", "schedule": "0 2 * * *" }
   ],
   "headers": [
     {
