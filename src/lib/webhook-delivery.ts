@@ -19,6 +19,21 @@ const REQUEST_TIMEOUT_MS = 10_000;
 
 type DeliveryStatus = "pending" | "delivered" | "failed" | "dead_letter";
 
+/** Shape of the JSON body sent to webhook consumers. */
+export interface WebhookPayload {
+  event: string;
+  data: Record<string, unknown>;
+  timestamp: string;
+}
+
+/** Summary returned after a delivery attempt completes (or exhausts retries). */
+export interface WebhookDeliveryResult {
+  success: boolean;
+  statusCode?: number;
+  attempts: number;
+  error?: string;
+}
+
 interface AttemptRecord {
   attempt: number;
   timestamp: string;
@@ -32,6 +47,22 @@ interface DeliveryResult {
   responseBody: string;
   responseTimeMs: number;
   success: boolean;
+}
+
+// ---------------------------------------------------------------------------
+// Payload signing
+// ---------------------------------------------------------------------------
+
+/**
+ * Signs a webhook payload string with HMAC-SHA256.
+ * Returns the hex-encoded signature for use in the
+ * `X-Webhook-Signature` header.
+ */
+export function signWebhookPayload(
+  payload: string,
+  secret: string,
+): string {
+  return crypto.createHmac("sha256", secret).update(payload).digest("hex");
 }
 
 // ---------------------------------------------------------------------------
@@ -184,17 +215,15 @@ export async function deliverWebhook(
     return;
   }
 
-  const body = JSON.stringify({
+  const webhookPayload: WebhookPayload = {
     event,
     timestamp: new Date().toISOString(),
     data: payload,
-  });
+  };
+  const body = JSON.stringify(webhookPayload);
 
   // HMAC signature
-  const signature = crypto
-    .createHmac("sha256", webhookSecret)
-    .update(body)
-    .digest("hex");
+  const signature = signWebhookPayload(body, webhookSecret);
 
   // Create the log entry up front
   let logId: string;
