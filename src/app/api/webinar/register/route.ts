@@ -31,7 +31,7 @@ const registerSchema = z.object({
 export async function POST(request: NextRequest) {
   const ip =
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  const { allowed } = await rateLimitByIP(ip, "webinar-register", 5);
+  const { allowed } = await rateLimitByIP(ip, "webinar-register", 10);
   if (!allowed) {
     return NextResponse.json(
       { error: "Too many requests. Please try again later." },

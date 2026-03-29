@@ -22,7 +22,7 @@ export async function POST(
   try {
   const forwarded = request.headers.get("x-forwarded-for");
   const ip = forwarded?.split(",")[0]?.trim() || "unknown";
-  const { allowed } = await rateLimitByIP(ip, "quotes-respond", 30);
+  const { allowed } = await rateLimitByIP(ip, "quotes-respond", 20);
   if (!allowed) {
     return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   }

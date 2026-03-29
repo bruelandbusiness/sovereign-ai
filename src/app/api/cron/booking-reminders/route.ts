@@ -140,10 +140,21 @@ export const GET = withCronErrorHandler("cron/booking-reminders", async (request
     }
 
     for (const booking of upcomingBookings) {
-      // Check dedup using the pre-fetched set
+      // Check dedup using the pre-fetched set (fast path)
       if (remindedBookingIds.has(booking.id)) {
         continue;
       }
+
+      // Atomic idempotency check via auditLog to prevent race conditions
+      // when overlapping cron runs pass the pre-fetched set check
+      const alreadySent = await prisma.auditLog.findFirst({
+        where: {
+          action: "booking_reminder_sent",
+          resourceId: booking.id,
+        },
+      });
+
+      if (alreadySent) continue;
 
       const tz = timezoneByClient.get(booking.clientId) || "America/New_York";
       const appointmentDate = formatDate(booking.startsAt, tz);
@@ -192,6 +203,23 @@ export const GET = withCronErrorHandler("cron/booking-reminders", async (request
             type: "email_sent",
             title: `Booking reminder sent [reminder-${booking.id}]`,
             description: `24-hour reminder sent to ${booking.customerName} for appointment on ${appointmentDate}.`,
+          },
+        });
+
+        // Authoritative dedup record for atomic claim pattern
+        await prisma.auditLog.create({
+          data: {
+            action: "booking_reminder_sent",
+            resource: "booking",
+            resourceId: booking.id,
+            accountId: "system",
+            metadata: JSON.stringify({
+              bookingId: booking.id,
+              clientId: booking.clientId,
+              customerEmail: booking.customerEmail,
+              customerPhone: booking.customerPhone,
+              sent_at: new Date().toISOString(),
+            }),
           },
         });
       } catch (err) {

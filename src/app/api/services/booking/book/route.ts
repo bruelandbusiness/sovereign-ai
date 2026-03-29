@@ -5,7 +5,7 @@ import { validateBody } from "@/lib/validate";
 import { rateLimitByIP } from "@/lib/rate-limit";
 import { syncBookingToCalendar } from "@/lib/integrations/google-calendar";
 import { sendSms } from "@/lib/twilio";
-import { sendBookingReminderEmail } from "@/lib/email";
+import { sendBookingReminderEmail, sendBookingConfirmationEmail } from "@/lib/email";
 import { dispatchWebhook } from "@/lib/webhooks";
 import { trackPerformanceBooking } from "@/lib/performance-tracking";
 import { createNotificationForClient } from "@/lib/notifications";
@@ -256,6 +256,23 @@ export async function POST(request: Request) {
     if (!smsResult.success) {
       logger.errorWithCause("[booking] Twilio SMS failed:", smsResult.error);
     }
+  }
+
+  // ── Immediate booking confirmation email (non-blocking) ─────
+  if (body.customerEmail) {
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const manageUrl = `${appUrl}/bookings/${booking.id}`;
+    sendBookingConfirmationEmail(
+      body.customerEmail,
+      body.customerName,
+      client.businessName,
+      body.serviceType || "Appointment",
+      formattedDate,
+      formattedTime,
+      manageUrl
+    ).catch((err) => {
+      logger.errorWithCause("[booking] Confirmation email failed:", err);
+    });
   }
 
   // ── Queue email reminder for 24h before appointment ─────────

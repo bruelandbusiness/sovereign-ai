@@ -34,7 +34,7 @@ export async function POST(
 ) {
   const ip =
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  const { allowed } = await rateLimitByIP(ip, "referral-submit", 10);
+  const { allowed } = await rateLimitByIP(ip, "referral-submit", 30);
   if (!allowed) {
     return NextResponse.json(
       { error: "Too many requests. Please try again later." },
@@ -166,20 +166,32 @@ export async function POST(
 
 // GET: Fetch referral program info for the public page
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ clientId: string }> }
 ) {
+  // Rate limit GET requests to prevent enumeration / scraping
+  const ip =
+    (request.headers.get("x-forwarded-for") ?? "").split(",")[0]?.trim() || "unknown";
+  const { allowed } = await rateLimitByIP(ip, "referral-info", 30);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { status: 429 }
+    );
+  }
+
   try {
     const { clientId } = await params;
 
     // Eagerly load client and referral-program service config in a single
     // query to avoid a separate N+1 lookup for the service.
+    // Only select fields needed for the public landing page — no internal
+    // metadata (e.g. vertical, account info) is exposed.
     const client = await prisma.client.findUnique({
       where: { id: clientId },
       select: {
         id: true,
         businessName: true,
-        vertical: true,
         services: {
           where: { serviceId: "referral-program" },
           take: 1,
@@ -211,9 +223,9 @@ export async function GET(
       }
     }
 
+    // Only expose minimal public data — no internal fields
     return NextResponse.json({
       businessName: client.businessName,
-      vertical: client.vertical,
       rewardText: config.rewardText,
       terms: config.terms,
       enabled: config.enabled,

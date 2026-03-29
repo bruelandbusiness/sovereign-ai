@@ -50,6 +50,24 @@ declare module "stripe" {
       list(params?: Record<string, unknown>): Promise<{ data: Record<string, unknown>[] }>;
       retrieve(id: string): Promise<Record<string, unknown>>;
     };
+    invoices: {
+      list(params?: Record<string, unknown>): Promise<{ data: Array<Record<string, unknown> & { payment_intent?: string | { id: string } }> }>;
+      retrieve(id: string): Promise<Record<string, unknown>>;
+    };
+    refunds: {
+      create(params: Record<string, unknown>): Promise<Record<string, unknown> & { id: string; amount?: number; status?: string }>;
+      retrieve(id: string): Promise<Record<string, unknown>>;
+      list(params?: Record<string, unknown>): Promise<{ data: Array<Record<string, unknown> & { id: string; amount: number; currency: string; status: string | null; created: number }> }>;
+    };
+    charges: {
+      list(params?: Record<string, unknown>): Promise<{ data: Array<Record<string, unknown> & { id: string; refunds?: { data: Array<{ id: string; amount: number; currency: string; status: string | null; created: number }> } }> }>;
+      retrieve(id: string): Promise<Record<string, unknown>>;
+    };
+    billingPortal: {
+      sessions: {
+        create(params: Record<string, unknown>): Promise<Record<string, unknown> & { url: string }>;
+      };
+    };
   }
   namespace Stripe {
     type LatestApiVersion = string;

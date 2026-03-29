@@ -7,7 +7,6 @@ import { Gift, CheckCircle2, Loader2, ArrowRight } from "lucide-react";
 
 interface ProgramInfo {
   businessName: string;
-  vertical: string | null;
   rewardText: string;
   terms: string;
   enabled: boolean;

@@ -16,7 +16,7 @@ export const dynamic = "force-dynamic";
 export async function GET(request: NextRequest) {
   // Rate limit: 60 requests per hour per IP (public calculator)
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  const { allowed } = await rateLimitByIP(ip, "financing-calc", 60);
+  const { allowed } = await rateLimitByIP(ip, "financing-calc", 30);
   if (!allowed) {
     return NextResponse.json(
       { error: "Too many requests. Please try again later." },

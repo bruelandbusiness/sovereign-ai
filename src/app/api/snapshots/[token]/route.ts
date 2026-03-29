@@ -14,7 +14,7 @@ export async function GET(
 ) {
   const forwarded = _request.headers.get("x-forwarded-for");
   const ip = forwarded?.split(",")[0]?.trim() || "unknown";
-  const { allowed } = await rateLimitByIP(ip, "snapshots-get", 120);
+  const { allowed } = await rateLimitByIP(ip, "snapshots-get", 30);
   if (!allowed) {
     return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   }

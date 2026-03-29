@@ -194,8 +194,8 @@ model Lead {
   name            String
   email           String?
   phone           String?
-  source          String    @default("website") // website | chatbot | form | phone | referral | voice
-  status          String    @default("new") // new | qualified | appointment | won | lost
+  source          String    @default("website") // chatbot | website | referral | phone | ads | form | social | voice
+  status          String    @default("new") // new | contacted | qualified | appointment | proposal | won | lost
   notes           String?
   score           Int?      // AI-generated lead score
   stage           String?   // hot | warm | cold
@@ -712,7 +712,7 @@ model EmailEvent {
   metadata   String?  // JSON
   createdAt  DateTime @default(now())
 
-  campaign EmailCampaign? @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  campaign EmailCampaign? @relation(fields: [campaignId], references: [id], onDelete: Cascade)
 
   @@index([messageId])
   @@index([campaignId])
@@ -1756,7 +1756,7 @@ model AffiliateReferral {
   convertedAt   DateTime?
 
   affiliate AffiliatePartner @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
-  client    Client?          @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  client    Client?          @relation(fields: [clientId], references: [id], onDelete: Cascade)
 
   @@index([affiliateId])
   @@index([clientId])

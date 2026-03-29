@@ -44,6 +44,17 @@ interface InvoiceObject {
   period_end?: number;
 }
 
+interface DisputeObject {
+  id: string;
+  charge?: string | null;
+  customer?: string | { id: string } | null;
+  amount?: number;
+  currency?: string;
+  status?: string;
+  reason?: string | null;
+  metadata?: Record<string, string> | null;
+}
+
 function resolveId(field: string | { id: string } | null | undefined): string | null {
   if (!field) return null;
   if (typeof field === "string") return field;
@@ -138,6 +149,7 @@ export async function POST(request: NextRequest) {
       "customer.subscription.deleted",
       "invoice.payment_succeeded",
       "invoice.payment_failed",
+      "charge.dispute.created",
     ]);
 
     let handlerError: unknown = null;
@@ -174,6 +186,12 @@ export async function POST(request: NextRequest) {
           break;
         case "invoice.paid":
           await handleInvoicePaid(obj as unknown as InvoiceObject);
+          break;
+        case "charge.dispute.created":
+          await handleDisputeCreated(obj as unknown as DisputeObject);
+          break;
+        case "charge.dispute.closed":
+          await handleDisputeClosed(obj as unknown as DisputeObject);
           break;
         default:
           logger.info(`[payments/webhooks/stripe] Unhandled event type: ${event.type}`);
@@ -835,4 +853,266 @@ async function handleSubscriptionResumed(sub: SubscriptionObject) {
       },
     }),
   ]);
+}
+
+// ─── charge.dispute.created ──────────────────────────────────────────
+
+async function handleDisputeCreated(dispute: DisputeObject) {
+  const customerId = resolveId(dispute.customer);
+  if (!customerId) {
+    logger.error("[payments/webhooks/stripe] No customer in dispute", { disputeId: dispute.id });
+    return;
+  }
+
+  const subscription = await prisma.subscription.findFirst({
+    where: { stripeCustId: customerId },
+    include: { client: { include: { account: true } } },
+  });
+  if (!subscription) {
+    logger.warn("[payments/webhooks/stripe] No subscription found for dispute customer", {
+      disputeId: dispute.id,
+      customerId,
+    });
+    return;
+  }
+
+  const amount = dispute.amount || 0;
+  const formattedAmount = `$${(amount / 100).toFixed(2)}`;
+
+  // Run independent updates in parallel
+  const parallelOps: Promise<unknown>[] = [
+    prisma.subscription.update({
+      where: { id: subscription.id },
+      data: { status: "past_due" },
+    }),
+    prisma.auditLog.create({
+      data: {
+        accountId: subscription.client?.accountId || null,
+        action: "dispute_created",
+        resource: "dispute",
+        resourceId: dispute.id,
+        metadata: JSON.stringify({
+          chargeId: dispute.charge,
+          amount,
+          currency: dispute.currency,
+          reason: dispute.reason,
+          status: dispute.status,
+        }),
+      },
+    }),
+    prisma.activityEvent.create({
+      data: {
+        clientId: subscription.clientId,
+        type: "seo_update",
+        title: "Chargeback received",
+        description: `A dispute for ${formattedAmount} has been filed. Your subscription has been placed on hold.`,
+      },
+    }),
+  ];
+
+  // Create a notification for the dashboard
+  if (subscription.client?.accountId) {
+    parallelOps.push(
+      prisma.notification.create({
+        data: {
+          accountId: subscription.client.accountId,
+          type: "billing",
+          title: "Chargeback Received",
+          message: `⚠️ Chargeback received — ${formattedAmount} disputed`,
+          actionUrl: "/dashboard/billing",
+        },
+      })
+    );
+  }
+
+  await Promise.all(parallelOps);
+
+  // Capture in Sentry as warning
+  Sentry.captureMessage(
+    `Chargeback received: ${formattedAmount} for customer ${customerId} (dispute: ${dispute.id}, reason: ${dispute.reason || "unknown"})`,
+    "warning",
+  );
+
+  // Send Telegram alert for dispute (revenue impact)
+  const businessName = subscription.client?.businessName ?? "Unknown";
+  sendTelegramAlert(
+    "warning",
+    "Chargeback Received",
+    `Client: ${businessName}\nAmount: ${formattedAmount}\nReason: ${dispute.reason || "Not specified"}\nDispute ID: ${dispute.id}`,
+  ).catch((err) => {
+    logger.errorWithCause("[payments/webhooks/stripe] Telegram alert for dispute failed", err);
+  });
+
+  // Send alert email to client owner
+  const clientEmail = subscription.client?.account?.email;
+  const ownerName = subscription.client?.ownerName || "there";
+  if (clientEmail) {
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.trysovereignai.com";
+    const html = emailLayout({
+      preheader: "A chargeback has been filed on your account",
+      body: `
+        <p style="color:#333;font-size:16px;line-height:1.5;">Hi ${ownerName},</p>
+        <p style="color:#333;font-size:16px;line-height:1.5;">We've received a chargeback dispute for <strong>${formattedAmount}</strong> on your account. Your subscription has been placed on hold until the dispute is resolved.</p>
+        <p style="color:#333;font-size:16px;line-height:1.5;">If you did not initiate this dispute, please contact your bank to withdraw it, then reach out to us so we can restore your services.</p>
+        ${emailButton("View Billing Details", `${appUrl}/dashboard/billing`, "danger")}
+        <p style="color:#666;font-size:14px;">If you have questions, please reply to this email.</p>
+      `,
+      isTransactional: true,
+    });
+
+    await sendEmailQueued(clientEmail, "Action Required: Chargeback Received", html);
+  }
+}
+
+// ─── charge.dispute.closed ───────────────────────────────────────────
+
+async function handleDisputeClosed(dispute: DisputeObject) {
+  const customerId = resolveId(dispute.customer);
+  if (!customerId) {
+    logger.error("[payments/webhooks/stripe] No customer in closed dispute", { disputeId: dispute.id });
+    return;
+  }
+
+  const subscription = await prisma.subscription.findFirst({
+    where: { stripeCustId: customerId },
+    include: { client: { include: { account: true } } },
+  });
+  if (!subscription) {
+    logger.warn("[payments/webhooks/stripe] No subscription found for closed dispute customer", {
+      disputeId: dispute.id,
+      customerId,
+    });
+    return;
+  }
+
+  const amount = dispute.amount || 0;
+  const formattedAmount = `$${(amount / 100).toFixed(2)}`;
+  const disputeWon = dispute.status === "won";
+  const disputeWithdrawn = dispute.status === "warning_closed";
+
+  // Determine outcome
+  const isResolved = disputeWon || disputeWithdrawn;
+
+  const parallelOps: Promise<unknown>[] = [
+    prisma.auditLog.create({
+      data: {
+        accountId: subscription.client?.accountId || null,
+        action: "dispute_closed",
+        resource: "dispute",
+        resourceId: dispute.id,
+        metadata: JSON.stringify({
+          chargeId: dispute.charge,
+          amount,
+          currency: dispute.currency,
+          status: dispute.status,
+          outcome: isResolved ? "won" : "lost",
+        }),
+      },
+    }),
+  ];
+
+  if (isResolved) {
+    // Dispute won or withdrawn: restore subscription to active
+    parallelOps.push(
+      prisma.subscription.update({
+        where: { id: subscription.id },
+        data: { status: "active" },
+      }),
+      prisma.activityEvent.create({
+        data: {
+          clientId: subscription.clientId,
+          type: "lead_captured",
+          title: "Dispute resolved in your favor",
+          description: `The ${formattedAmount} dispute has been resolved in your favor. Your subscription is active again.`,
+        },
+      }),
+      // Re-activate services that were paused due to the dispute
+      prisma.clientService.updateMany({
+        where: { clientId: subscription.clientId, status: "paused" },
+        data: { status: "active" },
+      }),
+    );
+
+    if (subscription.client?.accountId) {
+      parallelOps.push(
+        prisma.notification.create({
+          data: {
+            accountId: subscription.client.accountId,
+            type: "billing",
+            title: "Dispute Resolved",
+            message: `Dispute resolved in your favor — ${formattedAmount} returned`,
+            actionUrl: "/dashboard/billing",
+          },
+        })
+      );
+    }
+  } else {
+    // Dispute lost: keep past_due status
+    parallelOps.push(
+      prisma.activityEvent.create({
+        data: {
+          clientId: subscription.clientId,
+          type: "seo_update",
+          title: "Dispute lost",
+          description: `Dispute lost — ${formattedAmount} charged back. Please update your payment method to restore service.`,
+        },
+      }),
+    );
+
+    if (subscription.client?.accountId) {
+      parallelOps.push(
+        prisma.notification.create({
+          data: {
+            accountId: subscription.client.accountId,
+            type: "billing",
+            title: "Dispute Lost",
+            message: `Dispute lost — ${formattedAmount} charged back`,
+            actionUrl: "/dashboard/billing",
+          },
+        })
+      );
+    }
+  }
+
+  await Promise.all(parallelOps);
+
+  // Send Telegram alert with outcome
+  const businessName = subscription.client?.businessName ?? "Unknown";
+  sendTelegramAlert(
+    isResolved ? "info" : "warning",
+    `Dispute ${isResolved ? "Won" : "Lost"}`,
+    `Client: ${businessName}\nAmount: ${formattedAmount}\nOutcome: ${dispute.status}\nDispute ID: ${dispute.id}`,
+  ).catch((err) => {
+    logger.errorWithCause("[payments/webhooks/stripe] Telegram alert for dispute closure failed", err);
+  });
+
+  // Send outcome email to client owner
+  const clientEmail = subscription.client?.account?.email;
+  const ownerName = subscription.client?.ownerName || "there";
+  if (clientEmail) {
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.trysovereignai.com";
+    const subject = isResolved
+      ? "Dispute Resolved in Your Favor"
+      : "Dispute Lost — Action Required";
+    const html = emailLayout({
+      preheader: isResolved
+        ? "Your dispute has been resolved"
+        : "Your dispute was not resolved in your favor",
+      body: isResolved
+        ? `
+          <p style="color:#333;font-size:16px;line-height:1.5;">Hi ${ownerName},</p>
+          <p style="color:#333;font-size:16px;line-height:1.5;">Great news! The ${formattedAmount} dispute has been resolved in your favor. Your subscription is now active and all services have been restored.</p>
+          ${emailButton("View Dashboard", `${appUrl}/dashboard`)}
+        `
+        : `
+          <p style="color:#333;font-size:16px;line-height:1.5;">Hi ${ownerName},</p>
+          <p style="color:#333;font-size:16px;line-height:1.5;">Unfortunately, the ${formattedAmount} dispute was not resolved in your favor and the amount has been charged back. Please update your payment method to restore your services.</p>
+          ${emailButton("Update Payment Method", `${appUrl}/dashboard/billing`, "danger")}
+          <p style="color:#666;font-size:14px;">If you have questions, please reply to this email.</p>
+        `,
+      isTransactional: true,
+    });
+
+    await sendEmailQueued(clientEmail, subject, html);
+  }
 }
