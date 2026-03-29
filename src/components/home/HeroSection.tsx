@@ -14,7 +14,9 @@ import { motion, useMotionValue, useTransform, animate } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 import { Container } from "@/components/layout/Container";
 import { GradientButton } from "@/components/shared/GradientButton";
+import { ABTest } from "@/components/shared/ABTest";
 import { trackCTAClick, trackCtaClickConversion } from "@/lib/analytics";
+import { EXPERIMENTS } from "@/lib/experiments";
 
 /* ------------------------------------------------------------------ */
 /*  Animated counter with framer-motion                                */
@@ -399,18 +401,37 @@ export function HeroSection({ onCtaClick, onDemoClick }: HeroSectionProps) {
               className="mt-10 flex flex-col items-stretch gap-4 sm:flex-row sm:items-center sm:justify-center"
             >
               <div className="flex flex-col items-stretch sm:items-center">
-                <GradientButton
-                  size="lg"
-                  className="group btn-shine cta-glow px-8 py-4 text-base sm:px-10 sm:text-lg w-full sm:w-auto"
-                  onClick={() => {
-                    trackCTAClick("Start Getting More Leads", "homepage_hero");
-                    trackCtaClickConversion("hero");
-                    onCtaClick?.();
-                  }}
-                >
-                  Start Getting More Leads
-                  <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-                </GradientButton>
+                <ABTest
+                  flagKey={EXPERIMENTS.HERO_CTA_TEXT}
+                  control={
+                    <GradientButton
+                      size="lg"
+                      className="group btn-shine cta-glow px-8 py-4 text-base sm:px-10 sm:text-lg w-full sm:w-auto"
+                      onClick={() => {
+                        trackCTAClick("Start Getting More Leads", "homepage_hero");
+                        trackCtaClickConversion("hero");
+                        onCtaClick?.();
+                      }}
+                    >
+                      Start Getting More Leads
+                      <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                    </GradientButton>
+                  }
+                  variant={
+                    <GradientButton
+                      size="lg"
+                      className="group btn-shine cta-glow px-8 py-4 text-base sm:px-10 sm:text-lg w-full sm:w-auto"
+                      onClick={() => {
+                        trackCTAClick("Book Your Free Strategy Call", "homepage_hero");
+                        trackCtaClickConversion("hero");
+                        onCtaClick?.();
+                      }}
+                    >
+                      Book Your Free Strategy Call
+                      <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                    </GradientButton>
+                  }
+                />
                 <span className="mt-2.5 text-xs sm:text-sm text-muted-foreground font-medium">
                   Free 15-min strategy call &mdash; No credit card required
                 </span>
