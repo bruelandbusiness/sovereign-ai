@@ -217,6 +217,8 @@ model Lead {
   @@index([source])
   @@index([email])
   @@index([phone])
+  @@index([updatedAt])
+  @@index([status, createdAt])
 }
 
 model ActivityEvent {
@@ -355,6 +357,7 @@ model Booking {
   @@index([clientId, startsAt])
   @@index([locationId])
   @@index([status])
+  @@index([status, createdAt])
 }
 
 // ─── Blog ───────────────────────────────────────────────────
@@ -734,6 +737,7 @@ model OrchestrationEvent {
   @@index([type])
   @@index([clientId])
   @@index([createdAt])
+  @@index([status, createdAt])
 }
 
 model EventSubscription {
@@ -1125,6 +1129,7 @@ model Quote {
   @@index([clientId])
   @@index([leadId])
   @@index([status])
+  @@index([status, createdAt])
 }
 
 // ─── Receptionist Config ────────────────────────────────────
@@ -1172,6 +1177,7 @@ model RevenueEvent {
   @@index([createdAt])
   @@index([leadId])
   @@index([channel])
+  @@index([clientId, createdAt])
 }
 
 // ─── Review Response ────────────────────────────────────────
@@ -1934,6 +1940,7 @@ model DiscoveredLead {
   @@index([clientId])
   @@index([sourceId])
   @@index([status])
+  @@index([status, createdAt])
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -2051,6 +2058,8 @@ model OutreachEntry {
   @@index([clientId])
   @@index([sequenceId])
   @@index([status, nextStepAt])
+  @@index([leadId])
+  @@index([discoveredLeadId])
 }
 
 model SmsWarmupTracker {
@@ -2208,6 +2217,7 @@ model Prospect {
   @@index([score])
   @@index([vertical])
   @@index([city, state])
+  @@index([status, createdAt])
 }
 
 model ProspectActivity {
