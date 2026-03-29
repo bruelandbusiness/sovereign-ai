@@ -36,7 +36,43 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const body = await request.json();
+    let body: unknown;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json(
+        { error: "Invalid JSON body" },
+        { status: 400 },
+      );
+    }
+
+    // Pre-validation: check required fields with descriptive errors
+    if (typeof body !== "object" || body === null) {
+      return NextResponse.json(
+        { error: "Request body must be a JSON object" },
+        { status: 400 },
+      );
+    }
+    const raw = body as Record<string, unknown>;
+    if (!raw.vertical || typeof raw.vertical !== "string" || raw.vertical.trim() === "") {
+      return NextResponse.json(
+        { error: "Vertical is required" },
+        { status: 400 },
+      );
+    }
+    if (!raw.city || typeof raw.city !== "string" || raw.city.trim() === "") {
+      return NextResponse.json(
+        { error: "City is required" },
+        { status: 400 },
+      );
+    }
+    if (!raw.state || typeof raw.state !== "string" || raw.state.trim() === "") {
+      return NextResponse.json(
+        { error: "State is required" },
+        { status: 400 },
+      );
+    }
+
     const parsed = scrapeSchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json(

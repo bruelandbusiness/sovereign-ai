@@ -67,7 +67,43 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const body = await request.json();
+    let body: unknown;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json(
+        { error: "Invalid JSON body" },
+        { status: 400 },
+      );
+    }
+
+    // Pre-validation: check required fields with descriptive errors
+    if (typeof body !== "object" || body === null) {
+      return NextResponse.json(
+        { error: "Request body must be a JSON object" },
+        { status: 400 },
+      );
+    }
+    const raw = body as Record<string, unknown>;
+    if (!raw.type || typeof raw.type !== "string") {
+      return NextResponse.json(
+        { error: "Type is required and must be a string" },
+        { status: 400 },
+      );
+    }
+    if (!raw.name || typeof raw.name !== "string" || raw.name.trim() === "") {
+      return NextResponse.json(
+        { error: "Name is required" },
+        { status: 400 },
+      );
+    }
+    if (typeof raw.name === "string" && raw.name.length > 200) {
+      return NextResponse.json(
+        { error: "Name must not exceed 200 characters" },
+        { status: 400 },
+      );
+    }
+
     const parsed = createSourceSchema.safeParse(body);
 
     if (!parsed.success) {

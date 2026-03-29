@@ -55,7 +55,16 @@ export async function POST(request: NextRequest) {
       hasEmail: z.boolean().optional(),
     });
 
-    const body = await request.json();
+    let body: unknown;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json(
+        { error: "Invalid JSON body" },
+        { status: 400 },
+      );
+    }
+
     const parsed = exportSchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json({ error: "Validation failed" }, { status: 400 });

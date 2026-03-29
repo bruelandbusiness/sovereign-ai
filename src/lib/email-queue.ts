@@ -6,17 +6,67 @@ import { canSendEmail } from "@/lib/compliance";
 import { canSendEmail as checkFrequencyCap } from "@/lib/email-frequency";
 import { logContactAttempt } from "@/lib/compliance/tcpa";
 
+/** Email category type matching the EmailQueue.category column. */
+export type EmailCategory =
+  | "marketing"
+  | "weekly_reports"
+  | "product_updates"
+  | "transactional";
+
+/**
+ * Map an EmailQueue category string to the corresponding EmailPreference
+ * boolean field name. Returns null for transactional (never suppressed).
+ */
+function categoryToPreferenceField(
+  category: string,
+): "marketing" | "weeklyReports" | "productUpdates" | null {
+  switch (category) {
+    case "marketing":
+      return "marketing";
+    case "weekly_reports":
+      return "weeklyReports";
+    case "product_updates":
+      return "productUpdates";
+    default:
+      return null; // transactional or unknown -- never suppress
+  }
+}
+
 /**
  * Check if a recipient email address belongs to a client that has unsubscribed
- * from marketing emails. Used to suppress non-transactional sends.
+ * from a specific email category. Falls back to checking the blanket
+ * unsubscribe activity event for backward compatibility.
+ *
+ * Transactional emails are never suppressed.
  */
-export async function isUnsubscribedRecipient(email: string): Promise<boolean> {
+export async function isUnsubscribedRecipient(
+  email: string,
+  category: string = "marketing",
+): Promise<boolean> {
+  // Transactional emails are never suppressed
+  if (category === "transactional") return false;
+
   const account = await prisma.account.findUnique({
     where: { email },
     select: { client: { select: { id: true } } },
   });
   if (!account?.client) return false;
 
+  // Check granular email preferences first
+  const prefs = await prisma.emailPreference.findUnique({
+    where: { clientId: account.client.id },
+  });
+
+  if (prefs) {
+    const field = categoryToPreferenceField(category);
+    if (field) {
+      return !prefs[field];
+    }
+    // Unknown category with preferences record -- allow
+    return false;
+  }
+
+  // Fallback: check legacy blanket unsubscribe activity event
   const unsubEvent = await prisma.activityEvent.findFirst({
     where: {
       clientId: account.client.id,
@@ -53,6 +103,8 @@ interface QueueEmailOptions {
   maxAttempts?: number;
   /** Client ID for compliance checking. Null/undefined = transactional (skip compliance). */
   clientId?: string | null;
+  /** Email category for preference-based suppression. Defaults to "transactional". */
+  category?: EmailCategory;
 }
 
 /**
@@ -81,6 +133,7 @@ export async function queueEmail(
   const entry = await prisma.emailQueue.create({
     data: {
       clientId: options?.clientId ?? null,
+      category: options?.category ?? "transactional",
       to,
       subject: safeSubject,
       html,
@@ -120,6 +173,7 @@ export async function processEmailQueue(): Promise<{
     Array<{
       id: string;
       clientId: string | null;
+      category: string;
       to: string;
       subject: string;
       html: string;
@@ -173,15 +227,18 @@ export async function processEmailQueue(): Promise<{
       continue;
     }
 
-    // Unsubscribe suppression: skip marketing emails to clients who opted out.
-    const unsubscribed = await isUnsubscribedRecipient(email.to);
+    // Unsubscribe suppression: skip emails for categories the client opted out of.
+    const unsubscribed = await isUnsubscribedRecipient(
+      email.to,
+      email.category,
+    );
     if (unsubscribed) {
       await prisma.emailQueue.update({
         where: { id: email.id },
         data: {
           status: "failed",
           attempts: newAttempts,
-          lastError: "Suppressed: recipient has unsubscribed from marketing emails",
+          lastError: `Suppressed: recipient has unsubscribed from ${email.category} emails`,
         },
       });
       failed++;

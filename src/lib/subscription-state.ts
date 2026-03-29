@@ -105,10 +105,10 @@ export function warnOnInvalidTransition(
     `Allowed: [${getValidNextStatuses(currentStatus).join(", ")}]`;
 
   logger.warn(`[subscription-state] ${message}`, context);
-  Sentry.withScope((scope) => {
-    scope.setExtras({ currentStatus, newStatus, ...context });
-    Sentry.captureMessage(message, "warning");
-  });
+  Sentry.captureMessage(
+    `${message} | context: ${JSON.stringify({ currentStatus, newStatus, ...context })}`,
+    "warning",
+  );
 
   return false;
 }

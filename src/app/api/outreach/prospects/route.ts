@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { requireAdmin } from "@/lib/require-admin";
 import { AuthError } from "@/lib/require-client";
+import { rateLimitByIP } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 const TAG = "[api/outreach/prospects]";
@@ -12,6 +13,16 @@ const TAG = "[api/outreach/prospects]";
 // ---------------------------------------------------------------------------
 
 export async function GET(request: NextRequest) {
+  // Rate limit: 60 requests per IP per hour
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  const { allowed } = await rateLimitByIP(ip, "outreach-prospects", 60);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Too many requests" },
+      { status: 429 }
+    );
+  }
+
   try {
     await requireAdmin();
   } catch (error) {
@@ -32,9 +43,10 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get("status");
     const minScore = searchParams.get("minScore");
     const cursor = searchParams.get("cursor");
+    const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
     const limit = Math.min(
-      Number(searchParams.get("limit")) || 50,
-      200,
+      100,
+      Math.max(1, Number(searchParams.get("limit")) || 50),
     );
 
     const where: Record<string, unknown> = {
@@ -49,19 +61,20 @@ export async function GET(request: NextRequest) {
       where.score = { gte: Number(minScore) };
     }
 
-    const prospects = await prisma.prospect.findMany({
-      where,
-      orderBy: [{ score: "desc" }, { createdAt: "desc" }],
-      take: limit,
-      ...(cursor
-        ? {
-            skip: 1,
-            cursor: { id: cursor },
-          }
-        : {}),
-    });
+    // When a cursor is provided, use cursor-based pagination.
+    // Otherwise fall back to offset-based pagination.
+    const skip = cursor ? 1 : (page - 1) * limit;
 
-    const total = await prisma.prospect.count({ where });
+    const [prospects, total] = await Promise.all([
+      prisma.prospect.findMany({
+        where,
+        orderBy: [{ score: "desc" }, { createdAt: "desc" }],
+        take: limit,
+        skip,
+        ...(cursor ? { cursor: { id: cursor } } : {}),
+      }),
+      prisma.prospect.count({ where }),
+    ]);
 
     return NextResponse.json({
       prospects,
@@ -70,6 +83,12 @@ export async function GET(request: NextRequest) {
         prospects.length === limit
           ? prospects[prospects.length - 1].id
           : null,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
     });
   } catch (error) {
     logger.errorWithCause(`${TAG} GET failed`, error);

@@ -40,10 +40,47 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const raw = await request.json();
+    let raw: unknown;
+    try {
+      raw = await request.json();
+    } catch {
+      return NextResponse.json(
+        { error: "Invalid JSON body" },
+        { status: 400 },
+      );
+    }
+
+    // Pre-validation: check required fields before schema parsing
+    if (typeof raw === "object" && raw !== null && !Array.isArray((raw as Record<string, unknown>).leads)) {
+      const r = raw as Record<string, unknown>;
+      if (!r.name || typeof r.name !== "string" || r.name.trim() === "") {
+        return NextResponse.json(
+          { error: "Name is required" },
+          { status: 400 },
+        );
+      }
+      if (!r.email || typeof r.email !== "string") {
+        return NextResponse.json(
+          { error: "Email is required" },
+          { status: 400 },
+        );
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(r.email)) {
+        return NextResponse.json(
+          { error: "Invalid email format" },
+          { status: 400 },
+        );
+      }
+      if (typeof r.name === "string" && r.name.length > 200) {
+        return NextResponse.json(
+          { error: "Name must not exceed 200 characters" },
+          { status: 400 },
+        );
+      }
+    }
 
     // Support single lead or batch
-    const isBatch = Array.isArray(raw.leads);
+    const isBatch = Array.isArray((raw as Record<string, unknown>).leads);
     let leads: z.infer<typeof inboundSchema>[];
 
     if (isBatch) {
