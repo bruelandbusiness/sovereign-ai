@@ -452,9 +452,9 @@ export default function PricingPage() {
                             bundle.popular && "pt-10"
                           )}
                         >
-                          <h3 className="font-display text-2xl font-bold">
+                          <h2 className="font-display text-2xl font-bold">
                             {bundle.name}
-                          </h3>
+                          </h2>
                           <p className="mt-1 text-sm text-muted-foreground">
                             {bundle.description}
                           </p>
@@ -871,13 +871,14 @@ export default function PricingPage() {
                     </div>
 
                     <div>
-                      <label className="mb-2 block text-sm font-medium">
+                      <label htmlFor="leads-per-month" className="mb-2 block text-sm font-medium">
                         Current Leads Per Month:{" "}
                         <span className="text-primary font-bold">
                           {leadsPerMonth}
                         </span>
                       </label>
                       <input
+                        id="leads-per-month"
                         type="range"
                         min={5}
                         max={200}
@@ -896,10 +897,11 @@ export default function PricingPage() {
                     </div>
 
                     <div>
-                      <label className="mb-2 block text-sm font-medium">
+                      <label htmlFor="avg-job-value" className="mb-2 block text-sm font-medium">
                         Average Job Value ($)
                       </label>
                       <input
+                        id="avg-job-value"
                         type="number"
                         value={avgJobValue}
                         onChange={(e) =>
