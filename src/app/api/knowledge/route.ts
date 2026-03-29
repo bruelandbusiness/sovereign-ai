@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { KB_ARTICLES, KB_CATEGORIES } from "@/lib/knowledge-base";
+import { KNOWLEDGE_ARTICLES } from "@/lib/knowledge-seed";
 import { rateLimitByIP } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
+
+/** Categories that include the seed-data "best_practices" category. */
+const ALL_CATEGORIES = [
+  ...KB_CATEGORIES,
+  { id: "best_practices" as const, label: "Best Practices", icon: "puzzle" },
+];
 
 export const dynamic = "force-dynamic";
 /**
@@ -55,7 +62,7 @@ export async function GET(request: NextRequest) {
     ];
   }
 
-  const articles = await prisma.knowledgeArticle.findMany({
+  const dbArticles = await prisma.knowledgeArticle.findMany({
     where,
     orderBy: [{ category: "asc" }, { order: "asc" }],
     select: {
@@ -70,8 +77,24 @@ export async function GET(request: NextRequest) {
     take: 500,
   });
 
-  // Group by category for convenience
-  const categories = KB_CATEGORIES.map((cat) => ({
+  // Fall back to seed data when the database has no articles (e.g. DB
+  // is unreachable for writes or the seed insert above was skipped).
+  const articles =
+    dbArticles.length > 0
+      ? dbArticles
+      : KNOWLEDGE_ARTICLES.map((a) => ({
+          id: a.id,
+          slug: a.slug,
+          category: a.category,
+          title: a.title,
+          order: a.order,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        }));
+
+  // Group by category for convenience — use extended list so
+  // seed-only categories (e.g. best_practices) are included.
+  const categories = ALL_CATEGORIES.map((cat) => ({
     ...cat,
     articles: articles.filter((a) => a.category === cat.id),
   }));

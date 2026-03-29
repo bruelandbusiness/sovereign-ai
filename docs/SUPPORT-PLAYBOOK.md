@@ -1,258 +1,554 @@
-# Sovereign AI -- Support Playbook
+# Support Playbook
 
-## Overview
-
-This playbook defines how Sovereign AI handles client support requests. Every support interaction should be fast, professional, and resolution-oriented. When in doubt, escalate early rather than leaving a client waiting.
-
----
-
-## 1. Support Tiers
-
-### Tier 1 -- Basic Support
-
-**Handled by**: Front-line support staff
-**Response SLA**: Within 1 hour (business hours)
-
-| Issue | Resolution Steps |
-|-------|-----------------|
-| **Password reset / login issues** | 1. Verify client identity (email on file). 2. Trigger magic link resend via admin dashboard. 3. If magic link not received, check spam folder. 4. Verify email address in database. 5. If persistent, escalate to Tier 2. |
-| **Dashboard navigation questions** | 1. Identify which section the client needs help with. 2. Walk through the relevant dashboard area. 3. Share the appropriate help article or screenshot. 4. Offer a brief screen-share if needed. |
-| **Billing inquiries** | 1. Look up subscription in Stripe Dashboard. 2. Verify current plan, billing date, and payment method. 3. For invoice requests, generate from Stripe. 4. For plan changes, confirm new pricing and process via Stripe. 5. For refund requests, escalate to Tier 2. |
-| **Notification preferences** | 1. Guide client to Settings > Notifications in dashboard. 2. Help toggle email, SMS, and push preferences. 3. Verify changes saved successfully. |
-| **Report access** | 1. Confirm client has correct dashboard access. 2. Walk through report location and filters. 3. Export report if client needs offline copy. |
-
-### Tier 2 -- Technical Support
-
-**Handled by**: Senior support / engineering support
-**Response SLA**: Within 4 hours
-
-| Issue | Resolution Steps |
-|-------|-----------------|
-| **Service not working (no leads, calls failing)** | 1. Check service status in admin dashboard. 2. Verify service is activated for the client's account. 3. Check `/api/health` endpoint for system status. 4. Review Vercel logs for errors related to the client's account. 5. Test the service end-to-end with test data. 6. If infrastructure issue, escalate to Tier 3. |
-| **Integration problems (CRM sync, calendar)** | 1. Verify integration credentials are valid. 2. Check API connection status in admin panel. 3. Review error logs for failed sync attempts. 4. Re-authorize the integration if token expired. 5. Test with a manual sync trigger. 6. If API changes detected, escalate to Tier 3. |
-| **Email deliverability issues** | 1. Check email queue status (`/api/cron/email-queue`). 2. Verify SPF/DKIM/DMARC records for client's domain. 3. Check if emails are hitting spam (request client check spam folder). 4. Review bounce logs for hard/soft bounces. 5. If domain blacklisted, escalate to Tier 3. |
-| **Incorrect data in dashboard** | 1. Identify the specific metric or data point. 2. Cross-reference with source data (Stripe, lead DB, call logs). 3. Check for data sync delays (cron job timing). 4. If data discrepancy confirmed, log a bug and escalate to Tier 3. |
-| **Stripe payment failures** | 1. Check Stripe Dashboard for the failed payment. 2. Identify failure reason (insufficient funds, expired card, etc.). 3. For card issues, ask client to update payment method. 4. For Stripe-side errors, check Stripe status page. 5. Retry the payment via Stripe Dashboard if appropriate. |
-| **Refund processing** | 1. Verify refund eligibility per MSA terms. 2. Calculate refund amount (pro-rata or full per guarantee). 3. Get manager approval for refunds over $500. 4. Process refund via Stripe Dashboard. 5. Confirm refund with client via email. |
-
-### Tier 3 -- Engineering / Platform Issues
-
-**Handled by**: Engineering team
-**Response SLA**: Within 24 hours (critical: 4 hours)
-
-| Issue | Resolution Steps |
-|-------|-----------------|
-| **Data integrity issues** | 1. Identify affected records and scope. 2. Check database logs for anomalies. 3. Compare with Neon point-in-time data. 4. Write corrective queries if needed. 5. Verify data consistency post-fix. 6. Communicate resolution to affected clients. |
-| **Platform bugs** | 1. Reproduce the issue in staging. 2. Check Sentry for related error reports. 3. Identify root cause in codebase. 4. Write fix with tests. 5. Deploy via standard deployment process. 6. Verify fix in production. |
-| **Infrastructure outages** | 1. Check external service status pages (Vercel, Neon, Stripe). 2. If Sovereign AI issue, check Vercel deployment status. 3. Rollback if recent deployment caused the issue. 4. Communicate status to affected clients. 5. Post-mortem after resolution. |
-| **Security incidents** | 1. Follow incident response protocol (see RUNBOOK.md). 2. Isolate affected systems. 3. Assess scope and impact. 4. Notify affected clients within 72 hours (per DPA). 5. Remediate and document. |
+> **Last Updated:** [PLACEHOLDER — DATE]
+> **Owner:** [PLACEHOLDER — HEAD OF SUPPORT]
+> **Review Cadence:** Monthly
 
 ---
 
-## 2. Response Time SLAs
+## Table of Contents
 
-| Severity | Description | First Response | Resolution Target |
-|----------|-------------|---------------|-------------------|
-| **P1 -- Critical** | Platform down, all clients affected, data breach | 30 minutes | 4 hours |
-| **P2 -- High** | Service degraded, individual client's services not working | 1 hour | 8 hours |
-| **P3 -- Medium** | Feature not working as expected, workaround available | 4 hours | 24 hours |
-| **P4 -- Low** | Questions, feature requests, minor UI issues | 24 hours | 72 hours |
-
-### Business Hours
-
-- **Standard support**: Monday--Friday, 9:00 AM -- 6:00 PM CT
-- **P1 critical issues**: 24/7 (on-call rotation)
-- **Weekend coverage**: P1 and P2 only
+1. [Support Tiers and Responsibilities](#support-tiers-and-responsibilities)
+2. [SLA Definitions](#sla-definitions)
+3. [Common Issues and Resolutions](#common-issues-and-resolutions)
+4. [Escalation Procedures](#escalation-procedures)
+5. [Communication Templates](#communication-templates)
+6. [Tools and Access](#tools-and-access)
 
 ---
 
-## 3. Common Issues with Step-by-Step Resolutions
+## Support Tiers and Responsibilities
 
-### 3.1 Client Cannot Log In
+| Tier | Role | Scope | Tools |
+|---|---|---|---|
+| **L1 — Front Line** | Support Agent | Account access, billing questions, known issues, FAQ, basic troubleshooting | Help desk, CRM, knowledge base |
+| **L2 — Technical** | Senior Support / Support Engineer | Complex technical issues, integration troubleshooting, configuration, data queries | Platform admin, database read access, logs |
+| **L3 — Engineering** | Software Engineer / DevOps | Bug fixes, infrastructure issues, code-level investigation, hotfixes | Full codebase, production access, monitoring |
 
-```
-1. Ask: "What happens when you click the login link?"
-2. If "link expired" → Resend magic link from admin dashboard
-3. If "no email received":
-   a. Verify email address in client database
-   b. Check email-queue logs for delivery status
-   c. Ask client to check spam/junk folder
-   d. If email provider is blocking, whitelist sending domain
-4. If "error after clicking link":
-   a. Check if session creation succeeded in logs
-   b. Verify AUTH_SECRET is set in production
-   c. Check for CSRF validation errors in middleware logs
-5. If persistent → Escalate to Tier 2
-```
+### Tier Capabilities
 
-### 3.2 Leads Not Appearing in Dashboard
+**L1 Can:**
+- Reset passwords and unlock accounts
+- Explain billing and invoices
+- Walk clients through documented features
+- Apply known fixes from the knowledge base
+- Update client records in CRM
 
-```
-1. Check: Is the lead capture form live and accessible?
-2. Submit a test lead through the form
-3. Check /api/leads endpoint for recent entries
-4. Verify the lead-capture cron job is running (check Vercel cron logs)
-5. Check if lead scoring is filtering out the leads
-6. If test lead does not appear:
-   a. Check Vercel function logs for errors
-   b. Verify database connectivity (/api/health)
-   c. Check rate limiting (429 responses)
-7. If test lead appears but client leads do not:
-   a. Check lead source attribution
-   b. Verify form is posting to correct endpoint
-   c. Check for CORS or domain mismatch issues
-```
+**L2 Can:**
+- Access server logs and application logs
+- Run diagnostic queries on client data
+- Modify client configuration settings
+- Troubleshoot API and integration issues
+- Create workarounds for known bugs
 
-### 3.3 AI Receptionist Not Answering Calls
-
-```
-1. Verify Twilio account is active and funded
-2. Check Twilio call logs for the client's number
-3. Verify phone number routing in Twilio console
-4. Test with an inbound call to the assigned number
-5. Check for Twilio webhook failures (misconfigured URL)
-6. Verify TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN in env vars
-7. If calls connect but AI not responding:
-   a. Check ANTHROPIC_API_KEY is valid
-   b. Verify AI receptionist script is configured for client
-   c. Check for API rate limits on Anthropic
-```
-
-### 3.4 Review Requests Not Sending
-
-```
-1. Check email queue status for pending review request emails
-2. Verify client's customer contact list is populated
-3. Check SMS delivery status in Twilio logs
-4. Verify review request template is configured
-5. Check if review request cron job ran successfully
-6. Test by manually triggering a review request
-```
-
-### 3.5 Dashboard Showing Stale Data
-
-```
-1. Check when cron jobs last ran (Vercel Dashboard > Cron Jobs)
-2. Verify the relevant data sync cron is scheduled
-3. Check for cron job failures in logs
-4. Manually trigger a data refresh via admin panel
-5. Check browser cache (ask client to hard-refresh: Ctrl+Shift+R)
-6. If persistent → Escalate to Tier 3
-```
-
-### 3.6 Stripe Subscription Issues
-
-```
-1. Look up client in Stripe Dashboard by email
-2. Check subscription status (active, past_due, canceled)
-3. For "past_due":
-   a. Check failed payment reason
-   b. Contact client to update payment method
-   c. Retry payment once updated
-4. For webhook sync issues:
-   a. Check Stripe Dashboard > Webhooks > Recent events
-   b. Look for failed webhook deliveries
-   c. Resend failed events from Stripe
-5. Verify local subscription record matches Stripe
-```
+**L3 Can:**
+- Deploy hotfixes to production
+- Access and modify production databases
+- Investigate and fix application code
+- Resolve infrastructure and scaling issues
+- Implement permanent fixes for recurring issues
 
 ---
 
-## 4. Escalation Matrix
+## SLA Definitions
 
-### By Role
+### Response Time SLAs
 
-| Role | Handles | Escalates To |
-|------|---------|-------------|
-| Support Agent (Tier 1) | Basic inquiries, account questions, billing | Support Lead |
-| Support Lead (Tier 2) | Technical issues, refunds, service problems | Engineering Lead |
-| Engineering Lead (Tier 3) | Platform bugs, data issues, infrastructure | Head of Operations |
-| Head of Operations | Major outages, client escalations | Founder / CEO |
+| Priority | Description | First Response | Update Frequency | Resolution Target |
+|---|---|---|---|---|
+| **P0 — Critical** | Service completely down, data loss, security breach | 15 minutes | Every 30 minutes | 4 hours |
+| **P1 — High** | Major feature broken, payments affected, significant user impact | 1 hour | Every 2 hours | 8 hours |
+| **P2 — Medium** | Non-critical feature issue, workaround available, integration problem | 4 hours | Every 8 hours | 24 hours |
+| **P3 — Low** | Minor UI issue, feature request, documentation question | 8 hours | Daily | 72 hours |
+| **P4 — Informational** | General inquiry, feedback, enhancement suggestion | 24 hours | As needed | 5 business days |
 
-### By Issue Type
+### SLA by Client Tier
 
-| Issue Type | Primary | Backup | Executive Sponsor |
-|------------|---------|--------|-------------------|
-| Billing & payments | Support Lead | Account Manager | Head of Ops |
-| Service outage | Engineering Lead | On-call Engineer | CTO |
-| Client dissatisfaction | Account Manager | Client Success Lead | CEO |
-| Security incident | Engineering Lead | Security Reviewer | CTO + CEO |
-| Legal / compliance | Head of Operations | Legal Counsel | CEO |
+| Metric | Starter | Growth | Enterprise |
+|---|---|---|---|
+| Support channels | Email | Email + Chat | Email + Chat + Phone + Dedicated CSM |
+| Support hours | Business hours (9-5 ET) | Extended (8-8 ET) | 24/7 |
+| P0 first response | 1 hour | 30 minutes | 15 minutes |
+| P1 first response | 4 hours | 2 hours | 1 hour |
+| Dedicated CSM | No | No | Yes |
+| Quarterly reviews | No | Yes | Yes (monthly) |
 
-### Escalation Triggers (Auto-Escalate)
+### SLA Breach Protocol
 
-- Client has submitted 3+ tickets on the same issue
-- Issue has been open for more than 2x the SLA target
-- Client explicitly requests escalation
-- Issue affects more than one client
-- Any mention of cancellation or legal action
-
----
-
-## 5. Support Tools and Access
-
-| Tool | URL | Purpose |
-|------|-----|---------|
-| Admin Dashboard | `https://trysovereignai.com/admin` | Client management, service status |
-| Vercel Dashboard | `https://vercel.com` | Deployment logs, cron jobs |
-| Stripe Dashboard | `https://dashboard.stripe.com` | Billing, subscriptions, refunds |
-| Neon Console | `https://console.neon.tech` | Database management |
-| Sentry | `https://sentry.io` | Error monitoring |
-| Twilio Console | `https://console.twilio.com` | SMS/voice logs |
-| Telegram Bot | Internal | Alert monitoring |
+1. **Automated alert** fires when SLA threshold is at 75%
+2. **Ticket auto-escalated** to next tier at 90% of SLA
+3. **Manager notified** when SLA breached
+4. **Client receives** proactive communication acknowledging delay
+5. **Post-breach review** conducted within 24 hours
+6. **SLA credit applied** per contract terms (see SLA-TEMPLATE.md)
 
 ---
 
-## 6. Support Interaction Templates
+## Common Issues and Resolutions
 
-### First Response Template
+### Issue 1: Client Cannot Log In
+
+**Symptoms:** Login page shows "Invalid credentials" or account locked message.
+
+**Diagnosis:**
+1. Verify the email address exists in the system
+2. Check if account is locked (> 5 failed attempts)
+3. Confirm email invitation was accepted
+4. Check for SSO configuration issues (Enterprise)
+
+**Resolution:**
+- **Wrong password:** Send password reset link via platform admin
+- **Account locked:** Unlock via Admin → Users → [User] → Unlock Account
+- **Invitation not accepted:** Resend invitation email
+- **SSO issue:** Escalate to L2 for IdP configuration review
+
+**Tier:** L1
+
+---
+
+### Issue 2: Stripe Payment Failing
+
+**Symptoms:** Client reports subscription charge declined or checkout fails.
+
+**Diagnosis:**
+1. Check Stripe Dashboard → Payments for the specific charge
+2. Review decline code (e.g., `insufficient_funds`, `card_declined`, `expired_card`)
+3. Verify webhook delivery status in Stripe → Webhooks
+
+**Resolution:**
+- **Card declined:** Ask client to update payment method in billing settings
+- **Webhook failure:** Check Vercel function logs; retry webhook from Stripe dashboard
+- **Subscription stuck:** Manually sync subscription status: Admin → Billing → Sync
+- **Currency mismatch:** Verify Stripe account currency settings
+
+**Tier:** L1 (card issues) / L2 (webhook/sync issues)
+
+---
+
+### Issue 3: Emails Not Being Delivered
+
+**Symptoms:** Client or their customers not receiving notification emails.
+
+**Diagnosis:**
+1. Check SendGrid Activity Feed for the recipient email
+2. Look for bounces, blocks, or spam reports
+3. Verify sender domain authentication (SPF, DKIM, DMARC)
+4. Check if recipient is on the suppression list
+
+**Resolution:**
+- **Bounced:** Verify recipient email address; remove from suppression list if corrected
+- **Blocked by ISP:** Review email content for spam triggers; contact SendGrid support
+- **Domain not authenticated:** Guide client through DNS verification
+- **Suppression list:** Remove valid addresses from SendGrid suppressions
+
+**Tier:** L1 (basic) / L2 (domain/deliverability issues)
+
+---
+
+### Issue 4: SMS Not Sending
+
+**Symptoms:** SMS notifications not reaching recipients.
+
+**Diagnosis:**
+1. Check Twilio Console → Messages for delivery status
+2. Verify phone number format (E.164: +1XXXXXXXXXX)
+3. Check Twilio account balance
+4. Review message content for carrier filtering
+
+**Resolution:**
+- **Invalid number format:** Correct to E.164 format
+- **Account balance low:** Alert finance team to add funds
+- **Carrier filtered:** Shorten message, remove URLs, register for A2P 10DLC
+- **Number unsubscribed:** Recipient must re-opt-in via STOP/START
+
+**Tier:** L1 (format issues) / L2 (carrier/compliance issues)
+
+---
+
+### Issue 5: Dashboard Loading Slowly or Timing Out
+
+**Symptoms:** Dashboard takes > 5 seconds to load or shows timeout errors.
+
+**Diagnosis:**
+1. Check application monitoring (Vercel Analytics / Sentry)
+2. Review database query performance (slow query log)
+3. Check if issue is user-specific or platform-wide
+4. Verify client's data volume isn't exceeding tier limits
+
+**Resolution:**
+- **User-specific:** Clear browser cache, try incognito mode, check internet connection
+- **Data volume:** Optimize queries or upgrade client tier
+- **Platform-wide:** Escalate to L3 immediately (potential infrastructure issue)
+- **Database:** Escalate to L2 for query optimization
+
+**Tier:** L1 (user-specific) / L2 (data) / L3 (platform-wide)
+
+---
+
+### Issue 6: AI Automation Not Producing Expected Results
+
+**Symptoms:** AI-generated content is low quality, irrelevant, or erroring.
+
+**Diagnosis:**
+1. Review the automation configuration and prompts
+2. Check AI API status (OpenAI / Anthropic status pages)
+3. Verify API keys are valid and have sufficient quota
+4. Review input data quality
+
+**Resolution:**
+- **Poor output quality:** Guide client on prompt engineering best practices
+- **API errors:** Check API key validity; rotate if needed
+- **Rate limited:** Adjust automation frequency; upgrade API tier
+- **Unexpected behavior:** Collect examples and escalate to L2 for investigation
+
+**Tier:** L1 (guidance) / L2 (configuration) / L3 (bug investigation)
+
+---
+
+### Issue 7: Data Import/Export Failures
+
+**Symptoms:** CSV import fails, export generates empty file, or data appears corrupted.
+
+**Diagnosis:**
+1. Verify file format (UTF-8 CSV, correct headers)
+2. Check file size against limits (Starter: 5MB, Growth: 50MB, Enterprise: 500MB)
+3. Review import error log for specific row failures
+4. Confirm required fields are populated
+
+**Resolution:**
+- **Format error:** Provide CSV template with correct headers
+- **File too large:** Split file or upgrade tier
+- **Row failures:** Export error report showing failing rows with reasons
+- **Export empty:** Check date range filters; verify data exists
+
+**Tier:** L1 (format/guidance) / L2 (data investigation)
+
+---
+
+### Issue 8: Integration Connection Lost
+
+**Symptoms:** Third-party integration (CRM, calendar, etc.) stops syncing.
+
+**Diagnosis:**
+1. Check integration status in platform settings
+2. Verify OAuth tokens haven't expired
+3. Check third-party service status
+4. Review webhook delivery logs
+
+**Resolution:**
+- **Token expired:** Guide client to reconnect (disconnect → reconnect flow)
+- **Third-party outage:** Monitor and notify client when restored
+- **Webhook misconfigured:** Verify endpoint URL; reconfigure if needed
+- **Permissions changed:** Re-authorize with required scopes
+
+**Tier:** L1 (reconnect) / L2 (webhook/permission issues)
+
+---
+
+### Issue 9: Incorrect Invoice or Billing Amount
+
+**Symptoms:** Client charged wrong amount, duplicate charge, or missing credits.
+
+**Diagnosis:**
+1. Pull invoice from Stripe Dashboard
+2. Compare with contract terms and pricing tier
+3. Check for proration from mid-cycle plan changes
+4. Review coupon/discount codes applied
+
+**Resolution:**
+- **Overcharge:** Issue refund or credit via Stripe; notify finance
+- **Proration confusion:** Explain proration calculation to client
+- **Duplicate charge:** Refund duplicate; investigate subscription webhook
+- **Missing discount:** Apply coupon retroactively; issue credit if applicable
+
+**Tier:** L1 (explain) / L2 (refunds/credits, requires finance approval)
+
+---
+
+### Issue 10: Client Portal Not Displaying Correctly
+
+**Symptoms:** Branding wrong, layout broken, or content not showing for end users.
+
+**Diagnosis:**
+1. Check portal configuration in admin settings
+2. Verify custom domain DNS is resolving correctly
+3. Test in multiple browsers and devices
+4. Check if SSL certificate is valid
+
+**Resolution:**
+- **Branding wrong:** Re-upload logo/colors in portal settings; clear CDN cache
+- **Layout broken:** Check for custom CSS conflicts; revert to default theme
+- **Content missing:** Verify content is published, not draft
+- **SSL error:** Re-provision certificate via platform settings
+
+**Tier:** L1 (configuration) / L2 (DNS/SSL issues)
+
+---
+
+### Issue 11: Webhook Delivery Failures
+
+**Symptoms:** Incoming or outgoing webhooks showing failed status.
+
+**Diagnosis:**
+1. Check webhook logs for HTTP status codes
+2. Verify endpoint URL is correct and reachable
+3. Check if receiving server is returning errors
+4. Verify webhook signing secret matches
+
+**Resolution:**
+- **404 errors:** Correct endpoint URL
+- **401/403 errors:** Update authentication credentials/signing secret
+- **500 errors:** Issue on receiving end; contact client's dev team
+- **Timeout:** Receiving endpoint too slow; recommend async processing
+
+**Tier:** L2
+
+---
+
+### Issue 12: Account Permissions Not Working Correctly
+
+**Symptoms:** Users can access features they shouldn't, or are blocked from authorized features.
+
+**Diagnosis:**
+1. Review user's assigned role in admin panel
+2. Check organization-level permission overrides
+3. Verify the feature is included in the client's tier
+4. Check for recent permission changes
+
+**Resolution:**
+- **Wrong role:** Update role assignment in Admin → Users
+- **Tier limitation:** Explain feature availability per tier; suggest upgrade
+- **Permission cache:** Clear user session; have user log out and back in
+- **Bug:** Document expected vs. actual behavior; escalate to L3
+
+**Tier:** L1 (role changes) / L2 (investigation) / L3 (bugs)
+
+---
+
+## Escalation Procedures
+
+### Escalation Flow
 
 ```
-Hi [CLIENT_NAME],
+L1 Support Agent
+    │
+    ├── Cannot resolve within 30 minutes (P0-P1)
+    ├── Cannot resolve within 2 hours (P2-P3)
+    ├── Issue requires database or log access
+    └── Client specifically requests escalation
+         │
+         ▼
+L2 Senior Support / Support Engineer
+    │
+    ├── Confirmed software bug
+    ├── Infrastructure or scaling issue
+    ├── Requires code changes
+    └── Cannot resolve within L2 SLA
+         │
+         ▼
+L3 Engineering
+    │
+    ├── Requires production hotfix
+    ├── Security incident
+    └── Data loss or corruption
+         │
+         ▼
+Engineering Manager / CTO
+```
 
-Thanks for reaching out. I've received your request regarding [ISSUE].
+### Escalation Checklist
 
-I'm looking into this now and will have an update for you within [SLA_TIME].
+When escalating, always include:
 
-In the meantime, [ANY IMMEDIATE STEPS THE CLIENT CAN TAKE].
+- [ ] **Ticket ID** and link
+- [ ] **Client name** and tier
+- [ ] **Priority level** (P0-P4)
+- [ ] **Issue summary** (1-2 sentences)
+- [ ] **Steps already taken** (what was tried and failed)
+- [ ] **Impact** (number of users affected, revenue impact, etc.)
+- [ ] **Reproduction steps** (if applicable)
+- [ ] **Screenshots or logs** attached
+- [ ] **Client communication status** (what have they been told?)
+
+### Escalation Contacts
+
+| Level | Primary | Backup | Channel |
+|---|---|---|---|
+| L2 | [PLACEHOLDER] | [PLACEHOLDER] | `#support-escalations` |
+| L3 | [PLACEHOLDER] | [PLACEHOLDER] | `#engineering-urgent` |
+| Management | [PLACEHOLDER] | [PLACEHOLDER] | Direct message + phone |
+
+---
+
+## Communication Templates
+
+### Initial Response — Acknowledgment
+
+```
+Subject: [Ticket #[ID]] We've received your request
+
+Hi [CLIENT NAME],
+
+Thank you for reaching out. We've received your support request and
+a team member is reviewing it now.
+
+Ticket: #[TICKET_ID]
+Priority: [P0/P1/P2/P3/P4]
+Expected response: within [SLA TIME]
+
+If your issue is urgent, you can reach us at:
+- Chat: [PLACEHOLDER — CHAT URL]
+- Phone: [PLACEHOLDER — PHONE NUMBER] (Enterprise clients)
 
 Best,
-[AGENT_NAME]
-Sovereign AI Support
+[AGENT NAME]
+[COMPANY NAME] Support
 ```
 
-### Resolution Template
+### Status Update — In Progress
 
 ```
-Hi [CLIENT_NAME],
+Subject: [Ticket #[ID]] Update on your request
 
-Good news -- your issue regarding [ISSUE] has been resolved.
+Hi [CLIENT NAME],
 
-Here's what we found and fixed:
-- [ROOT CAUSE]
-- [WHAT WAS DONE]
-- [ANY FOLLOW-UP STEPS]
+I wanted to give you an update on your support request.
 
-Please let me know if you experience any further issues.
+Current status: In Progress
+What we've done so far:
+  - [ACTION 1]
+  - [ACTION 2]
+
+Next steps:
+  - [NEXT ACTION — EXPECTED TIMELINE]
+
+We'll continue working on this and update you
+by [NEXT UPDATE TIME].
 
 Best,
-[AGENT_NAME]
-Sovereign AI Support
+[AGENT NAME]
 ```
 
-### Escalation Notification Template
+### Escalation Notification to Client
 
 ```
-Hi [CLIENT_NAME],
+Subject: [Ticket #[ID]] Your request has been escalated
 
-I've escalated your request regarding [ISSUE] to our [TIER 2 / ENGINEERING] team
-for further investigation.
+Hi [CLIENT NAME],
 
-You can expect an update within [ESCALATED_SLA_TIME].
+To ensure we resolve your issue as quickly as possible, I've
+escalated your request to our [senior technical / engineering] team.
 
-Your case reference: [TICKET_ID]
+What this means:
+  - A specialist is now reviewing your case
+  - You may be contacted by [ESCALATION CONTACT] for additional details
+  - Target resolution: [UPDATED TIMELINE]
+
+Your ticket reference: #[TICKET_ID]
+
+We take this seriously and will keep you updated.
 
 Best,
-[AGENT_NAME]
-Sovereign AI Support
+[AGENT NAME]
 ```
+
+### Resolution Confirmation
+
+```
+Subject: [Ticket #[ID]] Your issue has been resolved
+
+Hi [CLIENT NAME],
+
+Great news — your support request has been resolved.
+
+Issue: [BRIEF DESCRIPTION]
+Resolution: [WHAT WAS DONE]
+Ticket: #[TICKET_ID]
+
+If the issue reoccurs or you have questions about the resolution,
+simply reply to this email and we'll reopen the ticket.
+
+We'd appreciate your feedback on this interaction:
+[PLACEHOLDER — SATISFACTION SURVEY LINK]
+
+Best,
+[AGENT NAME]
+[COMPANY NAME] Support
+```
+
+### SLA Breach Apology
+
+```
+Subject: [Ticket #[ID]] Our apologies for the delay
+
+Hi [CLIENT NAME],
+
+I want to sincerely apologize for the delay in resolving your
+support request. We did not meet our committed response time,
+and I understand this impacts your business.
+
+What happened: [BRIEF EXPLANATION]
+What we're doing: [CURRENT ACTION BEING TAKEN]
+Expected resolution: [UPDATED TIMELINE]
+
+As per our SLA terms, [CREDIT/REMEDY DETAILS IF APPLICABLE].
+
+I'm personally monitoring this ticket to ensure prompt resolution.
+
+Sincerely,
+[MANAGER NAME]
+[TITLE]
+```
+
+### Known Outage Communication
+
+```
+Subject: [Service Notice] [SERVICE NAME] — Performance Degradation
+
+Hi [CLIENT NAME],
+
+We're currently experiencing [BRIEF DESCRIPTION OF ISSUE]
+affecting [SCOPE — e.g., "email delivery" or "dashboard performance"].
+
+Started: [TIME AND TIMEZONE]
+Impact: [DESCRIPTION OF CLIENT IMPACT]
+Status: Investigating / Identified / Monitoring / Resolved
+
+Our engineering team is actively working on this. We'll provide
+updates every [FREQUENCY].
+
+Track real-time status at: [PLACEHOLDER — STATUS PAGE URL]
+
+We apologize for the inconvenience.
+
+Best,
+[COMPANY NAME] Support
+```
+
+---
+
+## Tools and Access
+
+### Support Team Tools
+
+| Tool | Purpose | Access Level |
+|---|---|---|
+| [PLACEHOLDER — Help Desk] | Ticket management | All support staff |
+| [PLACEHOLDER — CRM] | Client records and history | All support staff |
+| Stripe Dashboard | Billing and payment investigation | L1+ (read-only), L2+ (actions) |
+| SendGrid Dashboard | Email delivery monitoring | L2+ |
+| Twilio Console | SMS delivery monitoring | L2+ |
+| Vercel Dashboard | Deployment and function logs | L2+ (read-only), L3 (full) |
+| Sentry | Error tracking and monitoring | L2+ |
+| Database (Prisma Studio) | Data investigation | L2+ (read-only), L3 (write) |
+| GitHub | Code and issue tracking | L3 |
+
+### Knowledge Base
+
+All support agents should be familiar with:
+
+- [ ] Platform user documentation: [PLACEHOLDER — DOCS URL]
+- [ ] Internal knowledge base: [PLACEHOLDER — KB URL]
+- [ ] This support playbook
+- [ ] SLA terms: `docs/legal/SLA-TEMPLATE.md`
+- [ ] Known issues board: [PLACEHOLDER — BOARD URL]

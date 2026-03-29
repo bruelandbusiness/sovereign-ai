@@ -1,220 +1,256 @@
 # Service Level Agreement (SLA)
 
-**Between**: Sovereign AI ("Provider")
-**And**: [CLIENT_COMPANY_NAME] ("Client")
-**Effective Date**: [DATE]
-**Agreement Number**: SLA-[YYYY]-[NNN]
-
-*This SLA is incorporated by reference into the Master Service Agreement (MSA) between the parties.*
+> **Document Type:** Legal Template
+> **Version:** 1.0
+> **Effective Date:** [PLACEHOLDER — DATE]
+> **Last Reviewed:** [PLACEHOLDER — DATE]
+>
+> **DISCLAIMER:** This template is provided for reference purposes only. It must be reviewed and approved by qualified legal counsel before use. [PLACEHOLDER — COMPANY NAME] makes no representations regarding the legal sufficiency of this template.
 
 ---
 
-## 1. Platform Uptime Guarantee
+## 1. Parties
 
-### 1.1 Uptime Commitment
+This Service Level Agreement ("SLA") is entered into between:
 
-Provider guarantees **99.9% monthly uptime** for the Sovereign AI platform, measured as the percentage of total minutes in a calendar month during which the platform is available and operational.
+**Service Provider:**
+[PLACEHOLDER — COMPANY LEGAL NAME]
+[PLACEHOLDER — ADDRESS]
+("Provider")
 
-**Uptime Calculation**:
+**Client:**
+[PLACEHOLDER — CLIENT LEGAL NAME]
+[PLACEHOLDER — CLIENT ADDRESS]
+("Client")
+
+This SLA is incorporated by reference into the Master Service Agreement ("MSA") dated [PLACEHOLDER — MSA DATE] between Provider and Client.
+
+---
+
+## 2. Definitions
+
+| Term | Definition |
+|---|---|
+| **Service** | The [PLACEHOLDER — PRODUCT NAME] platform and associated services as described in the MSA |
+| **Uptime** | The percentage of time the Service is available and operational during a calendar month |
+| **Downtime** | Any period during which the Service is unavailable, excluding Scheduled Maintenance and Exclusions |
+| **Scheduled Maintenance** | Planned maintenance windows communicated at least 48 hours in advance |
+| **Incident** | Any event that causes degradation or interruption of the Service |
+| **Response Time** | The elapsed time between Client's report of an Incident and Provider's first substantive communication |
+| **Resolution Time** | The elapsed time between Client's report of an Incident and full restoration of Service |
+| **Business Hours** | Monday through Friday, 9:00 AM to 6:00 PM Eastern Time, excluding US federal holidays |
+| **Severity Level** | Classification of Incident impact as defined in Section 5 |
+
+---
+
+## 3. Service Availability
+
+### 3.1 Uptime Commitment
+
+Provider commits to the following monthly uptime targets:
+
+| Service Tier | Monthly Uptime Target | Maximum Allowed Downtime / Month |
+|---|---|---|
+| Starter | 99.5% | ~3 hours 39 minutes |
+| Growth | 99.9% | ~43 minutes |
+| Enterprise | 99.95% | ~21 minutes |
+
+### 3.2 Uptime Calculation
 
 ```
-Uptime % = ((Total Minutes in Month - Downtime Minutes) / Total Minutes in Month) x 100
+Monthly Uptime % = ((Total Minutes in Month - Downtime Minutes) / Total Minutes in Month) x 100
 ```
 
-### 1.2 Uptime Tiers
+Where:
+- **Total Minutes in Month** = Calendar days in month x 1,440
+- **Downtime Minutes** = Total minutes of unplanned Service unavailability
 
-| Uptime Achieved | Status | Credit |
-|----------------|--------|--------|
-| 99.9% -- 100% | Target met | No credit due |
-| 99.0% -- 99.8% | Below target | 10% service credit |
-| 95.0% -- 98.9% | Significant degradation | 25% service credit |
-| Below 95.0% | Major outage | 50% service credit |
+### 3.3 Uptime Monitoring
 
-### 1.3 Measurement
-
-Uptime is measured using automated external monitoring at 1-minute intervals from multiple geographic locations. The Provider's monitoring data is the authoritative source for uptime calculations.
+- Provider shall monitor Service availability continuously using independent monitoring tools
+- Uptime reports shall be made available to Client upon request
+- Enterprise clients receive automated monthly uptime reports
 
 ---
 
-## 2. Support Response Times
+## 4. Scheduled Maintenance
 
-### 2.1 Priority Definitions
+### 4.1 Maintenance Windows
 
-| Priority | Definition | Examples |
-|----------|-----------|----------|
-| **P1 -- Critical** | Platform entirely unavailable; all services affected; data breach or security incident | Complete outage, data loss, unauthorized access |
-| **P2 -- High** | Major feature unavailable; single client's services non-functional; significant performance degradation | Lead capture not working, AI receptionist down, dashboard inaccessible |
-| **P3 -- Medium** | Feature partially impaired; workaround available; minor performance issues | Slow dashboard loading, delayed notifications, report formatting errors |
-| **P4 -- Low** | General questions, feature requests, cosmetic issues, documentation requests | UI suggestions, how-to questions, enhancement requests |
+| Maintenance Type | Window | Notice Required |
+|---|---|---|
+| **Standard Maintenance** | Sundays 2:00-6:00 AM ET | 48 hours |
+| **Emergency Maintenance** | As needed | Best effort (minimum 1 hour) |
+| **Major Upgrades** | Negotiated with Client | 7 calendar days |
 
-### 2.2 Response Time Commitments
+### 4.2 Maintenance Procedures
 
-| Priority | First Response | Status Update | Resolution Target |
-|----------|---------------|---------------|-------------------|
-| **P1 -- Critical** | 30 minutes | Every 1 hour | 4 hours |
-| **P2 -- High** | 1 hour | Every 4 hours | 8 business hours |
-| **P3 -- Medium** | 4 business hours | Every 24 hours | 2 business days |
-| **P4 -- Low** | 1 business day | As needed | 5 business days |
-
-### 2.3 Support Channels
-
-| Channel | Availability | Best For |
-|---------|-------------|----------|
-| Email (support@trysovereignai.com) | 24/7 (monitored during business hours) | All priorities |
-| Dashboard ticket system | 24/7 | P3 and P4 issues |
-| Phone | Business hours (M--F, 9AM--6PM CT) | P1 and P2 issues |
-| Emergency line | 24/7 | P1 only |
-
-### 2.4 Business Hours
-
-Standard business hours: Monday through Friday, 9:00 AM to 6:00 PM Central Time, excluding US federal holidays.
+- Provider shall notify Client via email and status page of all scheduled maintenance
+- Maintenance shall be performed during the designated maintenance windows whenever possible
+- Provider shall make reasonable efforts to minimize Service disruption during maintenance
+- Scheduled maintenance does not count toward Downtime calculations
 
 ---
 
-## 3. Service Delivery Timelines
+## 5. Incident Severity Levels and Response Times
 
-### 3.1 Onboarding Timeline
+### 5.1 Severity Definitions
 
-| Milestone | Timeline |
-|-----------|----------|
-| Account provisioning | Within 24 hours of contract execution |
-| Core services activated | Within 48 hours of account provisioning |
-| Full configuration complete | Within 5 business days |
-| First performance report | Within 14 days of activation |
+| Severity | Definition | Examples |
+|---|---|---|
+| **S1 — Critical** | Service is completely unavailable; data loss or security breach | Platform down for all users; payment processing failure; data breach |
+| **S2 — High** | Major feature or function is severely impaired; no workaround available | Dashboard inaccessible; email/SMS delivery completely failed; authentication broken |
+| **S3 — Medium** | Feature is impaired but workaround is available; limited user impact | Slow page loads; individual integration failure; reporting inaccuracies |
+| **S4 — Low** | Minor issue with minimal business impact | UI cosmetic defect; non-critical feature request; documentation error |
 
-### 3.2 Service Activation
+### 5.2 Response and Resolution Times
 
-| Service Category | Activation Timeline |
-|-----------------|-------------------|
-| AI Receptionist | 24--48 hours |
-| Lead Capture and Management | 24 hours |
-| Review Management | 24--48 hours |
-| SEO Optimization | 3--5 business days |
-| Google Ads Management | 3--5 business days |
-| Social Media Management | 5--7 business days |
-| Email Marketing | 3--5 business days |
-| Website Optimization | 5--10 business days |
+| Severity | First Response | Status Updates | Target Resolution |
+|---|---|---|---|
+| **S1 — Critical** | 15 minutes (24/7) | Every 30 minutes | 4 hours |
+| **S2 — High** | 1 hour (Business Hours*) | Every 2 hours | 8 hours |
+| **S3 — Medium** | 4 hours (Business Hours) | Every 8 hours | 2 business days |
+| **S4 — Low** | 1 business day | As needed | 5 business days |
 
-### 3.3 Ongoing Deliverables
+*Enterprise tier: S2 incidents receive 24/7 response.
 
-| Deliverable | Frequency |
-|------------|-----------|
-| Performance dashboard (real-time) | Continuous |
-| Lead activity reports | Weekly |
-| Comprehensive performance report | Monthly |
-| Strategy review call | Monthly |
-| ROI analysis | Quarterly |
+### 5.3 Severity Classification
+
+- Initial severity is assigned by the reporting party
+- Provider may reclassify severity with documented justification
+- Client may request severity escalation at any time
+- Disputes over severity classification shall be resolved by [PLACEHOLDER — ESCALATION CONTACT]
 
 ---
 
-## 4. Performance Guarantees
+## 6. Performance Metrics
 
-### 4.1 Lead Generation Targets
+### 6.1 Platform Performance
 
-Lead generation targets are established during the onboarding process and documented in the Client's service configuration. Targets are based on:
+| Metric | Target | Measurement Method |
+|---|---|---|
+| Page Load Time (p95) | < 3 seconds | Synthetic monitoring |
+| API Response Time (p95) | < 500 milliseconds | Server-side logging |
+| API Error Rate | < 0.1% | Server-side logging |
+| Email Delivery Rate | > 98% | SendGrid analytics |
+| SMS Delivery Rate | > 95% | Twilio analytics |
+| Database Query Time (p95) | < 200 milliseconds | Database monitoring |
 
-- Client's trade and service area
-- Selected service tier
-- Market conditions and competition
-- Historical performance baseline
+### 6.2 Support Performance
 
-### 4.2 Target Framework
+| Metric | Target |
+|---|---|
+| First Response SLA Compliance | >= 95% |
+| Resolution SLA Compliance | >= 90% |
+| Customer Satisfaction (CSAT) | >= 4.0 / 5.0 |
+| Ticket Backlog (> 5 days old) | < 5% of total tickets |
 
-| Tier | Monthly Lead Target (Minimum) | Expected Range |
-|------|------------------------------|----------------|
-| DIY | 5 qualified leads | 5--15 |
-| Starter | 15 qualified leads | 15--30 |
-| Growth | 30 qualified leads | 30--60 |
-| Empire | 50 qualified leads | 50--100+ |
+### 6.3 Reporting
 
-*Qualified lead: A contact who has expressed interest in the Client's services, is within the service area, and has provided valid contact information.*
-
-### 4.3 Ramp-Up Period
-
-Lead generation targets apply after a 30-day ramp-up period. During ramp-up, Provider will optimize campaigns and automations. The guarantee evaluation begins on Day 31.
-
----
-
-## 5. Remedies and Credits
-
-### 5.1 Service Credits
-
-When Provider fails to meet SLA commitments, Client is entitled to service credits as specified in Section 1.2 (uptime) and below:
-
-| SLA Breach | Credit |
-|-----------|--------|
-| Missed uptime target | Per Section 1.2 |
-| Missed P1 response time | 5% monthly fee per incident |
-| Missed P2 response time | 2% monthly fee per incident |
-| Missed lead target (after ramp-up) | Pro-rata credit for shortfall |
-
-### 5.2 Credit Caps
-
-- Maximum service credits in any month: 50% of that month's fee
-- Credits are applied to the next billing cycle
-- Credits are not redeemable for cash
-
-### 5.3 Credit Request Process
-
-1. Client submits a credit request via email within 30 days of the SLA breach
-2. Provider validates the breach against monitoring data
-3. Credits are applied within one billing cycle of validation
-
-### 5.4 60-Day Money-Back Guarantee
-
-In addition to service credits, the MSA provides a 60-day money-back guarantee. If Client is unsatisfied with service performance within the first 60 days, Client may request a full refund per the terms in the MSA.
+- Provider shall deliver monthly SLA compliance reports to Enterprise clients
+- Reports shall include: uptime percentage, incident summary, response time compliance, and performance metrics
+- Reports delivered within 10 business days of month end
+- Growth tier clients may request quarterly reports
 
 ---
 
-## 6. Exclusions
+## 7. Remedies and Service Credits
 
-The following are excluded from SLA calculations and do not qualify for service credits:
+### 7.1 Service Credit Schedule
 
-### 6.1 Scheduled Maintenance
+If Provider fails to meet the monthly uptime commitment, Client is entitled to the following credits applied to the next monthly invoice:
 
-- Scheduled maintenance windows (communicated 48+ hours in advance)
-- Maintenance is typically performed during low-traffic hours (2:00 AM -- 6:00 AM CT)
-- Maximum 4 hours of scheduled maintenance per month
+| Monthly Uptime | Service Credit (% of Monthly Fee) |
+|---|---|
+| 99.0% - 99.89% (Growth/Enterprise) | 10% |
+| 98.0% - 98.99% | 20% |
+| 95.0% - 97.99% | 30% |
+| Below 95.0% | 50% |
 
-### 6.2 Force Majeure
+### 7.2 Credit Request Procedure
 
-- Natural disasters, acts of war, terrorism
-- Government actions or regulations
-- Pandemic-related disruptions
+1. Client must request credits within 30 days of the month in which the SLA was not met
+2. Request must be submitted in writing to [PLACEHOLDER — SUPPORT EMAIL]
+3. Request must include: dates and times of Downtime, description of impact
+4. Provider shall respond to credit requests within 10 business days
+5. Approved credits applied to the next billing cycle
 
-### 6.3 Third-Party Failures
+### 7.3 Credit Limitations
 
-- Failures of third-party services (Stripe, Twilio, Anthropic, Google, etc.)
-- Internet service provider outages
-- DNS propagation delays outside Provider's control
+- Maximum service credits in any calendar month shall not exceed 50% of the monthly fee for that month
+- Service credits are the Client's sole and exclusive remedy for Provider's failure to meet uptime commitments
+- Credits are not redeemable for cash and may not be transferred
+- Credits do not accumulate across months
 
-### 6.4 Client-Caused Issues
+### 7.4 Chronic Failure
 
-- Client-initiated configuration changes that cause service disruption
-- Failure to provide required access credentials or approvals
-- Exceeding agreed-upon usage limits
-- Client infrastructure failures (their website, phone system, etc.)
-
-### 6.5 Exclusion Documentation
-
-Provider will document any excluded downtime events and make records available to Client upon request.
-
----
-
-## 7. SLA Review and Amendments
-
-- This SLA is reviewed quarterly during the strategy review call
-- Amendments require written agreement from both parties
-- Provider may improve SLA terms at any time without Client consent
-- Material degradation of SLA terms requires 60 days written notice
+If Provider fails to meet the uptime commitment for three (3) consecutive months:
+- Client may terminate the MSA without penalty upon 30 days written notice
+- Client shall receive a prorated refund of any prepaid fees
+- Provider shall provide reasonable transition assistance for up to 30 days
 
 ---
 
-## 8. Signatures
+## 8. Exclusions
+
+The following are excluded from Downtime calculations and SLA commitments:
+
+1. **Scheduled Maintenance** — as defined in Section 4
+2. **Force Majeure** — events beyond Provider's reasonable control, including but not limited to:
+   - Natural disasters, acts of war, terrorism, or government action
+   - Internet backbone outages or DNS failures affecting multiple providers
+   - Widespread power outages
+3. **Third-Party Failures** — outages caused by:
+   - Client's internet service provider
+   - Third-party services not operated by Provider (e.g., Stripe, SendGrid, Twilio)
+   - Client's hardware, software, or network infrastructure
+4. **Client Actions** — including:
+   - Unauthorized modifications to the Service or configuration
+   - Exceeding documented usage limits or API rate limits
+   - Failure to follow Provider's documented procedures or recommendations
+5. **Beta or Preview Features** — features explicitly marked as beta, preview, or experimental
+6. **Suspension** — Service suspension due to Client's breach of the MSA (e.g., non-payment)
+
+---
+
+## 9. Client Responsibilities
+
+Client agrees to:
+
+1. Designate at least one (1) technical contact for incident communication
+2. Report incidents promptly via designated support channels
+3. Provide reasonable cooperation in incident diagnosis and resolution
+4. Maintain current contact information in the Client portal
+5. Implement Provider's recommended security practices (MFA, strong passwords)
+6. Keep integrations and API implementations up to date with documented specifications
+
+---
+
+## 10. Escalation Path
+
+| Level | Contact | Triggered When |
+|---|---|---|
+| L1 — Support | [PLACEHOLDER — SUPPORT EMAIL] | Initial incident report |
+| L2 — Support Management | [PLACEHOLDER — SUPPORT MANAGER] | SLA at risk; Client requests escalation |
+| L3 — Engineering | [PLACEHOLDER — ENGINEERING LEAD] | Confirmed bug; infrastructure issue |
+| L4 — Executive | [PLACEHOLDER — VP/CTO] | Chronic SLA failure; Client escalation |
+
+---
+
+## 11. Term and Amendments
+
+- This SLA is effective for the duration of the MSA
+- Provider may update this SLA with 30 days written notice to Client
+- Material adverse changes require Client's written consent
+- In the event of conflict between this SLA and the MSA, the MSA shall govern
+
+---
+
+## 12. Signatures
 
 | | Provider | Client |
-|-|----------|--------|
-| **Name** | ________________________ | ________________________ |
-| **Title** | ________________________ | ________________________ |
-| **Date** | ________________________ | ________________________ |
-| **Signature** | ________________________ | ________________________ |
+|---|---|---|
+| **Name** | [PLACEHOLDER] | [PLACEHOLDER] |
+| **Title** | [PLACEHOLDER] | [PLACEHOLDER] |
+| **Signature** | _________________________ | _________________________ |
+| **Date** | [PLACEHOLDER] | [PLACEHOLDER] |

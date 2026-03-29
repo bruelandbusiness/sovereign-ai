@@ -1,296 +1,296 @@
-# Sovereign AI -- Production Deployment Runbook
+# Deployment Runbook
 
-## 1. Prerequisites
-
-### Environment Variables (Required)
-
-Verify all required environment variables are set in Vercel before deploying:
-
-| Variable | Source | Notes |
-|----------|--------|-------|
-| `DATABASE_URL` | Neon console | Pooled connection string |
-| `STRIPE_SECRET_KEY` | Stripe Dashboard | **Live** key (starts with `sk_live_`) |
-| `STRIPE_WEBHOOK_SECRET` | Stripe Dashboard > Webhooks | Signing secret for webhook verification |
-| `STRIPE_PUBLISHABLE_KEY` | Stripe Dashboard | **Live** publishable key (starts with `pk_live_`) |
-| `NEXT_PUBLIC_SENTRY_DSN` | Sentry project settings | Client-side error reporting |
-| `SENTRY_AUTH_TOKEN` | Sentry > Settings > Auth Tokens | Source map uploads |
-| `CRON_SECRET` | Self-generated | Random 32+ character string for cron auth |
-| `TELEGRAM_BOT_TOKEN` | @BotFather | Telegram alert bot |
-| `TELEGRAM_CHAT_ID` | Telegram | Alert destination chat/group |
-| `TWILIO_ACCOUNT_SID` | Twilio console | SMS/voice services |
-| `TWILIO_AUTH_TOKEN` | Twilio console | SMS/voice auth |
-| `ANTHROPIC_API_KEY` | Anthropic console | Claude AI services |
-| `AUTH_SECRET` | Self-generated | Random 32+ character string for session encryption |
-| `ENCRYPTION_KEY` | Self-generated | Encryption key for sensitive data |
-| `SENDGRID_API_KEY` | SendGrid console | Email delivery |
-| `UPSTASH_REDIS_REST_URL` | Upstash console | Rate limiting (Redis) |
-| `UPSTASH_REDIS_REST_TOKEN` | Upstash console | Rate limiting auth |
-| `ELEVENLABS_API_KEY` | ElevenLabs console | Voice/TTS services |
-| `NEXT_PUBLIC_APP_URL` | -- | Production URL (e.g., `https://trysovereignai.com`) |
-| `NEXT_PUBLIC_GA_ID` | Google Analytics | GA4 measurement ID |
-
-### Database
-
-- [ ] Neon PostgreSQL database provisioned
-- [ ] Connection string tested locally
-- [ ] All migrations applied to production (`npx prisma migrate deploy`)
-- [ ] Seed data applied if needed (`npm run db:seed`)
-
-### Stripe (Live Mode)
-
-- [ ] Stripe account activated (not test mode)
-- [ ] Live API keys generated and stored in Vercel env vars
-- [ ] Products and prices created in Stripe Dashboard
-- [ ] Webhook endpoint configured: `https://trysovereignai.com/api/payments/webhooks/stripe`
-- [ ] Webhook events subscribed: `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_succeeded`, `invoice.payment_failed`
+> **Last Updated:** [PLACEHOLDER — DATE]
+> **Owner:** [PLACEHOLDER — DEVOPS LEAD]
+> **Review Cadence:** Quarterly
 
 ---
 
-## 2. Step-by-Step Vercel Deployment
+## Table of Contents
 
-### Initial Setup (First Deploy)
-
-```bash
-# 1. Install Vercel CLI
-npm i -g vercel
-
-# 2. Link project to Vercel
-vercel link
-
-# 3. Set all environment variables
-vercel env add DATABASE_URL production
-vercel env add STRIPE_SECRET_KEY production
-# ... repeat for all variables above
-
-# 4. Deploy to production
-vercel --prod
-```
-
-### Subsequent Deployments
-
-```bash
-# Option A: Git push (recommended -- auto-deploys via Vercel GitHub integration)
-git push origin main
-
-# Option B: Manual CLI deploy
-vercel --prod
-```
-
-### Vercel Project Settings
-
-1. **Framework Preset**: Next.js
-2. **Build Command**: `npm run build` (runs `prisma generate` then `next build`)
-3. **Output Directory**: `.next`
-4. **Install Command**: `npm ci`
-5. **Node.js Version**: 20.x
-6. **Root Directory**: `./`
+1. [Pre-Deployment Checklist](#pre-deployment-checklist)
+2. [Environment Variable Reference](#environment-variable-reference)
+3. [Production Deployment to Vercel](#production-deployment-to-vercel)
+4. [Database Migration Procedures](#database-migration-procedures)
+5. [Rollback Procedures](#rollback-procedures)
+6. [Post-Deployment Verification](#post-deployment-verification)
+7. [Incident Response](#incident-response)
 
 ---
 
-## 3. Database Migration Procedure
+## Pre-Deployment Checklist
 
-### Pre-Migration
+Complete **every item** before initiating a production deployment.
 
-```bash
-# 1. Check current migration status
-npx prisma migrate status
+### Code Quality
 
-# 2. Back up the database via Neon dashboard
-#    Neon Console > Project > Branches > Create Branch (acts as snapshot)
+- [ ] All CI checks pass (lint, type-check, unit tests, integration tests)
+- [ ] Code reviewed and approved by at least one peer
+- [ ] No critical or high-severity Dependabot / security alerts open
+- [ ] Feature branch merged into `main` via squash-merge
+- [ ] Changelog / release notes updated
 
-# 3. Test migration locally
-DATABASE_URL="<local-or-branch-url>" npx prisma migrate deploy
+### Environment
+
+- [ ] All required environment variables are set in Vercel dashboard (see table below)
+- [ ] Secrets rotated if approaching expiration
+- [ ] Database backups verified (< 24 hours old)
+- [ ] Staging deployment tested and signed off
+
+### Communication
+
+- [ ] Deployment window communicated to team in `#deployments` channel
+- [ ] Status page updated if maintenance window required
+- [ ] On-call engineer confirmed and available
+
+---
+
+## Environment Variable Reference
+
+| Variable | Required | Description | Example |
+|---|---|---|---|
+| `DATABASE_URL` | Yes | PostgreSQL connection string (Prisma) | `postgresql://user:pass@host:5432/db?sslmode=require` |
+| `DIRECT_URL` | Yes | Direct DB connection (bypasses connection pooler) | `postgresql://user:pass@host:5432/db` |
+| `STRIPE_SECRET_KEY` | Yes | Stripe API secret key | `sk_live_...` |
+| `STRIPE_WEBHOOK_SECRET` | Yes | Stripe webhook signing secret | `whsec_...` |
+| `STRIPE_PUBLISHABLE_KEY` | Yes | Stripe publishable key (client-side) | `pk_live_...` |
+| `SENDGRID_API_KEY` | Yes | SendGrid email API key | `SG....` |
+| `SENDGRID_FROM_EMAIL` | Yes | Verified sender email | `notifications@[PLACEHOLDER].com` |
+| `TWILIO_ACCOUNT_SID` | Yes | Twilio account SID | `AC...` |
+| `TWILIO_AUTH_TOKEN` | Yes | Twilio auth token | `...` |
+| `TWILIO_PHONE_NUMBER` | Yes | Twilio sending phone number | `+1XXXXXXXXXX` |
+| `NEXT_PUBLIC_APP_URL` | Yes | Public-facing application URL | `https://app.[PLACEHOLDER].com` |
+| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Yes | Stripe publishable key (Next.js public) | `pk_live_...` |
+| `NEXTAUTH_SECRET` | Yes | NextAuth.js session encryption secret | 32+ char random string |
+| `NEXTAUTH_URL` | Yes | Canonical URL for NextAuth | `https://app.[PLACEHOLDER].com` |
+| `OPENAI_API_KEY` | Conditional | OpenAI API key (if AI features enabled) | `sk-...` |
+| `ANTHROPIC_API_KEY` | Conditional | Anthropic API key (Claude integration) | `sk-ant-...` |
+| `REDIS_URL` | Optional | Redis connection for caching / queues | `redis://...` |
+| `SENTRY_DSN` | Optional | Sentry error tracking DSN | `https://...@sentry.io/...` |
+| `LOG_LEVEL` | Optional | Application log level | `info` |
+
+> **Security Note:** Never commit secrets to version control. Use Vercel's encrypted environment variable store or a secrets manager.
+
+---
+
+## Production Deployment to Vercel
+
+### Automated Deployment (Preferred)
+
+Merging to `main` triggers an automatic Vercel production deployment.
+
+```
+1. Merge PR to main
+2. Vercel build triggers automatically
+3. Monitor build in Vercel dashboard → Deployments
+4. Verify deployment URL resolves
+5. Run post-deployment checks (see below)
 ```
 
-### Apply Migration
+### Manual Deployment
+
+Use when automated deployment is disabled or a hotfix is needed.
 
 ```bash
-# Production migration (non-interactive, CI-safe)
+# 1. Ensure you are on the correct branch
+git checkout main
+git pull origin main
+
+# 2. Verify environment
+vercel env ls --environment production
+
+# 3. Deploy to production
+vercel --prod
+
+# 4. Note the deployment URL from output
+# Example: https://sovereign-ai-XXXXXX.vercel.app
+```
+
+### Build Configuration
+
+| Setting | Value |
+|---|---|
+| Framework | Next.js |
+| Build Command | `npx prisma generate && next build` |
+| Output Directory | `.next` |
+| Install Command | `npm ci` |
+| Node.js Version | 18.x |
+| Root Directory | `/` |
+
+---
+
+## Database Migration Procedures
+
+### Running Migrations in Production
+
+```bash
+# 1. Generate migration from schema changes (development)
+npx prisma migrate dev --name descriptive_migration_name
+
+# 2. Review the generated SQL in prisma/migrations/
+cat prisma/migrations/YYYYMMDDHHMMSS_descriptive_migration_name/migration.sql
+
+# 3. Commit the migration file
+git add prisma/migrations/
+git commit -m "db: add migration — descriptive_migration_name"
+
+# 4. Deploy migration to production
+#    Option A: Automatic — runs during Vercel build via postinstall
+#    Option B: Manual —
 npx prisma migrate deploy
 ```
 
-### Post-Migration Verification
+### Migration Safety Checklist
+
+- [ ] Migration SQL reviewed for destructive operations (DROP, ALTER column type)
+- [ ] Large table migrations tested against production-size dataset
+- [ ] Backward-compatible changes only (additive preferred)
+- [ ] If destructive: two-phase migration planned (add new → migrate data → remove old)
+- [ ] Database backup taken immediately before migration
+- [ ] Estimated migration duration documented
+
+### Seeding Production Data
 
 ```bash
-# Verify schema is in sync
+# Only run for initial setup or reference data updates
+npx prisma db seed
+```
+
+### Schema Drift Detection
+
+```bash
+# Compare current database state to Prisma schema
 npx prisma migrate status
 
-# Verify application health
-curl -s https://trysovereignai.com/api/health | jq '.checks.database'
-# Expected: { "status": "connected", "latencyMs": <number> }
+# If drift detected, resolve before deploying new migrations
+npx prisma migrate resolve --applied MIGRATION_NAME
 ```
-
-### Migration Rollback
-
-Prisma does not support automatic rollback. Options:
-
-1. **Corrective migration**: Write a new migration that reverses the changes
-2. **Point-in-time recovery**: Restore from Neon branch snapshot
-3. **Branch restore**: Switch `DATABASE_URL` to the pre-migration Neon branch
 
 ---
 
-## 4. Post-Deployment Verification Checklist
+## Rollback Procedures
 
-Run through this checklist after every production deployment:
+### Vercel Deployment Rollback
 
-### Automated Checks
+**Time to rollback: < 2 minutes**
 
-```bash
-# Health endpoint
-curl -s https://trysovereignai.com/api/health | jq .
-# Expected: { "status": "ok", ... }
-
-# Verify build version (check deployment timestamp)
-curl -sI https://trysovereignai.com | grep x-vercel-id
-```
-
-### Manual Checks
-
-- [ ] **Landing page** loads at `https://trysovereignai.com`
-- [ ] **Login flow**: Request magic link, receive email, authenticate
-- [ ] **Dashboard**: Loads after authentication, displays services
-- [ ] **Stripe checkout**: Initiate checkout, verify redirect to Stripe
-- [ ] **API health**: `/api/health` returns `"status": "ok"`
-- [ ] **Cron jobs**: Check Vercel Dashboard > Cron Jobs for next scheduled run
-- [ ] **Sentry**: Verify source maps uploaded (Sentry > Releases)
-- [ ] **Telegram**: Send test alert via `/api/webhooks/telegram`
-- [ ] **Error monitoring**: Trigger a test error, verify it appears in Sentry
-
-### Performance Checks
-
-- [ ] Lighthouse score > 90 on landing page
-- [ ] First Contentful Paint < 1.5s
-- [ ] Time to Interactive < 3s
-- [ ] No console errors in browser DevTools
-
----
-
-## 5. Rollback Procedure
-
-### Vercel Instant Rollback (Recommended)
-
-```bash
-# List recent deployments
-vercel ls
-
-# Promote a previous deployment to production
-vercel promote <deployment-url>
-```
-
-**Via Vercel Dashboard**:
-1. Navigate to Project > Deployments
+1. Open [Vercel Dashboard](https://vercel.com) → Project → Deployments
 2. Find the last known-good deployment
-3. Click the three-dot menu > "Promote to Production"
-
-Rollback takes effect within seconds. No rebuild required.
-
-### Git Revert (If Code Fix Needed)
+3. Click the three-dot menu → **Promote to Production**
+4. Verify the rollback deployment is live
+5. Notify team in `#deployments`
 
 ```bash
-# Identify the problematic commit
-git log --oneline -10
-
-# Revert the commit
-git revert <commit-sha>
-git push origin main
-
-# Vercel auto-deploys the revert
+# CLI alternative
+vercel rollback [DEPLOYMENT_URL]
 ```
 
-### Database Rollback (If Migration Caused Issues)
+### Database Rollback
 
-1. Switch `DATABASE_URL` in Vercel to the pre-migration Neon branch
-2. Redeploy: `vercel --prod`
-3. Write a corrective migration once the issue is understood
+> **WARNING:** Database rollbacks are destructive. Always prefer forward-fixing with a new migration.
+
+#### Option A: Forward-Fix (Preferred)
+
+```bash
+# Create a new migration that reverses the problematic changes
+npx prisma migrate dev --name revert_problematic_change
+npx prisma migrate deploy
+```
+
+#### Option B: Point-in-Time Recovery
+
+1. Contact database provider ([PLACEHOLDER — e.g., Supabase, Neon, PlanetScale])
+2. Request point-in-time recovery to timestamp **before** the migration
+3. Update `DATABASE_URL` to restored instance
+4. Redeploy application
+5. Verify data integrity
+
+#### Option C: Manual SQL Rollback
+
+```bash
+# Connect to production database
+psql $DATABASE_URL
+
+# Execute the reverse SQL (must be prepared in advance)
+\i rollback_scripts/YYYYMMDDHHMMSS_rollback.sql
+
+# Mark migration as rolled back
+npx prisma migrate resolve --rolled-back MIGRATION_NAME
+```
+
+### Rollback Decision Matrix
+
+| Severity | Symptoms | Action |
+|---|---|---|
+| **P0 — Site Down** | 5xx errors, app unreachable | Immediate Vercel rollback |
+| **P1 — Major Feature Broken** | Core workflow fails, payments affected | Rollback within 15 min if no hotfix |
+| **P2 — Minor Feature Broken** | Non-critical feature regression | Forward-fix within 4 hours |
+| **P3 — Cosmetic** | UI glitch, typo | Forward-fix in next release |
 
 ---
 
-## 6. DNS Configuration
+## Post-Deployment Verification
 
-### Domain Setup
+Run these checks within 10 minutes of every production deployment.
 
-1. **Vercel Dashboard** > Project > Settings > Domains
-2. Add `trysovereignai.com` and `www.trysovereignai.com`
-3. Vercel provides DNS records to configure
-
-### DNS Records
-
-Configure at your domain registrar:
-
-| Type | Name | Value | TTL |
-|------|------|-------|-----|
-| A | `@` | `76.76.21.21` | 300 |
-| CNAME | `www` | `cname.vercel-dns.com` | 300 |
-
-### Email DNS (For Deliverability)
-
-| Type | Name | Value |
-|------|------|-------|
-| TXT | `@` | `v=spf1 include:<email-provider> ~all` |
-| CNAME | `dkim._domainkey` | Provided by email service |
-| TXT | `_dmarc` | `v=DMARC1; p=quarantine; rua=mailto:admin@trysovereignai.com` |
-
-### Verification
+### Automated Smoke Tests
 
 ```bash
-# Check DNS propagation
-dig trysovereignai.com +short
-dig www.trysovereignai.com +short
-
-# Check email DNS
-dig txt trysovereignai.com +short
-dig txt _dmarc.trysovereignai.com +short
+# Run production smoke test suite
+npm run test:smoke -- --env=production
 ```
+
+### Manual Verification Checklist
+
+- [ ] Landing page loads correctly
+- [ ] User can sign up / sign in
+- [ ] Dashboard renders with data
+- [ ] Stripe checkout flow works (use test card `4242 4242 4242 4242`)
+- [ ] Email notifications trigger (check SendGrid activity)
+- [ ] SMS notifications trigger (check Twilio logs)
+- [ ] API health endpoint returns 200: `curl https://[PLACEHOLDER_APP_URL]/api/health`
+- [ ] Webhook endpoints responding (Stripe dashboard → Webhooks)
+- [ ] No new errors in Sentry / error tracking
+- [ ] Database connection pool healthy (check provider dashboard)
 
 ---
 
-## 7. SSL/TLS Setup
+## Incident Response
 
-### Automatic via Vercel
+### During a Failed Deployment
 
-Vercel automatically provisions and renews SSL/TLS certificates for all domains via Let's Encrypt. No manual configuration is required.
+1. **Assess** — Check Vercel build logs for errors
+2. **Decide** — Rollback or forward-fix (see decision matrix above)
+3. **Act** — Execute rollback or deploy hotfix
+4. **Communicate** — Update `#incidents` channel with status
+5. **Document** — Create post-incident report within 48 hours
 
-**What Vercel handles**:
-- Certificate provisioning (issued within minutes of domain verification)
-- Automatic renewal (before expiration)
-- HTTP to HTTPS redirect (enabled by default)
-- TLS 1.2 and 1.3 support
-- HSTS headers (configured in `vercel.json`)
+### Contacts
 
-### Verification
-
-```bash
-# Check SSL certificate
-curl -vI https://trysovereignai.com 2>&1 | grep -E "SSL|subject|expire"
-
-# Check security headers
-curl -sI https://trysovereignai.com | grep -iE "strict-transport|x-frame|x-content"
-```
-
-### Security Headers (Configured in vercel.json)
-
-The following headers are set at the edge:
-
-- `Strict-Transport-Security: max-age=63072000; includeSubDomains; preload`
-- `X-Content-Type-Options: nosniff`
-- `X-Frame-Options: DENY`
-- `X-XSS-Protection: 1; mode=block`
-- `Referrer-Policy: strict-origin-when-cross-origin`
+| Role | Name | Contact |
+|---|---|---|
+| DevOps Lead | [PLACEHOLDER] | [PLACEHOLDER] |
+| Backend Lead | [PLACEHOLDER] | [PLACEHOLDER] |
+| Database Admin | [PLACEHOLDER] | [PLACEHOLDER] |
+| On-Call Engineer | Rotating — see PagerDuty | [PLACEHOLDER] |
 
 ---
 
-## 8. Quick Reference
+## Appendix: Useful Commands
 
-| Task | Command / Action |
-|------|-----------------|
-| Deploy to production | `git push origin main` or `vercel --prod` |
-| Check health | `curl https://trysovereignai.com/api/health` |
-| View logs | `vercel logs --follow` |
-| Rollback | `vercel promote <url>` |
-| Run migration | `npx prisma migrate deploy` |
-| Check migration status | `npx prisma migrate status` |
-| View DB | `npm run db:studio` |
-| Check DNS | `dig trysovereignai.com +short` |
-| Check SSL | `curl -vI https://trysovereignai.com 2>&1 \| grep SSL` |
-| Deploy checklist | `npm run deploy:checklist` |
+```bash
+# View Vercel deployment logs
+vercel logs [DEPLOYMENT_URL]
+
+# Check Prisma migration status
+npx prisma migrate status
+
+# Open Prisma Studio (database GUI)
+npx prisma studio
+
+# Verify environment variables are set
+vercel env ls --environment production
+
+# Tail application logs
+vercel logs --follow
+```

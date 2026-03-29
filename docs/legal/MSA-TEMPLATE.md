@@ -1,183 +1,171 @@
 # Master Service Agreement (MSA)
 
-**Between**: Sovereign AI ("Provider")
-**And**: [CLIENT_COMPANY_NAME] ("Client")
-**Effective Date**: [DATE]
-**Agreement Number**: MSA-[YYYY]-[NNN]
+> **Document Type:** Legal Template
+> **Version:** 1.0
+> **Effective Date:** [PLACEHOLDER — DATE]
+> **Last Reviewed:** [PLACEHOLDER — DATE]
+>
+> **DISCLAIMER:** This template is provided for reference purposes only. It must be reviewed and approved by qualified legal counsel before execution. [PLACEHOLDER — COMPANY NAME] makes no representations regarding the legal sufficiency of this template for any particular jurisdiction or circumstance.
 
 ---
 
-## 1. Service Description
+## MASTER SERVICE AGREEMENT
 
-### 1.1 Services
+This Master Service Agreement ("Agreement") is entered into as of [PLACEHOLDER — EFFECTIVE DATE] ("Effective Date") by and between:
 
-Provider agrees to provide Client with AI-powered marketing and business automation services ("Services") as selected by Client from the following service categories:
+**[PLACEHOLDER — COMPANY LEGAL NAME]**, a [PLACEHOLDER — STATE] [PLACEHOLDER — ENTITY TYPE, e.g., limited liability company], with its principal place of business at [PLACEHOLDER — ADDRESS] ("Provider"),
 
-| # | Service | Description |
-|---|---------|-------------|
-| 1 | AI Lead Generation | AI-powered outbound prospecting, multi-channel sequences, lead scoring |
-| 2 | AI Voice Agents | 24/7 AI-powered phone answering, call routing, and transcript generation |
-| 3 | AI Chat Assistant | Custom-trained chatbot for lead capture and appointment booking |
-| 4 | AI SEO Domination | Local SEO audits, Google Business Profile optimization, keyword targeting |
-| 5 | AI Ad Management | Google and Facebook ad campaign setup, optimization, and reporting |
-| 6 | AI Email Marketing | Drip campaigns, newsletters, automated sequences |
-| 7 | AI Social Media | Content creation, scheduling, publishing, and engagement |
-| 8 | AI Review Management | Automated review request campaigns, monitoring, and response |
-| 9 | AI Scheduling System | Online booking, automated reminders, calendar management |
-| 10 | AI CRM Automation | Lead tracking, pipeline management, revenue forecasting |
-| 11 | AI Website Builder | High-converting websites with A/B testing and heatmaps |
-| 12 | AI Analytics | Real-time dashboards, ROI tracking, multi-channel attribution |
-| 13 | AI Content Engine | Blog content, service pages, SEO-optimized writing |
-| 14 | AI Reputation Shield | 24/7 brand monitoring, sentiment analysis, crisis response |
-| 15 | AI Retargeting | Cross-platform retargeting ads to bring back lost visitors |
-| 16 | Custom AI Build | Custom workflow automation, API integrations, tailored solutions |
+and
 
-### 1.2 Selected Services
+**[PLACEHOLDER — CLIENT LEGAL NAME]**, a [PLACEHOLDER — STATE/JURISDICTION] [PLACEHOLDER — ENTITY TYPE], with its principal place of business at [PLACEHOLDER — ADDRESS] ("Client").
 
-The specific services, service tier, and configuration for Client are documented in the attached Service Order Form (Exhibit A).
-
-### 1.3 Service Level Agreement
-
-Services are subject to the Service Level Agreement (SLA) attached as Exhibit B and incorporated by reference.
-
-### 1.4 Platform Access
-
-Provider grants Client a non-exclusive, non-transferable right to access and use the Sovereign AI platform during the term of this Agreement for Client's internal business purposes.
+Provider and Client are each referred to as a "Party" and collectively as the "Parties."
 
 ---
 
-## 2. Fees and Payment Terms
+## 1. Definitions
 
-### 2.1 Service Fees
+**"Authorized Users"** means Client's employees, contractors, and agents authorized by Client to access the Services.
 
-| Tier | Monthly Fee | Included Services |
-|------|------------|-------------------|
-| DIY | $497/month | 3 core AI tools (self-managed) |
-| Starter | $3,497/month | Done-for-you lead generation + review automation + scheduling |
-| Growth | $6,997/month | 6 AI systems (most popular -- chosen by 94% of clients) |
-| Empire | $12,997/month | All 16 services + dedicated account manager |
+**"Client Data"** means all data, content, and information submitted to or generated through the Services by Client or its Authorized Users.
 
-Client's selected tier and fee are specified in the Service Order Form (Exhibit A).
+**"Confidential Information"** means any non-public information disclosed by one Party to the other, whether orally, in writing, or electronically, that is designated as confidential or that a reasonable person would understand to be confidential.
 
-### 2.2 Payment Terms
+**"Documentation"** means Provider's user guides, help articles, API documentation, and other materials describing the functionality and use of the Services.
 
-- **Billing cycle**: Monthly, in advance, on the anniversary of the Effective Date
-- **Payment method**: Credit card or ACH via Stripe (Provider's payment processor)
-- **Due date**: Payment is due on the billing date; auto-charged to the payment method on file
-- **Late payments**: Payments more than 10 days past due accrue interest at 1.5% per month
-- **Failed payments**: Provider will attempt to re-process failed payments up to 3 times over 10 days
+**"Intellectual Property Rights"** means all patents, copyrights, trademarks, trade secrets, and other intellectual property rights.
 
-### 2.3 Price Changes
+**"Services"** means the [PLACEHOLDER — PRODUCT NAME] platform and related services as described in the applicable Order Form.
 
-- Provider will provide 60 days written notice before any fee increase
-- Fee increases take effect at the start of the next billing cycle following the notice period
-- Client may terminate this Agreement without penalty if fee increase exceeds 10%
+**"Order Form"** means a document or online order referencing this Agreement that specifies the Services, fees, and term.
 
-### 2.4 Taxes
-
-All fees are exclusive of applicable taxes. Client is responsible for all sales, use, and similar taxes imposed on the Services.
-
-### 2.5 Setup Fees
-
-Setup fees, if any, are specified in the Service Order Form and are due upon execution of this Agreement. Setup fees are non-refundable after the onboarding process begins.
+**"Service Level Agreement" or "SLA"** means the service level commitments set forth in the SLA document incorporated herein by reference.
 
 ---
 
-## 3. Term and Termination
+## 2. Services
 
-### 3.1 Initial Term
+### 2.1 Provision of Services
 
-This Agreement begins on the Effective Date and continues for an initial term of [12] months ("Initial Term"), unless terminated earlier in accordance with this section.
+Provider shall make the Services available to Client in accordance with this Agreement, the applicable Order Form, and the SLA. Provider shall use commercially reasonable efforts to ensure the Services operate in substantial conformity with the Documentation.
 
-### 3.2 Renewal
+### 2.2 Service Tiers
 
-After the Initial Term, this Agreement automatically renews for successive [12]-month periods ("Renewal Terms") unless either party provides written notice of non-renewal at least 30 days before the end of the current term.
+| Tier | Description | Monthly Fee |
+|---|---|---|
+| **Starter** | Core platform features, basic integrations, email support | $[PLACEHOLDER]/month |
+| **Growth** | Advanced features, priority support, expanded usage limits | $[PLACEHOLDER]/month |
+| **Enterprise** | Full platform, dedicated CSM, custom integrations, 24/7 support | $[PLACEHOLDER]/month (or custom) |
 
-### 3.3 Termination for Convenience
+Specific features and limits for each tier are detailed in the Order Form.
 
-After the Initial Term, either party may terminate this Agreement at any time by providing 30 days written notice. Client's obligation to pay for the current billing period remains.
+### 2.3 Modifications to Services
 
-### 3.4 Termination for Cause
+Provider may update, modify, or improve the Services from time to time. Provider shall not materially reduce the functionality of the Services during the Subscription Term without Client's prior written consent. Provider shall give Client at least 30 days' notice of material changes.
 
-Either party may terminate this Agreement immediately upon written notice if:
-- The other party materially breaches this Agreement and fails to cure within 30 days of notice
-- The other party becomes insolvent, files for bankruptcy, or ceases operations
-- The other party violates applicable laws in connection with the Services
+### 2.4 Professional Services
 
-### 3.5 Effect of Termination
-
-Upon termination:
-1. Client's access to the platform is deactivated within 5 business days
-2. Provider exports Client data upon request (within 30 days)
-3. Provider deletes Client data within 90 days (per the DPA)
-4. All outstanding fees become immediately due
-5. Sections 5 (Confidentiality), 6 (IP), 7 (Limitation of Liability), and 8 (Indemnification) survive termination
+Any professional services (implementation, customization, training, consulting) shall be described in a separate Statement of Work ("SOW") referencing this Agreement.
 
 ---
 
-## 4. 60-Day Money-Back Guarantee
+## 3. Client Obligations
 
-### 4.1 Guarantee
+### 3.1 Acceptable Use
 
-Provider offers a 60-day money-back guarantee from the Effective Date. If Client is not satisfied with the Services within the first 60 days, Client may request a full refund of all fees paid.
+Client shall:
 
-### 4.2 Conditions
+1. Use the Services only for lawful purposes and in accordance with the Documentation
+2. Ensure Authorized Users comply with this Agreement
+3. Maintain the confidentiality of account credentials
+4. Promptly notify Provider of any unauthorized access or security breach
+5. Not reverse engineer, decompile, or disassemble the Services
+6. Not use the Services to store or transmit malicious code
+7. Not exceed the usage limits specified in the Order Form
 
-To qualify for the guarantee:
-1. Client must have completed the onboarding process (account setup, service activation)
-2. Client must have provided all requested access credentials and information within 5 business days of request
-3. Client must not have materially interfered with service delivery
-4. Client must submit the refund request in writing within 60 days of the Effective Date
+### 3.2 Client Data
 
-### 4.3 Refund Process
+Client is solely responsible for the accuracy, quality, and legality of Client Data and the means by which Client acquired such data. Client represents and warrants that it has all necessary rights and consents to provide Client Data to Provider for processing.
 
-1. Client submits written refund request to support@trysovereignai.com
-2. Provider acknowledges request within 2 business days
-3. Provider conducts a brief exit interview (optional but appreciated)
-4. Refund is processed within 10 business days of the request
-5. Refund is issued to the original payment method
+### 3.3 Cooperation
 
-### 4.4 Scope
-
-The guarantee covers:
-- All monthly service fees paid during the 60-day period
-- Any setup fees paid
-
-The guarantee does not cover:
-- Third-party costs incurred at Client's direction (ad spend, domain purchases, etc.)
-- Services provided by third parties outside the Sovereign AI platform
+Client shall provide reasonable cooperation and access to information necessary for Provider to perform the Services, including timely responses to requests for information, decisions, and approvals.
 
 ---
 
-## 5. Confidentiality
+## 4. Fees and Payment
 
-### 5.1 Definition
+### 4.1 Fees
 
-"Confidential Information" means any non-public information disclosed by one party to the other, including but not limited to: business plans, customer lists, pricing, financial information, technical data, trade secrets, and proprietary methodologies.
+Client shall pay Provider the fees set forth in the applicable Order Form. Unless otherwise specified:
 
-### 5.2 Obligations
+| Term | Condition |
+|---|---|
+| **Billing Cycle** | Monthly, in advance |
+| **Payment Method** | Credit card via Stripe (or invoicing for Enterprise) |
+| **Currency** | United States Dollars (USD) |
+| **Payment Due** | Upon invoice date (auto-charge) or Net 30 for invoiced accounts |
 
-Each party agrees to:
-- Protect the other party's Confidential Information with at least the same care used for its own
-- Use Confidential Information only for purposes of this Agreement
-- Not disclose Confidential Information to third parties without prior written consent
-- Limit access to Confidential Information to personnel who need to know
+### 4.2 Fee Adjustments
 
-### 5.3 Exclusions
+- Provider may increase fees upon renewal with at least **60 days** written notice prior to the renewal date
+- Fee increases shall not exceed [PLACEHOLDER — e.g., 10%] per year unless mutually agreed
+- Mid-term upgrades are effective immediately; fees are prorated for the remaining billing period
+- Downgrades take effect at the start of the next billing cycle
 
-Confidential Information does not include information that:
-- Is or becomes publicly available through no fault of the receiving party
-- Was known to the receiving party before disclosure
-- Is independently developed without use of the disclosing party's Confidential Information
-- Is rightfully received from a third party without restriction
+### 4.3 Taxes
 
-### 5.4 Required Disclosures
+All fees are exclusive of applicable taxes. Client shall be responsible for all sales, use, VAT, and similar taxes, excluding taxes based on Provider's income.
 
-A party may disclose Confidential Information if required by law, regulation, or court order, provided that the party gives prompt notice to the other party (where legally permitted) and cooperates in seeking protective measures.
+### 4.4 Late Payments
 
-### 5.5 Duration
+- Invoices unpaid after **15 days** past due will incur interest at 1.5% per month (or the maximum rate permitted by law, whichever is less)
+- Provider may suspend Services after **30 days** of non-payment with 10 days' prior written notice
+- Client remains liable for all fees during suspension
+- Provider may send past-due accounts to collections; Client shall be responsible for reasonable collection costs
 
-Confidentiality obligations survive termination of this Agreement for a period of 3 years.
+### 4.5 Disputes
+
+Client must notify Provider in writing of any fee dispute within **30 days** of the invoice date. Undisputed amounts must be paid when due. The Parties shall negotiate disputed amounts in good faith.
+
+---
+
+## 5. Term and Termination
+
+### 5.1 Term
+
+| Component | Duration |
+|---|---|
+| **Initial Term** | [PLACEHOLDER — e.g., 12 months] from the Effective Date |
+| **Renewal Term** | Automatically renews for successive [PLACEHOLDER — e.g., 12-month] periods |
+| **Non-Renewal Notice** | Either Party may prevent renewal with **30 days** written notice before the end of the current term |
+
+### 5.2 Termination for Cause
+
+Either Party may terminate this Agreement immediately upon written notice if:
+
+1. The other Party materially breaches this Agreement and fails to cure within **30 days** of written notice
+2. The other Party becomes insolvent, files for bankruptcy, or ceases operations
+3. The other Party is in material breach of applicable law in connection with the Services
+
+### 5.3 Termination for Convenience
+
+- **Client** may terminate for convenience with **30 days** written notice. Early termination fees may apply as specified in the Order Form.
+- **Provider** may terminate for convenience with **90 days** written notice and a prorated refund of any prepaid fees.
+
+### 5.4 Effect of Termination
+
+Upon termination or expiration:
+
+1. Client's access to the Services shall cease
+2. Client may request export of Client Data within **30 days** of termination
+3. Provider shall delete Client Data within **60 days** of termination (subject to legal retention obligations)
+4. All outstanding fees become immediately due and payable
+5. The following sections survive termination: 6 (Intellectual Property), 7 (Confidentiality), 8 (Liability), 9 (Indemnification), and 12 (General Provisions)
+
+### 5.5 Transition Assistance
+
+Upon request, Provider shall provide reasonable transition assistance for up to **30 days** following termination at Provider's then-current professional services rates.
 
 ---
 
@@ -185,199 +173,239 @@ Confidentiality obligations survive termination of this Agreement for a period o
 
 ### 6.1 Provider IP
 
-Provider retains all rights, title, and interest in:
-- The Sovereign AI platform, software, algorithms, and technology
-- All improvements, modifications, and derivative works of the platform
-- Provider's methodologies, processes, and know-how
-- Aggregated and anonymized data derived from Client's use of the Services
+Provider retains all Intellectual Property Rights in and to the Services, Documentation, and any derivative works, improvements, or modifications thereof. Nothing in this Agreement transfers ownership of Provider's IP to Client.
 
 ### 6.2 Client IP
 
-Client retains all rights, title, and interest in:
-- Client's business name, trademarks, and branding
-- Client's customer data and business information
-- Content created specifically for Client (subject to Section 6.3)
+Client retains all Intellectual Property Rights in and to Client Data. Client grants Provider a limited, non-exclusive license to use Client Data solely to provide the Services.
 
-### 6.3 Work Product
+### 6.3 License Grant
 
-- Content created by Provider specifically for Client (ad copy, blog posts, social media content) is owned by Client upon full payment
-- Templates, frameworks, and tools used to create such content remain Provider's IP
-- Client grants Provider a limited license to use Client's name and logo for case studies and marketing (revocable upon written request)
+Provider grants Client a limited, non-exclusive, non-transferable, non-sublicensable license to access and use the Services during the Subscription Term in accordance with this Agreement and the applicable Order Form.
 
----
+### 6.4 Feedback
 
-## 7. Limitation of Liability
+If Client provides suggestions, enhancement requests, or other feedback regarding the Services ("Feedback"), Provider may use such Feedback without restriction or obligation. Client hereby assigns all rights in Feedback to Provider.
 
-### 7.1 Cap on Liability
+### 6.5 AI-Generated Content
 
-TO THE MAXIMUM EXTENT PERMITTED BY LAW, EACH PARTY'S TOTAL AGGREGATE LIABILITY ARISING OUT OF OR RELATED TO THIS AGREEMENT SHALL NOT EXCEED THE TOTAL FEES PAID BY CLIENT TO PROVIDER IN THE 12 MONTHS PRECEDING THE CLAIM.
-
-### 7.2 Exclusion of Consequential Damages
-
-IN NO EVENT SHALL EITHER PARTY BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO LOSS OF PROFITS, LOSS OF DATA, LOSS OF BUSINESS OPPORTUNITIES, OR COST OF PROCUREMENT OF SUBSTITUTE SERVICES, REGARDLESS OF THE CAUSE OF ACTION OR THE THEORY OF LIABILITY.
-
-### 7.3 Exceptions
-
-The limitations in this Section 7 do not apply to:
-- Breach of confidentiality obligations (Section 5)
-- Indemnification obligations (Section 8)
-- Willful misconduct or gross negligence
-- Provider's obligations under the 60-Day Money-Back Guarantee (Section 4)
+Content generated by AI features within the Services:
+- Shall be considered Client Data to the extent it incorporates Client's inputs
+- Provider makes no representations regarding the originality or non-infringement of AI-generated content
+- Client is responsible for reviewing and validating AI-generated content before use
 
 ---
 
-## 8. Indemnification
+## 7. Confidentiality
 
-### 8.1 Provider Indemnification
+### 7.1 Obligations
 
-Provider will defend, indemnify, and hold harmless Client from and against any third-party claims, damages, and expenses (including reasonable attorney fees) arising from:
-- Provider's negligent or willful acts in performing the Services
-- Provider's infringement of a third party's intellectual property rights
-- Provider's breach of the DPA or applicable data protection laws
-- Provider's violation of applicable laws or regulations
+Each Party shall:
 
-### 8.2 Client Indemnification
+1. Hold the other Party's Confidential Information in strict confidence
+2. Not disclose Confidential Information to third parties except as necessary to perform obligations under this Agreement
+3. Use Confidential Information only for purposes related to this Agreement
+4. Protect Confidential Information with at least the same degree of care it uses for its own confidential information, and no less than reasonable care
 
-Client will defend, indemnify, and hold harmless Provider from and against any third-party claims, damages, and expenses (including reasonable attorney fees) arising from:
-- Client's use of the Services in violation of this Agreement
-- Client's provision of inaccurate or misleading information for use in marketing
-- Client's violation of applicable laws or regulations (including advertising laws)
-- Claims by Client's customers arising from Client's products or services
+### 7.2 Exceptions
 
-### 8.3 Indemnification Process
+Confidential Information does not include information that:
 
-The indemnified party must:
-1. Promptly notify the indemnifying party of any claim
-2. Grant the indemnifying party sole control of the defense and settlement
-3. Cooperate with the indemnifying party in the defense
-4. Not settle any claim without the indemnifying party's written consent
+1. Is or becomes publicly available through no fault of the receiving Party
+2. Was rightfully in the receiving Party's possession prior to disclosure
+3. Is rightfully received from a third party without restriction
+4. Is independently developed without use of the disclosing Party's Confidential Information
 
----
+### 7.3 Required Disclosures
 
-## 9. Representations and Warranties
+A Party may disclose Confidential Information to the extent required by law, regulation, or court order, provided that the disclosing Party gives prompt notice (where legally permissible) and cooperates with the other Party's efforts to obtain protective treatment.
 
-### 9.1 Mutual Representations
+### 7.4 Duration
 
-Each party represents and warrants that:
-- It has the authority to enter into this Agreement
-- This Agreement does not conflict with any other obligation
-- It will comply with all applicable laws and regulations
-
-### 9.2 Provider Warranties
-
-Provider warrants that:
-- Services will be performed in a professional and workmanlike manner
-- The platform will substantially conform to the documentation
-- Provider will maintain commercially reasonable security measures
-- Provider will not knowingly introduce malicious code into the platform
-
-### 9.3 Client Warranties
-
-Client warrants that:
-- Client has the right to use all materials and information provided to Provider
-- Materials provided do not infringe any third-party rights
-- Client will use the Services in compliance with applicable laws
-- Client advertising will be truthful and not misleading
-
-### 9.4 Disclaimer
-
-EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, PROVIDER MAKES NO WARRANTIES, EXPRESS OR IMPLIED, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT. PROVIDER DOES NOT WARRANT THAT THE SERVICES WILL BE ERROR-FREE OR UNINTERRUPTED.
+Confidentiality obligations survive for **3 years** after termination of this Agreement, except for trade secrets which are protected for as long as they remain trade secrets.
 
 ---
 
-## 10. Governing Law and Dispute Resolution
+## 8. Limitation of Liability
 
-### 10.1 Governing Law
+### 8.1 Disclaimer of Warranties
 
-This Agreement is governed by the laws of the State of [STATE], without regard to conflict of law principles.
+EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, THE SERVICES ARE PROVIDED "AS IS." PROVIDER DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
 
-### 10.2 Dispute Resolution
+### 8.2 Limitation of Direct Damages
 
-The parties agree to resolve disputes in the following order:
-1. **Negotiation**: Good faith negotiation between senior representatives within 30 days
-2. **Mediation**: Non-binding mediation with a mutually agreed mediator within 60 days
-3. **Arbitration**: Binding arbitration under the rules of the American Arbitration Association in [CITY, STATE]
+EXCEPT FOR OBLIGATIONS UNDER SECTION 7 (CONFIDENTIALITY) AND SECTION 9 (INDEMNIFICATION), NEITHER PARTY'S AGGREGATE LIABILITY FOR DIRECT DAMAGES UNDER THIS AGREEMENT SHALL EXCEED THE TOTAL FEES PAID OR PAYABLE BY CLIENT IN THE **12-MONTH PERIOD** PRECEDING THE CLAIM.
 
-### 10.3 Injunctive Relief
+### 8.3 Exclusion of Consequential Damages
 
-Nothing in this section prevents either party from seeking injunctive relief in a court of competent jurisdiction to protect its intellectual property or confidential information.
+IN NO EVENT SHALL EITHER PARTY BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO LOSS OF PROFITS, LOSS OF DATA, BUSINESS INTERRUPTION, OR LOSS OF GOODWILL, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
 
----
+### 8.4 Exceptions
 
-## 11. General Provisions
+The limitations in Sections 8.2 and 8.3 shall not apply to:
 
-### 11.1 Entire Agreement
-
-This Agreement, together with all Exhibits, constitutes the entire agreement between the parties and supersedes all prior negotiations, representations, and agreements.
-
-### 11.2 Amendments
-
-This Agreement may only be amended by a written instrument signed by both parties.
-
-### 11.3 Assignment
-
-Neither party may assign this Agreement without the other party's prior written consent, except in connection with a merger, acquisition, or sale of substantially all assets.
-
-### 11.4 Severability
-
-If any provision is held invalid or unenforceable, the remaining provisions remain in full force and effect.
-
-### 11.5 Waiver
-
-Failure to enforce any provision does not constitute a waiver of that provision or any other provision.
-
-### 11.6 Notices
-
-All notices must be in writing and delivered to:
-
-**Provider**:
-Sovereign AI
-[ADDRESS]
-Email: legal@trysovereignai.com
-
-**Client**:
-[CLIENT_COMPANY_NAME]
-[CLIENT_ADDRESS]
-Email: [CLIENT_EMAIL]
-
-### 11.7 Force Majeure
-
-Neither party is liable for failure to perform due to causes beyond its reasonable control, including natural disasters, war, terrorism, pandemics, government actions, or failures of third-party services.
-
-### 11.8 Independent Contractors
-
-The parties are independent contractors. Nothing in this Agreement creates a partnership, joint venture, or agency relationship.
+1. Client's payment obligations
+2. Either Party's breach of Section 7 (Confidentiality)
+3. Either Party's indemnification obligations under Section 9
+4. Liability arising from gross negligence or willful misconduct
+5. Liability that cannot be limited by applicable law
 
 ---
 
-## 12. Signatures
+## 9. Indemnification
 
-| | Provider (Sovereign AI) | Client |
-|-|-------------------------|--------|
-| **Name** | ________________________ | ________________________ |
-| **Title** | ________________________ | ________________________ |
-| **Date** | ________________________ | ________________________ |
-| **Signature** | ________________________ | ________________________ |
+### 9.1 Provider Indemnification
+
+Provider shall defend, indemnify, and hold harmless Client from and against any third-party claims, damages, and expenses (including reasonable attorneys' fees) arising from:
+
+1. Provider's infringement of a third party's Intellectual Property Rights through the Services
+2. Provider's material breach of the Data Processing Agreement
+3. Provider's gross negligence or willful misconduct
+
+### 9.2 Client Indemnification
+
+Client shall defend, indemnify, and hold harmless Provider from and against any third-party claims, damages, and expenses (including reasonable attorneys' fees) arising from:
+
+1. Client Data or Client's use of the Services in violation of this Agreement or applicable law
+2. Client's breach of its representations and warranties under this Agreement
+3. Claims by Client's end users related to Client's products or services
+
+### 9.3 Indemnification Procedure
+
+The indemnified Party shall:
+
+1. Promptly notify the indemnifying Party of the claim in writing
+2. Grant the indemnifying Party sole control of the defense and settlement
+3. Provide reasonable cooperation and assistance at the indemnifying Party's expense
 
 ---
 
-## Exhibit A: Service Order Form
+## 10. Data Protection
+
+### 10.1 Data Processing Agreement
+
+The Data Processing Agreement ("DPA") attached hereto and incorporated by reference governs all processing of Personal Data. In the event of any conflict between this Agreement and the DPA, the DPA shall prevail with respect to data protection matters.
+
+### 10.2 Security
+
+Provider shall implement and maintain appropriate technical and organizational measures to protect Client Data, as further described in the DPA and SLA.
+
+### 10.3 Data Breach
+
+Provider shall notify Client of any Data Breach in accordance with the timelines and procedures set forth in the DPA.
+
+---
+
+## 11. Insurance
+
+Provider shall maintain the following insurance coverage during the term of this Agreement:
+
+| Coverage Type | Minimum Amount |
+|---|---|
+| Commercial General Liability | $[PLACEHOLDER — e.g., 1,000,000] per occurrence |
+| Professional Liability / E&O | $[PLACEHOLDER — e.g., 2,000,000] per occurrence |
+| Cyber Liability | $[PLACEHOLDER — e.g., 2,000,000] per occurrence |
+| Workers' Compensation | As required by applicable law |
+
+Provider shall provide certificates of insurance upon Client's reasonable request.
+
+---
+
+## 12. General Provisions
+
+### 12.1 Governing Law
+
+This Agreement shall be governed by the laws of the State of [PLACEHOLDER — STATE], without regard to its conflict of laws provisions.
+
+### 12.2 Dispute Resolution
+
+1. **Negotiation:** The Parties shall first attempt to resolve disputes through good-faith negotiation for a period of **30 days**
+2. **Mediation:** If negotiation fails, the Parties shall submit the dispute to mediation under the rules of [PLACEHOLDER — e.g., JAMS or AAA] for a period of **60 days**
+3. **Litigation/Arbitration:** If mediation fails, disputes shall be resolved by [PLACEHOLDER — binding arbitration under [RULES] / litigation in the courts of [JURISDICTION]]
+
+### 12.3 Force Majeure
+
+Neither Party shall be liable for failure or delay in performance due to events beyond its reasonable control, including natural disasters, acts of war or terrorism, pandemics, government actions, labor disputes, or internet infrastructure failures. The affected Party shall provide prompt notice and use reasonable efforts to mitigate the impact.
+
+### 12.4 Assignment
+
+Neither Party may assign this Agreement without the other Party's prior written consent, except that either Party may assign to a successor in connection with a merger, acquisition, or sale of substantially all its assets. Any purported assignment in violation of this section is void.
+
+### 12.5 Notices
+
+All notices shall be in writing and sent to the addresses specified in the Order Form via:
+- Certified mail (effective upon receipt)
+- Email (effective upon confirmation of receipt)
+- Overnight courier (effective upon delivery)
+
+### 12.6 Entire Agreement
+
+This Agreement, together with all Order Forms, the SLA, the DPA, and any SOWs, constitutes the entire agreement between the Parties and supersedes all prior agreements, representations, and understandings.
+
+### 12.7 Amendments
+
+This Agreement may be amended only by a written instrument signed by both Parties.
+
+### 12.8 Severability
+
+If any provision of this Agreement is held unenforceable, the remaining provisions shall continue in full force and effect.
+
+### 12.9 Waiver
+
+Failure to enforce any provision of this Agreement shall not constitute a waiver of future enforcement.
+
+### 12.10 Independent Contractors
+
+The Parties are independent contractors. Nothing in this Agreement creates a partnership, joint venture, agency, or employment relationship.
+
+### 12.11 Counterparts
+
+This Agreement may be executed in counterparts, each of which shall be deemed an original.
+
+---
+
+## 13. Signatures
+
+**IN WITNESS WHEREOF**, the Parties have executed this Master Service Agreement as of the Effective Date.
+
+### Provider
 
 | Field | Value |
-|-------|-------|
-| **Client Name** | [CLIENT_COMPANY_NAME] |
-| **Selected Tier** | [ ] DIY ($497/mo) [ ] Starter ($3,497/mo) [ ] Growth ($6,997/mo) [ ] Empire ($12,997/mo) |
-| **Selected Services** | [LIST] |
-| **Initial Term** | [12] months |
-| **Setup Fee** | $[AMOUNT] |
-| **Monthly Fee** | $[AMOUNT] |
-| **Start Date** | [DATE] |
-| **Special Terms** | [ANY CUSTOM TERMS] |
+|---|---|
+| **Company** | [PLACEHOLDER — COMPANY LEGAL NAME] |
+| **Name** | [PLACEHOLDER] |
+| **Title** | [PLACEHOLDER] |
+| **Signature** | _________________________ |
+| **Date** | [PLACEHOLDER] |
 
-## Exhibit B: Service Level Agreement
+### Client
 
-*See attached SLA-TEMPLATE.md*
+| Field | Value |
+|---|---|
+| **Company** | [PLACEHOLDER — CLIENT LEGAL NAME] |
+| **Name** | [PLACEHOLDER] |
+| **Title** | [PLACEHOLDER] |
+| **Signature** | _________________________ |
+| **Date** | [PLACEHOLDER] |
 
-## Exhibit C: Data Processing Agreement
+---
 
-*See attached DPA-TEMPLATE.md*
+## Exhibit A: Order Form Template
+
+| Field | Value |
+|---|---|
+| **Client** | [PLACEHOLDER — CLIENT NAME] |
+| **Service Tier** | [ ] Starter / [ ] Growth / [ ] Enterprise |
+| **Monthly Fee** | $[PLACEHOLDER] |
+| **Billing Cycle** | Monthly / Annual |
+| **Initial Term** | [PLACEHOLDER] months |
+| **Start Date** | [PLACEHOLDER] |
+| **Authorized Users** | [PLACEHOLDER — NUMBER] |
+| **Custom Terms** | [PLACEHOLDER — OR "None"] |
+
+**Additional Services:**
+
+| Service | Fee | Notes |
+|---|---|---|
+| [PLACEHOLDER] | $[PLACEHOLDER] | [PLACEHOLDER] |
+| [PLACEHOLDER] | $[PLACEHOLDER] | [PLACEHOLDER] |

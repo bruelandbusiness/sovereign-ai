@@ -1,87 +1,118 @@
-# Sovereign AI -- One-Pager
+# [PLACEHOLDER — COMPANY NAME] — One-Pager
 
-*Formatted for easy conversion to PDF. Print-ready layout with clear sections.*
-
----
-
-## AI-Powered Growth for Home Service Contractors
-
-### The Problem
-
-Home service contractors lose thousands of dollars every month to:
-- **Missed calls** -- 62% of calls to contractors go unanswered
-- **Slow follow-up** -- Average lead response time is 47 hours (customers choose the first responder)
-- **No online presence** -- Competitors with better reviews and SEO win the search results
-- **Wasted ad spend** -- Money poured into ads with no tracking, no optimization, no ROI visibility
-- **Manual marketing** -- Owners spending nights and weekends on social media and emails instead of growing their business
-
-### The Solution
-
-Sovereign AI is an all-in-one AI marketing platform built specifically for contractors. We replace your entire marketing stack with a single platform that runs 24/7, captures every lead, and proves ROI on every dollar spent.
+> **For:** Prospective Clients
+> **Version:** 1.0
+> **Last Updated:** [PLACEHOLDER — DATE]
 
 ---
 
-## 3 Key Differentiators
+## Company Overview
 
-**1. AI That Works While You Sleep**
-Our AI receptionist answers every call, captures every lead, and follows up automatically -- even at 2am on a Saturday. No missed opportunities, ever.
+**[PLACEHOLDER — COMPANY NAME]** is an AI-powered business operations platform that helps service-based businesses automate client management, streamline communications, and scale revenue — without scaling headcount.
 
-**2. Built for Contractors, Not Agencies**
-We are not a generic marketing agency. Every feature is designed for home service businesses -- from local SEO to review management to job-specific lead scoring.
-
-**3. 60-Day Money-Back Guarantee**
-We put our money where our mouth is. If you do not see results in 60 days, you get a full refund. No other marketing company offers this because they cannot back it up.
+**Founded:** [PLACEHOLDER — YEAR]
+**Headquarters:** [PLACEHOLDER — CITY, STATE]
+**Clients Served:** [PLACEHOLDER — NUMBER]+
+**Industries:** [PLACEHOLDER — e.g., Professional Services, Consulting, Agencies, Coaching, Real Estate]
 
 ---
 
-## 16 Services, One Platform -- Trusted by 500+ Businesses
+## The Problem
 
-| Generation | Engagement | Management | Intelligence |
-|------------|------------|------------|--------------|
-| AI Lead Generation | AI Voice Agents | AI Review Management | AI Analytics |
-| AI SEO Domination | AI Chat Assistant | AI Scheduling System | AI Content Engine |
-| AI Ad Management | AI Email Marketing | AI CRM Automation | AI Reputation Shield |
-| AI Retargeting | AI Social Media | | Custom AI Build |
-| | | AI Website Builder | |
+Service-based businesses waste **[PLACEHOLDER — e.g., 15-20] hours per week** on manual operations:
 
----
+- Chasing leads through scattered spreadsheets and inboxes
+- Manually onboarding clients with error-prone processes
+- Sending repetitive emails and follow-ups by hand
+- Juggling disconnected tools that don't talk to each other
+- Missing revenue opportunities due to lack of visibility
 
-## Pricing
-
-| DIY | Starter | Growth | Empire |
-|-----|---------|--------|--------|
-| **$497/mo** | **$3,497/mo** | **$6,997/mo** | **$12,997/mo** |
-| 3 core AI tools | Done-for-you lead gen | 6 AI systems | All 16 services |
-| Self-managed | Monthly reporting | Weekly reporting | Real-time dashboard |
-| Email support | Email support | Priority support | Dedicated account manager |
-| | | | Custom integrations |
-
-*All plans include the 60-day money-back guarantee.*
+**The result:** Burnout, lost revenue, and inability to scale.
 
 ---
 
-## Results That Speak
+## The Solution
 
-| Metric | Industry Average | Sovereign AI Clients |
-|--------|-----------------|---------------------|
-| Lead response time | 47 hours | Under 5 minutes |
-| Missed call rate | 62% | Under 5% |
-| Monthly leads | 10--15 | 30--80+ |
-| Google review rating | 3.8 stars | 4.7+ stars |
-| Cost per lead | $150+ | Under $50 |
-| Marketing ROI | Unknown | 5--10x tracked |
+[PLACEHOLDER — COMPANY NAME] replaces your fragmented tech stack with a single, AI-powered platform that automates the entire client lifecycle — from first contact to recurring revenue.
+
+### Three Bundles, Built to Scale With You
+
+| | Starter | Growth | Enterprise |
+|---|---|---|---|
+| **Best For** | Solopreneurs and small teams | Growing businesses (5-25 people) | Established companies (25+) |
+| **AI Automation** | Basic workflows | Advanced multi-step automations | Custom AI pipelines |
+| **Client Portal** | Standard | Branded | Fully customized |
+| **Communications** | 1,000 emails + 500 SMS/mo | 10,000 emails + 5,000 SMS/mo | Unlimited |
+| **Analytics** | Basic dashboard | Advanced reporting | Custom dashboards + API |
+| **Support** | Email (business hours) | Email + Chat (extended hours) | Dedicated CSM + 24/7 |
+| **Monthly Investment** | $[PLACEHOLDER]/mo | $[PLACEHOLDER]/mo | Custom pricing |
 
 ---
 
-## Get Started
+## Key Value Propositions
 
-**Ready to grow your business on autopilot?**
+### 1. Save [PLACEHOLDER — e.g., 15+] Hours Per Week
+Automate client communications, follow-ups, onboarding workflows, and reporting. Your team focuses on high-value work instead of repetitive tasks.
 
-1. Book a free 15-minute demo: [trysovereignai.com/demo]
-2. See real results from contractors in your trade
-3. Start your 60-day risk-free trial
+### 2. Increase Revenue by [PLACEHOLDER — e.g., 30%]
+AI-powered lead scoring, automated follow-up sequences, and proposal generation ensure no opportunity falls through the cracks.
 
-**Contact**:
-- Web: trysovereignai.com
-- Email: support@trysovereignai.com
-- Phone: [PHONE_NUMBER]
+### 3. One Platform, Not Ten Tools
+Replace your CRM + email marketing + SMS + invoicing + client portal + analytics stack with a single integrated platform. Fewer subscriptions, fewer headaches, better data.
+
+---
+
+## ROI at a Glance
+
+| Metric | Before [COMPANY NAME] | After [COMPANY NAME] | Impact |
+|---|---|---|---|
+| Hours spent on admin/week | [PLACEHOLDER — e.g., 20] | [PLACEHOLDER — e.g., 5] | **[PLACEHOLDER — e.g., 75%] reduction** |
+| Lead response time | [PLACEHOLDER — e.g., 24 hours] | [PLACEHOLDER — e.g., < 5 minutes] | **[PLACEHOLDER — e.g., 99%] faster** |
+| Client onboarding time | [PLACEHOLDER — e.g., 2 weeks] | [PLACEHOLDER — e.g., 2 days] | **[PLACEHOLDER — e.g., 85%] faster** |
+| Monthly revenue per employee | $[PLACEHOLDER] | $[PLACEHOLDER] | **[PLACEHOLDER]% increase** |
+| Tool subscriptions | [PLACEHOLDER — e.g., 6 tools, $X/mo] | 1 platform, $[PLACEHOLDER]/mo | **[PLACEHOLDER]% cost savings** |
+
+---
+
+## Social Proof
+
+> "[PLACEHOLDER — CLIENT QUOTE about specific results achieved.]"
+> — **[PLACEHOLDER — CLIENT NAME]**, [TITLE], [COMPANY]
+
+> "[PLACEHOLDER — CLIENT QUOTE about ease of use or time savings.]"
+> — **[PLACEHOLDER — CLIENT NAME]**, [TITLE], [COMPANY]
+
+### Trusted By
+
+[PLACEHOLDER — CLIENT LOGO 1] | [PLACEHOLDER — CLIENT LOGO 2] | [PLACEHOLDER — CLIENT LOGO 3] | [PLACEHOLDER — CLIENT LOGO 4]
+
+### By the Numbers
+
+- **[PLACEHOLDER]%** average increase in client retention
+- **[PLACEHOLDER]** hours saved per client per month
+- **[PLACEHOLDER]%** client satisfaction score (NPS)
+- **$[PLACEHOLDER]M+** in revenue managed through the platform
+
+---
+
+## How It Works
+
+```
+1. CONNECT         →  2. AUTOMATE        →  3. GROW
+Import your data      Set up AI workflows    Watch your business
+and integrations      and automations        scale effortlessly
+(< 1 hour setup)      (Day 1 guided setup)   (Results in week 1)
+```
+
+---
+
+## Ready to Get Started?
+
+| Action | Details |
+|---|---|
+| **Book a Demo** | [PLACEHOLDER — CALENDAR LINK] |
+| **Start Free Trial** | [PLACEHOLDER — TRIAL URL] |
+| **Contact Sales** | [PLACEHOLDER — EMAIL] / [PLACEHOLDER — PHONE] |
+| **Visit Website** | [PLACEHOLDER — WEBSITE URL] |
+
+**[PLACEHOLDER — COMPANY NAME]** — Automate. Scale. Succeed.

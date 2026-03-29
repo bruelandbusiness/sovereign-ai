@@ -1,388 +1,531 @@
-# Sovereign AI -- Sales Process SOP
+# Sales Process Standard Operating Procedure
 
-## Overview
-
-This document defines the complete sales process from lead qualification through close and handoff to onboarding. Every prospect follows this pipeline to ensure consistent deal quality, accurate forecasting, and smooth client transitions.
-
-**Target Market**: Home service contractors (HVAC, plumbing, electrical, roofing, landscaping, general contractors)
-**Average Deal Size**: $3,497--$12,997/month recurring
-**Sales Cycle**: 3--14 days (avg. 7 days)
+> **Last Updated:** [PLACEHOLDER — DATE]
+> **Owner:** [PLACEHOLDER — VP OF SALES]
+> **Review Cadence:** Quarterly
 
 ---
 
-## 1. Lead Qualification -- BANT Criteria
+## Table of Contents
 
-Before investing time in a prospect, confirm they meet the BANT threshold:
+1. [Sales Pipeline Overview](#sales-pipeline-overview)
+2. [Lead Qualification (BANT Framework)](#lead-qualification-bant-framework)
+3. [Discovery Call](#discovery-call)
+4. [Proposal Generation](#proposal-generation)
+5. [Follow-Up Sequence](#follow-up-sequence)
+6. [Objection Handling](#objection-handling)
+7. [Closing Process](#closing-process)
+8. [Handoff to Client Success](#handoff-to-client-success)
+
+---
+
+## Sales Pipeline Overview
+
+### Pipeline Stages
+
+| Stage | Description | Target Conversion | Avg. Duration |
+|---|---|---|---|
+| **Lead** | Inbound or outbound contact identified | -- | -- |
+| **Qualified** | Passes BANT qualification | 40% of leads | 1-3 days |
+| **Discovery** | Discovery call completed | 70% of qualified | 3-5 days |
+| **Proposal** | Proposal delivered | 80% of discovery | 2-5 days |
+| **Negotiation** | Terms being discussed | 75% of proposals | 3-10 days |
+| **Closed Won** | Contract signed, payment received | 60% of negotiation | 1-5 days |
+| **Closed Lost** | Deal did not close | -- | -- |
+
+### Key Metrics
+
+| Metric | Target |
+|---|---|
+| Lead-to-Close Rate | >= 15% |
+| Average Deal Size | $[PLACEHOLDER] / month |
+| Average Sales Cycle | 14-30 days |
+| Monthly Qualified Leads | [PLACEHOLDER] |
+| Monthly Closed Deals | [PLACEHOLDER] |
+| Average Revenue per Account (ARPA) | $[PLACEHOLDER] |
+
+---
+
+## Lead Qualification (BANT Framework)
+
+Every lead must be scored against all four BANT criteria before advancing to Discovery.
 
 ### Budget
 
-- [ ] Revenue > $500K/year (or growing rapidly toward it)
-- [ ] Currently spending on marketing (any amount indicates willingness to invest)
-- [ ] Can afford $497+/month for DIY or $3,497+/month for done-for-you marketing services
-- [ ] Decision-maker controls the marketing budget
+> Can they afford our solution?
+
+| Score | Criteria |
+|---|---|
+| **3 — Strong** | Has allocated budget; amount aligns with our pricing |
+| **2 — Medium** | Has budget authority; needs to confirm amount |
+| **1 — Weak** | No current budget; exploring options for next quarter |
+| **0 — Disqualified** | Explicitly cannot afford minimum tier |
+
+**Qualifying Questions:**
+- "What budget have you allocated for [AI automation / client management / digital operations]?"
+- "Have you invested in similar solutions before? What was the typical range?"
+- "Is there a procurement process we should be aware of?"
 
 ### Authority
 
-- [ ] Speaking with the business owner or partner
-- [ ] If not the owner, can they make purchasing decisions without additional approval?
-- [ ] Have they purchased marketing services before?
+> Are we talking to the decision maker?
+
+| Score | Criteria |
+|---|---|
+| **3 — Strong** | Direct decision maker (CEO, Owner, VP) |
+| **2 — Medium** | Influencer who can champion to decision maker |
+| **1 — Weak** | Researcher or evaluator with no direct authority |
+| **0 — Disqualified** | No path to decision maker identified |
+
+**Qualifying Questions:**
+- "Who else would be involved in this decision?"
+- "What does your evaluation process typically look like?"
+- "Have you made similar purchasing decisions before?"
 
 ### Need
 
-- [ ] Currently getting fewer leads than they can handle
-- [ ] Relying on word-of-mouth or referrals only
-- [ ] No online presence or poor online presence
-- [ ] Losing jobs to competitors with better marketing
-- [ ] Struggling with reputation management (low review count or rating)
-- [ ] Missing calls or slow to respond to leads
+> Do they have a problem we can solve?
+
+| Score | Criteria |
+|---|---|
+| **3 — Strong** | Clear, urgent pain point that maps directly to our solution |
+| **2 — Medium** | Recognized need; exploring multiple solutions |
+| **1 — Weak** | General interest; no specific pain point identified |
+| **0 — Disqualified** | No identifiable need our product addresses |
+
+**Qualifying Questions:**
+- "What's your biggest operational challenge right now?"
+- "How are you currently handling [client management / automation / outreach]?"
+- "What would it mean for your business if this problem was solved?"
 
 ### Timeline
 
-- [ ] Looking to start within 30 days
-- [ ] Has a specific trigger event (slow season coming, lost a big client, expanding service area)
-- [ ] Not locked into a long-term contract with a competitor
+> When do they need a solution?
 
-### Qualification Score
+| Score | Criteria |
+|---|---|
+| **3 — Strong** | Immediate need; wants to start within 30 days |
+| **2 — Medium** | Planning for next quarter (60-90 days) |
+| **1 — Weak** | General interest; no defined timeline |
+| **0 — Disqualified** | No foreseeable need in next 6 months |
 
-| Score | Criteria Met | Action |
-|-------|-------------|--------|
-| A-Lead | All 4 BANT | Book discovery call immediately |
-| B-Lead | 3 of 4 BANT | Book discovery call, address the gap |
-| C-Lead | 2 of 4 BANT | Add to nurture sequence, follow up in 30 days |
-| D-Lead | 1 or fewer | Disqualify, add to long-term nurture |
+**Qualifying Questions:**
+- "When are you looking to have a solution in place?"
+- "Is there a specific event or deadline driving this decision?"
+- "What happens if you don't solve this in the next [30/60/90] days?"
 
----
+### Qualification Scoring
 
-## 2. Discovery Call Script
-
-**Duration**: 20--30 minutes
-**Goal**: Understand the prospect's business, identify pain points, and determine fit
-
-### Opening (2 minutes)
-
-```
-"Hey [NAME], thanks for taking the time today. I'm [YOUR_NAME] with
-Sovereign AI. Before I tell you about us, I want to learn about your
-business so I can figure out if we can actually help. Sound good?"
-```
-
-### 15 Discovery Questions
-
-**Business Overview (Questions 1--5)**
-
-1. "Tell me about your business. What services do you offer and what's your service area?"
-2. "How long have you been in business?"
-3. "How many jobs are you doing per month right now?"
-4. "What's your average job value?"
-5. "How many employees or crews do you have? Could you handle more work if you had it?"
-
-**Current Marketing (Questions 6--10)**
-
-6. "How are you currently getting new customers?"
-7. "Are you doing any paid advertising right now? Google Ads, Facebook, anything like that?"
-8. "Do you have a website? When was the last time it was updated?"
-9. "How many Google reviews do you have, and what's your rating?"
-10. "How much are you spending on marketing per month total?"
-
-**Pain Points (Questions 11--13)**
-
-11. "What's your biggest challenge right now when it comes to getting new customers?"
-12. "When a lead comes in -- a phone call or a form submission -- how quickly does someone respond?"
-13. "Have you ever missed a job because you didn't answer the phone or follow up fast enough?"
-
-**Goals and Timeline (Questions 14--15)**
-
-14. "If we could wave a magic wand, what would your business look like 12 months from now? Revenue, number of jobs, team size?"
-15. "What's stopping you from getting there today?"
-
-### Transition to Demo (1 minute)
-
-```
-"Based on what you've shared, I think we can help. Let me show you
-exactly how our platform works and how contractors like you are using
-it to [ADDRESS SPECIFIC PAIN POINT THEY MENTIONED]. This will take
-about 10 minutes -- cool?"
-```
+| Total Score | Action |
+|---|---|
+| **10-12** | Hot lead — fast-track to Discovery |
+| **7-9** | Warm lead — schedule Discovery within 1 week |
+| **4-6** | Cool lead — nurture sequence; revisit in 30 days |
+| **0-3** | Disqualified — add to marketing nurture list |
 
 ---
 
-## 3. Demo Walkthrough Guide
+## Discovery Call
 
-**Duration**: 10--15 minutes
-**Format**: Screen share of the Sovereign AI dashboard
+### Pre-Call Preparation (15 minutes)
 
-### Demo Flow
+- [ ] Research the prospect's company (website, LinkedIn, news)
+- [ ] Review any previous interactions in CRM
+- [ ] Identify their industry and likely pain points
+- [ ] Prepare relevant case studies or examples
+- [ ] Review BANT qualification notes
+- [ ] Have product demo environment ready
 
-1. **Dashboard Overview** (2 min)
-   - Show the main dashboard with real-time metrics
-   - Highlight lead count, revenue attributed, review score
-   - "This is what your command center looks like. Everything in one place."
+### Discovery Call Checklist (30-45 minutes)
 
-2. **Lead Capture and Management** (3 min)
-   - Show how leads flow in from multiple sources
-   - Demonstrate lead scoring and prioritization
-   - Show automated follow-up sequences
-   - "Right now you said you're missing calls. Our AI receptionist answers every call, 24/7."
+#### Opening (5 minutes)
+- [ ] Thank them for their time
+- [ ] Confirm meeting duration and agenda
+- [ ] Brief intro — who you are and what you do (30 seconds max)
+- [ ] Ask: "Before I share about us, I'd love to understand your world better."
 
-3. **AI Receptionist Demo** (2 min)
-   - Play a sample call recording (or live demo if available)
-   - Show how the transcript and lead data auto-populate
-   - "This is what happens when someone calls you at 9pm on a Saturday."
+#### Current State (10 minutes)
+- [ ] "Walk me through how you currently handle [relevant process]."
+- [ ] "How many people are involved in that process?"
+- [ ] "What tools are you using today?"
+- [ ] "On a scale of 1-10, how satisfied are you with your current approach?"
+- [ ] "How much time per week does your team spend on [manual task]?"
 
-4. **Review Management** (2 min)
-   - Show automated review request flow
-   - Demonstrate review monitoring across platforms
-   - "You said you have [X] reviews. Our clients typically double their review count in 60 days."
+#### Pain Points (10 minutes)
+- [ ] "What's the biggest bottleneck in your current workflow?"
+- [ ] "What's the cost of not solving this? (time, money, opportunity)"
+- [ ] "Have you tried other solutions? What worked and what didn't?"
+- [ ] "If you could wave a magic wand and fix one thing, what would it be?"
 
-5. **Reporting and ROI** (2 min)
-   - Show the ROI dashboard
-   - Walk through lead attribution
-   - "Every dollar you spend, you can see exactly what it generated."
+#### Future State (5 minutes)
+- [ ] "What would the ideal solution look like for you?"
+- [ ] "How would you measure success?"
+- [ ] "What would achieving this mean for you personally? For the business?"
 
-6. **Service Menu** (2 min)
-   - Briefly show the full list of 16 services
-   - Highlight the ones most relevant to their stated needs
-   - "You don't have to use all of these. We build a package around what you need."
+#### Solution Alignment (10 minutes)
+- [ ] Present relevant capabilities (tailored to their needs, not a feature dump)
+- [ ] Show 1-2 most relevant screens or workflows
+- [ ] Share a relevant case study or client result
+- [ ] Connect features directly to their stated pain points
 
-### Demo Best Practices
+#### Close & Next Steps (5 minutes)
+- [ ] "Based on what we've discussed, I think [BUNDLE] would be the best fit. Here's why..."
+- [ ] "I'd like to put together a custom proposal for you. Can I send that by [DATE]?"
+- [ ] Confirm decision timeline and stakeholders
+- [ ] Schedule follow-up meeting to review proposal
+- [ ] "Is there anything else you'd like me to address in the proposal?"
 
-- Personalize everything to their trade and pain points
-- Use their company name and specific challenges in examples
-- Pause after each section: "Does this make sense for your business?"
-- Let them ask questions -- engagement signals buying intent
+### Post-Call Actions
+- [ ] Send thank-you email within 1 hour
+- [ ] Update CRM with discovery notes
+- [ ] Begin proposal generation
+- [ ] Log BANT scores
+- [ ] Schedule proposal delivery meeting
 
 ---
 
-## 4. Objection Handling
+## Proposal Generation
+
+### AI-Powered Proposal Workflow
+
+Sovereign AI uses Claude to generate customized proposals based on discovery call data.
+
+#### Step 1: Prepare Proposal Input
+
+Compile the following from your discovery notes:
+
+```
+Client Name: [PLACEHOLDER]
+Industry: [PLACEHOLDER]
+Company Size: [PLACEHOLDER]
+Primary Pain Points:
+  1. [PLACEHOLDER]
+  2. [PLACEHOLDER]
+  3. [PLACEHOLDER]
+Current Tools: [PLACEHOLDER]
+Desired Outcomes: [PLACEHOLDER]
+Budget Range: [PLACEHOLDER]
+Timeline: [PLACEHOLDER]
+Decision Makers: [PLACEHOLDER]
+Recommended Bundle: [STARTER / GROWTH / ENTERPRISE]
+Custom Requirements: [PLACEHOLDER]
+```
+
+#### Step 2: Generate Proposal with Claude
+
+Use the proposal generation workflow in the platform:
+
+1. Navigate to **Sales Tools → Proposal Generator**
+2. Input the compiled discovery data
+3. Select the recommended bundle
+4. Add any custom pricing or terms
+5. Review and edit the AI-generated content
+6. Add relevant case studies and ROI projections
+
+#### Step 3: Proposal Structure
+
+Every proposal should include:
+
+| Section | Content |
+|---|---|
+| Executive Summary | 1-paragraph overview tailored to their needs |
+| Understanding Your Challenges | Mirror their pain points (show you listened) |
+| Proposed Solution | Bundle details mapped to their specific needs |
+| Implementation Timeline | Week-by-week onboarding plan |
+| Investment | Pricing with clear value justification |
+| ROI Projection | Expected return based on their metrics |
+| Case Study | Relevant client success story |
+| About Us | Company credibility and differentiators |
+| Next Steps | Clear CTA with contract terms |
+
+#### Step 4: Review and Send
+
+- [ ] Proofread for accuracy (names, numbers, company details)
+- [ ] Verify pricing matches approved rates
+- [ ] Get manager approval (deals > $[PLACEHOLDER]/month)
+- [ ] Send via email with personalized cover note
+- [ ] Log in CRM with sent date
+
+---
+
+## Follow-Up Sequence
+
+### After Discovery Call (No Proposal Yet)
+
+| Day | Action | Channel | Template |
+|---|---|---|---|
+| 0 | Thank-you email with meeting summary | Email | See below |
+| 1 | Connect on LinkedIn (if not already) | LinkedIn | Personalized connection request |
+| 2-3 | Send proposal | Email | Proposal cover email |
+
+### After Proposal Sent
+
+| Day | Action | Channel | Template |
+|---|---|---|---|
+| 1 | Confirm receipt | Email | "Just confirming you received the proposal" |
+| 3 | Value-add follow-up | Email | Share relevant article, case study, or insight |
+| 7 | Check-in call/email | Phone / Email | "Any questions about the proposal?" |
+| 14 | Re-engagement | Email | "Checking in — has anything changed?" |
+| 30 | Final follow-up | Email | "Circling back one last time" |
+
+### Follow-Up Email Templates
+
+#### Day 0 — Thank You
+
+```
+Subject: Great Speaking with You, [FIRST NAME]
+
+Hi [FIRST NAME],
+
+Thank you for taking the time to speak with me today. I really
+enjoyed learning about [COMPANY] and the challenges you're facing
+with [SPECIFIC PAIN POINT].
+
+Here's a quick recap of what we discussed:
+- [KEY POINT 1]
+- [KEY POINT 2]
+- [KEY POINT 3]
+
+I'll have a customized proposal ready for you by [DATE].
+In the meantime, here's a case study that's relevant to your
+situation: [LINK]
+
+Looking forward to continuing the conversation.
+
+Best,
+[YOUR NAME]
+```
+
+#### Day 1 — Proposal Delivery
+
+```
+Subject: Your Custom [COMPANY NAME] Proposal — [CLIENT COMPANY]
+
+Hi [FIRST NAME],
+
+As promised, I've put together a proposal tailored to
+[CLIENT COMPANY]'s needs. You'll find it attached.
+
+Key highlights:
+- [HIGHLIGHT 1 — mapped to their pain point]
+- [HIGHLIGHT 2 — mapped to their desired outcome]
+- [HIGHLIGHT 3 — ROI or time savings figure]
+
+I'd love to walk you through it live. Are you available
+[DATE OPTION 1] or [DATE OPTION 2] for a 20-minute review?
+
+Best,
+[YOUR NAME]
+```
+
+#### Day 7 — Check-In
+
+```
+Subject: Quick Question About the Proposal
+
+Hi [FIRST NAME],
+
+I wanted to check in on the proposal I sent last week.
+Have you had a chance to review it?
+
+A couple of things I wanted to highlight:
+- [SPECIFIC VALUE POINT relevant to their timeline]
+- [NEW PIECE OF INFORMATION — e.g., new feature, case study result]
+
+Happy to hop on a quick call to address any questions.
+What works best for your schedule?
+
+Best,
+[YOUR NAME]
+```
+
+#### Day 14 — Re-Engagement
+
+```
+Subject: Still Thinking About [PAIN POINT]?
+
+Hi [FIRST NAME],
+
+I understand evaluating new solutions takes time.
+I wanted to share one more thing that might be helpful:
+
+[RELEVANT INSIGHT, DATA POINT, OR CASE STUDY]
+
+If your priorities have shifted, no worries at all.
+But if [PAIN POINT] is still a challenge, I'd be happy
+to revisit the conversation whenever works for you.
+
+Best,
+[YOUR NAME]
+```
+
+#### Day 30 — Final Follow-Up
+
+```
+Subject: Closing the Loop — [CLIENT COMPANY]
+
+Hi [FIRST NAME],
+
+I want to be respectful of your time, so this will be
+my last follow-up for now.
+
+If [PAIN POINT] becomes a priority again, our proposal
+remains available and I'm happy to update it to reflect
+any changes in your needs.
+
+Wishing you and the [CLIENT COMPANY] team all the best.
+
+Best,
+[YOUR NAME]
+
+P.S. I'll keep you on our monthly insights newsletter
+so you can stay up to date on [INDUSTRY] trends. Feel
+free to unsubscribe anytime.
+```
+
+---
+
+## Objection Handling
 
 ### Price Objections
 
-**"That's too expensive"**
-```
-"I hear you. Let me ask -- what's the average value of a job for you?
-[$X,000]. So if our platform brings you even 2--3 extra jobs per month,
-that's [$Y,000] in revenue for a [$Z/month] investment. Most of our
-clients see ROI within the first 30 days. Plus, we have a 60-day
-money-back guarantee, so there's really no risk."
-```
+#### "It's too expensive."
 
-**"I can't afford it right now"**
-```
-"Totally understand. The way I see it, you can't afford NOT to have a
-system bringing in leads. Every month without it is money left on the
-table. We have a DIY plan at $497/month to get started, and our
-done-for-you plans start at $3,497/month. Can I show you what each
-includes?"
-```
+**Response Framework:**
+1. Acknowledge: "I appreciate you being upfront about budget concerns."
+2. Reframe: "Let me share how our clients typically think about the investment..."
+3. Quantify: "Based on what you shared, you're spending approximately [X hours/week] on [MANUAL PROCESS]. At [HOURLY RATE], that's $[AMOUNT]/month in labor alone."
+4. Compare: "Our [BUNDLE] tier is $[PRICE]/month, which means you'd see a positive ROI within [TIMEFRAME]."
+5. Offer: "We also have our [LOWER TIER] option at $[PRICE] if you'd like to start smaller."
 
-**"My buddy does my marketing for cheap"**
-```
-"That's great that you have someone helping. Quick question -- can you
-tell me exactly how many leads they brought in last month and what each
-one cost? [Pause]. That's what our platform tracks for you automatically.
-We don't replace people -- we give you the data to know what's working."
-```
+#### "We can build this in-house."
 
-### Trust Objections
-
-**"I've been burned by marketing companies before"**
-```
-"I hear that a lot, honestly. That's exactly why we built in a 60-day
-money-back guarantee. If we don't deliver results, you get your money
-back. No other marketing company offers that because they can't back it
-up. We can because the AI actually works."
-```
-
-**"How do I know this will work for my trade?"**
-```
-"Great question. We work specifically with [THEIR_TRADE] contractors.
-[Reference a relevant result: 'We had an HVAC company in Texas that
-went from 20 to 65 leads per month in 90 days.'] I can connect you
-with a reference if that would help."
-```
+**Response:**
+- "Absolutely — many companies consider that route. Here's what we've found:"
+- "Development cost: $[PLACEHOLDER] in engineering time over [PLACEHOLDER] months"
+- "Ongoing maintenance: [PLACEHOLDER] hours/month"
+- "Opportunity cost: What else could your engineers be building?"
+- "With us, you're live in [TIMEFRAME] with ongoing updates included."
 
 ### Timing Objections
 
-**"I need to think about it"**
-```
-"Absolutely, take the time you need. Just so I can follow up properly --
-what specifically do you want to think through? Is it the price, the fit,
-or something else? [Address the real objection]. I'll follow up on
-[DAY] -- does that work?"
-```
+#### "Not the right time."
 
-**"Call me back in a few months"**
-```
-"I can do that. But let me ask -- if we started today, by [3 months
-from now] you'd already have [X] months of leads and data. Every month
-you wait is a month your competitors are getting those leads instead.
-What if we started with just the basics and scaled up when you're ready?"
-```
+**Response:**
+1. Understand: "Totally fair. Can I ask — is there a specific reason for the timing, or is it more about competing priorities?"
+2. Quantify delay: "Every month this isn't solved costs your team approximately [X hours / $Y]. Over the next [THEIR TIMELINE], that adds up to [TOTAL]."
+3. Lower barrier: "Would it make sense to start with a pilot? We can set you up with [STARTER TIER] so there's minimal commitment while you evaluate."
+
+#### "We need to talk to other stakeholders."
+
+**Response:**
+- "Absolutely — who else needs to be involved?"
+- "Would it be helpful if I put together a one-page summary for them?" (see `docs/sales/ONE-PAGER.md`)
+- "Would it make sense for me to join that conversation to answer technical questions directly?"
 
 ### Competition Objections
 
-**"I'm already using [Competitor]"**
-```
-"Got it. How's that going for you? [Listen]. What made you take this
-call today? [Listen for dissatisfaction]. The difference with us is
-[SPECIFIC DIFFERENTIATOR: AI-powered, all-in-one, 60-day guarantee].
-Happy to do a side-by-side comparison if that would be helpful."
-```
+#### "We're also looking at [COMPETITOR]."
+
+**Response:**
+1. Acknowledge: "It's smart to evaluate options. We encourage it."
+2. Differentiate: "The key differences our clients highlight are:"
+   - [DIFFERENTIATOR 1 — e.g., "AI-powered automation built in, not bolted on"]
+   - [DIFFERENTIATOR 2 — e.g., "All-in-one platform vs. stitching tools together"]
+   - [DIFFERENTIATOR 3 — e.g., "Dedicated onboarding and success team"]
+3. Social proof: "Here's a case study from [SIMILAR COMPANY] who evaluated [COMPETITOR] and chose us: [LINK]"
+
+#### "We're happy with our current solution."
+
+**Response:**
+- "That's great to hear. Out of curiosity, if you could improve one thing about your current setup, what would it be?"
+- (Listen, then connect that gap to your offering)
+- "Many of our clients didn't realize how much time they were leaving on the table until they saw the comparison."
+
+### Trust Objections
+
+#### "I haven't heard of your company."
+
+**Response:**
+- "That's fair — we're a growing company, and we let our results speak for us."
+- Share relevant case studies and client logos
+- Offer a reference call with an existing client in their industry
+- "We also offer [TRIAL/PILOT PERIOD] so you can experience it firsthand."
+
+#### "What if the product doesn't work as promised?"
+
+**Response:**
+- "Great question. We back our platform with a [PLACEHOLDER]% uptime SLA."
+- "Our Master Service Agreement includes clear performance commitments."
+- "We offer a [PLACEHOLDER — e.g., 30-day] money-back guarantee."
+- "And here are our current client satisfaction metrics: [PLACEHOLDER — NPS score, retention rate]."
 
 ---
 
-## 5. Proposal Generation Workflow
+## Closing Process
 
-### Step 1: Build the Proposal
+### Closing Signals to Watch For
 
-After the discovery call, within 2 hours:
+- Asking about implementation timeline
+- Requesting references or case studies
+- Asking about contract terms or payment options
+- Involving additional stakeholders
+- Asking "What happens after we sign?"
+- Negotiating specific terms
 
-1. Select the recommended tier based on client needs and budget
-2. Customize the service package (highlight services that address their stated pain points)
-3. Include relevant metrics and case study references
-4. Add the 60-day money-back guarantee terms
-5. Include the MSA summary and SLA highlights
+### Closing Steps
 
-### Step 2: Proposal Contents
-
-1. **Executive summary** -- 2--3 sentences tailored to their situation
-2. **Recommended package** -- Tier name, included services, pricing
-3. **Expected results** -- Conservative projections based on their trade and market
-4. **Timeline** -- What happens in Week 1, Month 1, Month 2
-5. **Investment** -- Monthly fee, setup fee (if any), contract term
-6. **Guarantee** -- 60-day money-back guarantee details
-7. **Next steps** -- How to get started
-
-### Step 3: Send the Proposal
-
-```
-Subject: Your Sovereign AI Growth Plan -- [COMPANY_NAME]
-
-Hi [NAME],
-
-Great talking with you today. As promised, here's a custom plan
-for [COMPANY_NAME] based on everything we discussed.
-
-I've put together a [TIER_NAME] package focused on:
-- [PAIN_POINT_1 solution]
-- [PAIN_POINT_2 solution]
-- [PAIN_POINT_3 solution]
-
-The full proposal is attached. I'm available [DATE/TIME] to walk
-through it together if you'd like.
-
-Talk soon,
-[YOUR_NAME]
-```
+1. **Verbal agreement** — Confirm selected bundle and any custom terms
+2. **Send contract** — MSA + SLA via [PLACEHOLDER — e.g., DocuSign, PandaDoc]
+3. **Follow up** — If not signed within 48 hours, call to address concerns
+4. **Payment setup** — Stripe checkout link or invoice (depending on deal size)
+5. **Confirmation** — Send welcome email upon payment receipt
+6. **Internal handoff** — Trigger onboarding process (see below)
 
 ---
 
-## 6. Follow-Up Sequence
+## Handoff to Client Success
 
-### Automated Follow-Up Timeline
+### Sales-to-Success Handoff Checklist
 
-| Day | Channel | Message |
-|-----|---------|---------|
-| **Day 1** (after proposal sent) | Email | Proposal delivery + summary |
-| **Day 1** (2 hours later) | SMS | "Hey [NAME], just sent over your growth plan. Let me know if you have questions." |
-| **Day 3** | Email | "Checking in -- did you get a chance to review the proposal? Happy to walk through it." |
-| **Day 3** | Phone call | Brief check-in, answer questions, handle objections |
-| **Day 7** | Email | Value-add email with a relevant case study or industry insight |
-| **Day 7** | SMS | "Hey [NAME], wanted to share how a [TRADE] company similar to yours got [RESULT]." |
-| **Day 14** | Email | Urgency-based email (limited onboarding slots, seasonal timing, etc.) |
-| **Day 14** | Phone call | Final direct outreach before moving to nurture |
-| **Day 30** | Email | Long-term nurture (monthly newsletter, industry tips) |
+Complete within 24 hours of contract signature.
 
-### Follow-Up Rules
+- [ ] **CRM updated** with final deal details, contacts, and notes
+- [ ] **Handoff document** completed:
+  - Client company background
+  - Key contacts and their roles
+  - Bundle selected and any custom terms
+  - Pain points and stated goals
+  - Promises made during sales process (be specific)
+  - Potential risks or concerns flagged
+  - Upsell opportunities identified
+- [ ] **Handoff meeting** scheduled (Sales + CSM, 30 min)
+- [ ] **Introduction email** sent (Sales introduces CSM to client)
+- [ ] **Onboarding kickoff** scheduled within 48 hours
 
-- Never go more than 3 days without a touchpoint during active selling
-- Alternate channels (email, phone, SMS) -- don't repeat the same channel twice in a row
-- After Day 14 with no response, move to monthly nurture sequence
-- If prospect re-engages, restart from Day 1
-
----
-
-## 7. Close Process
-
-### Step 1: Verbal Agreement
-
-- Confirm the selected package and pricing
-- Confirm the start date
-- Address any final questions or concerns
-
-### Step 2: Contract Execution
-
-1. Generate MSA from template (see `docs/legal/MSA-TEMPLATE.md`)
-2. Generate SLA from template (see `docs/legal/SLA-TEMPLATE.md`)
-3. Send via e-signature tool (DocuSign, PandaDoc, or similar)
-4. Both parties sign
-
-### Step 3: Payment Setup
-
-1. Send Stripe checkout link for the first month
-2. Or set up recurring billing via Stripe subscription
-3. Confirm payment received
-4. Send payment confirmation email
-
-### Step 4: Handoff to Onboarding
-
-1. Create internal handoff document:
-   - Client name and contact info
-   - Selected package and services
-   - Discovery call notes (pain points, goals, current state)
-   - Any special agreements or custom terms
-   - Expected results and timeline discussed
-2. Introduce client to their Account Manager via email
-3. Schedule Day 1 onboarding call
-4. Trigger the onboarding workflow (see `docs/CLIENT-ONBOARDING-SOP.md`)
-
-### Handoff Email Template
+### Introduction Email Template
 
 ```
-Subject: Welcome to the Team! Meet Your Account Manager
+Subject: Introducing [CSM NAME], Your Success Manager
 
-Hi [CLIENT_NAME],
+Hi [CLIENT FIRST NAME],
 
-I'm thrilled to officially welcome you to Sovereign AI!
+I'm thrilled to officially welcome [CLIENT COMPANY] to
+[COMPANY NAME]!
 
-I want to introduce you to [AM_NAME], your dedicated Account Manager.
-[AM_NAME] will be your primary point of contact from here on out.
+I'd like to introduce you to [CSM NAME], who will be your
+dedicated Client Success Manager. [CSM NAME] is going to make
+sure you get the most out of [BUNDLE NAME] and will be your
+go-to person going forward.
 
-[AM_NAME], meet [CLIENT_NAME] from [COMPANY_NAME]. They're a
-[TRADE] contractor in [LOCATION] and they're starting with our
-[TIER_NAME] package. Key priorities are:
-- [PRIORITY_1]
-- [PRIORITY_2]
-- [PRIORITY_3]
+[CSM NAME], meet [CLIENT FIRST NAME] — [BRIEF CONTEXT about
+the client and what they're most excited about].
 
-[AM_NAME] will be reaching out shortly to schedule your setup call.
-
-Excited to get started!
+I'll let [CSM NAME] take it from here to get your onboarding
+scheduled. It's been a pleasure working with you, [FIRST NAME],
+and I'll check in from time to time to make sure everything
+is going well.
 
 Best,
-[SALES_REP_NAME]
+[SALES REP NAME]
 ```
-
----
-
-## 8. Pipeline Stages and CRM Management
-
-| Stage | Criteria | Expected Duration |
-|-------|----------|-------------------|
-| **New Lead** | Contact info captured | -- |
-| **Qualified** | BANT score A or B | 1 day |
-| **Discovery Scheduled** | Call booked | 1--3 days |
-| **Discovery Complete** | Call done, needs identified | Same day |
-| **Proposal Sent** | Custom proposal delivered | 1 day |
-| **Negotiation** | Objections being addressed, terms discussed | 1--7 days |
-| **Verbal Commit** | Prospect agreed to move forward | 1 day |
-| **Closed Won** | Contract signed, payment received | 1--2 days |
-| **Closed Lost** | Prospect declined (log reason) | -- |
-| **Onboarding** | Handed off to Account Manager | -- |
-
-### CRM Hygiene Rules
-
-- Update deal stage within 24 hours of any status change
-- Log every call, email, and SMS in the CRM
-- Add lost deal reasons for every Closed Lost (price, timing, competitor, no decision)
-- Review pipeline weekly with sales leadership

@@ -1,166 +1,236 @@
-# Case Study: [CLIENT_COMPANY_NAME]
+# Case Study: [PLACEHOLDER — CLIENT COMPANY NAME]
 
-*[TRADE_TYPE] Contractor | [CITY, STATE] | [TIER_NAME] Plan*
+> **Industry:** [PLACEHOLDER — e.g., Professional Services, Consulting, Real Estate]
+> **Company Size:** [PLACEHOLDER — e.g., 15 employees]
+> **Service Tier:** [PLACEHOLDER — Starter / Growth / Enterprise]
+> **Timeline:** [PLACEHOLDER — e.g., January 2026 - Present]
+> **Published:** [PLACEHOLDER — DATE]
 
 ---
 
-## Client Overview
+## Client Profile
 
-**Company**: [CLIENT_COMPANY_NAME]
-**Industry**: [TRADE -- e.g., HVAC, Plumbing, Electrical, Roofing, Landscaping]
-**Location**: [CITY, STATE]
-**Company Size**: [NUMBER] employees
-**Years in Business**: [NUMBER]
-**Service Area**: [DESCRIPTION -- e.g., "Greater Dallas-Fort Worth metro area"]
-**Website**: [URL]
+### About [PLACEHOLDER — CLIENT COMPANY NAME]
 
-### About the Client
+[PLACEHOLDER — 2-3 sentences describing the client company, what they do, who they serve, and their market position.]
 
-[2--3 sentences describing the client's business. What services do they offer? What is their reputation in the community? Any notable achievements or specializations.]
+| Detail | Value |
+|---|---|
+| **Company** | [PLACEHOLDER — CLIENT COMPANY NAME] |
+| **Industry** | [PLACEHOLDER] |
+| **Location** | [PLACEHOLDER — CITY, STATE] |
+| **Founded** | [PLACEHOLDER — YEAR] |
+| **Employees** | [PLACEHOLDER — NUMBER] |
+| **Annual Revenue** | $[PLACEHOLDER] |
+| **Clients Served** | [PLACEHOLDER — NUMBER] per [month/year] |
+| **Website** | [PLACEHOLDER — URL] |
 
-*Example: "[CLIENT_COMPANY_NAME] is a family-owned HVAC company serving the Greater Dallas-Fort Worth area since 2012. They specialize in residential AC installation and repair, with a team of 8 certified technicians."*
+### Key Stakeholders
+
+| Name | Title | Role in Decision |
+|---|---|---|
+| [PLACEHOLDER] | [PLACEHOLDER — e.g., CEO] | Executive Sponsor |
+| [PLACEHOLDER] | [PLACEHOLDER — e.g., Operations Manager] | Day-to-Day User |
+| [PLACEHOLDER] | [PLACEHOLDER — e.g., IT Lead] | Technical Evaluator |
 
 ---
 
 ## The Challenge
 
-### Situation Before Sovereign AI
+### Situation
 
-[Describe the client's marketing and lead generation situation before they started using Sovereign AI. Be specific about the pain points.]
+[PLACEHOLDER — 2-3 paragraphs describing the client's situation before adopting the solution. Include:]
 
-**Key Challenges**:
+- What was their business context?
+- What processes were they running manually?
+- What tools were they using (and where were the gaps)?
 
-1. **[CHALLENGE_1]**: [Description]
-   - *Example: "Missing 40%+ of inbound calls, especially evenings and weekends"*
+### Pain Points
 
-2. **[CHALLENGE_2]**: [Description]
-   - *Example: "Only 12 Google reviews with a 3.9-star rating, losing to competitors with 100+ reviews"*
+1. **[PLACEHOLDER — Pain Point 1]**
+   [PLACEHOLDER — 1-2 sentences describing the specific problem and its impact.]
 
-3. **[CHALLENGE_3]**: [Description]
-   - *Example: "Spending $3,000/month on Google Ads with no visibility into which leads converted to jobs"*
+2. **[PLACEHOLDER — Pain Point 2]**
+   [PLACEHOLDER — 1-2 sentences describing the specific problem and its impact.]
 
-### Before Metrics
+3. **[PLACEHOLDER — Pain Point 3]**
+   [PLACEHOLDER — 1-2 sentences describing the specific problem and its impact.]
 
-| Metric | Value |
-|--------|-------|
-| Monthly leads | [NUMBER] |
-| Lead response time | [TIME] |
-| Google reviews | [NUMBER] |
-| Google rating | [RATING] stars |
-| Monthly revenue | $[AMOUNT] |
-| Cost per lead | $[AMOUNT] |
-| Call answer rate | [PERCENTAGE]% |
-| Marketing spend | $[AMOUNT]/month |
-| Marketing ROI | [UNKNOWN / NEGATIVE / X%] |
+### Business Impact of the Problem
+
+| Metric | Before | Impact |
+|---|---|---|
+| Hours spent on manual admin per week | [PLACEHOLDER — e.g., 25 hours] | Lost productivity |
+| Average lead response time | [PLACEHOLDER — e.g., 48 hours] | Lost opportunities |
+| Client onboarding time | [PLACEHOLDER — e.g., 3 weeks] | Delayed revenue |
+| Monthly tool spend | $[PLACEHOLDER] across [X] tools | Fragmented data, high cost |
+| Client churn rate | [PLACEHOLDER — e.g., 15%] annually | Revenue loss |
+
+> **[PLACEHOLDER — CLIENT NAME] in their own words:**
+> "[PLACEHOLDER — Quote describing their frustration or challenge before the solution.]"
 
 ---
 
 ## The Solution
 
-### Services Implemented
+### Why [PLACEHOLDER — COMPANY NAME]?
 
-[List the specific Sovereign AI services activated for this client and briefly explain how each was configured.]
+[PLACEHOLDER — 1-2 paragraphs explaining why the client chose this solution over alternatives. What were the deciding factors?]
 
-| Service | Configuration |
-|---------|--------------|
-| [SERVICE_1] | [Brief description of how it was set up] |
-| [SERVICE_2] | [Brief description] |
-| [SERVICE_3] | [Brief description] |
-| [SERVICE_4] | [Brief description] |
-| [SERVICE_5] | [Brief description] |
+**Key factors in their decision:**
+- [PLACEHOLDER — Factor 1, e.g., "All-in-one platform eliminated need for 6 separate tools"]
+- [PLACEHOLDER — Factor 2, e.g., "AI automation capabilities aligned with their growth goals"]
+- [PLACEHOLDER — Factor 3, e.g., "Dedicated onboarding support reduced implementation risk"]
 
-*Example:*
+### Implementation
 
-| Service | Configuration |
-|---------|--------------|
-| AI Receptionist | 24/7 call answering with custom scripts for AC repair, installation, and maintenance inquiries |
-| Lead Capture | Multi-channel capture from website forms, phone calls, and Google Ads with automated scoring |
-| Review Management | Automated post-service review requests via SMS with direct Google review links |
-| Google Ads | Targeted campaigns for "AC repair near me" and related keywords across 15 zip codes |
-| SEO Optimization | Google Business Profile optimization, local citation building, service-area page creation |
+#### Selected Bundle: [PLACEHOLDER — Starter / Growth / Enterprise]
+
+| Feature | How It Was Used |
+|---|---|
+| **AI Automation** | [PLACEHOLDER — e.g., "Automated lead follow-up sequences and proposal generation"] |
+| **Client Portal** | [PLACEHOLDER — e.g., "Branded client portal for document sharing and status updates"] |
+| **Email Campaigns** | [PLACEHOLDER — e.g., "Automated nurture sequences for leads and onboarding emails for clients"] |
+| **SMS Notifications** | [PLACEHOLDER — e.g., "Appointment reminders and delivery confirmations"] |
+| **Analytics Dashboard** | [PLACEHOLDER — e.g., "Real-time pipeline visibility and revenue forecasting"] |
+| **Payment Processing** | [PLACEHOLDER — e.g., "Automated recurring billing with Stripe integration"] |
 
 ### Implementation Timeline
 
-| Week | Milestone |
-|------|-----------|
-| Week 1 | [MILESTONE -- e.g., "Account setup, AI receptionist configured and live"] |
-| Week 2 | [MILESTONE -- e.g., "Google Ads campaigns launched, review request automation active"] |
-| Week 3 | [MILESTONE -- e.g., "SEO optimizations deployed, first performance report delivered"] |
-| Week 4 | [MILESTONE -- e.g., "Full optimization cycle complete, all services tuned based on data"] |
+| Week | Milestone | Activities |
+|---|---|---|
+| **Week 1** | Onboarding & Setup | Account provisioning, data migration, team training |
+| **Week 2** | Configuration | Workflow automation setup, email/SMS templates, integrations |
+| **Week 3** | Testing & Refinement | User acceptance testing, workflow adjustments, go-live prep |
+| **Week 4** | Go-Live | Full production launch, monitoring, first-week support |
+| **Week 5-8** | Optimization | Performance review, workflow refinements, advanced feature adoption |
+
+#### Implementation Highlights
+
+- **Data migrated:** [PLACEHOLDER — e.g., "3,500 client records from Salesforce and 2 years of email history"]
+- **Automations created:** [PLACEHOLDER — e.g., "12 automated workflows replacing manual processes"]
+- **Users trained:** [PLACEHOLDER — e.g., "8 team members across 3 departments"]
+- **Time to first value:** [PLACEHOLDER — e.g., "3 days from kickoff to first automated workflow live"]
 
 ---
 
 ## The Results
 
-### After Metrics (Measured at [30 / 60 / 90] Days)
+### Before and After Comparison
 
 | Metric | Before | After | Change |
-|--------|--------|-------|--------|
-| Monthly leads | [BEFORE] | [AFTER] | [+X% / +X leads] |
-| Lead response time | [BEFORE] | [AFTER] | [X% faster] |
-| Google reviews | [BEFORE] | [AFTER] | [+X reviews] |
-| Google rating | [BEFORE] stars | [AFTER] stars | [+X.X improvement] |
-| Monthly revenue | $[BEFORE] | $[AFTER] | [+$X / +X%] |
-| Cost per lead | $[BEFORE] | $[AFTER] | [-X%] |
-| Call answer rate | [BEFORE]% | [AFTER]% | [+X percentage points] |
-| Marketing ROI | [BEFORE] | [AFTER]x | [Measurable for first time / Xx improvement] |
-
-### Key Wins
-
-1. **[WIN_1]**: [Specific result with a number]
-   - *Example: "Went from missing 40% of calls to answering 98% within 3 rings"*
-
-2. **[WIN_2]**: [Specific result with a number]
-   - *Example: "Increased Google reviews from 12 to 47 in 60 days, rating improved from 3.9 to 4.8 stars"*
-
-3. **[WIN_3]**: [Specific result with a number]
-   - *Example: "Generated 43 qualified leads in the first month, resulting in $67,000 in new revenue"*
+|---|---|---|---|
+| Admin hours per week | [PLACEHOLDER — e.g., 25 hours] | [PLACEHOLDER — e.g., 6 hours] | **[PLACEHOLDER — e.g., 76%] reduction** |
+| Lead response time | [PLACEHOLDER — e.g., 48 hours] | [PLACEHOLDER — e.g., < 5 minutes] | **[PLACEHOLDER — e.g., 99.8%] faster** |
+| Client onboarding time | [PLACEHOLDER — e.g., 3 weeks] | [PLACEHOLDER — e.g., 3 days] | **[PLACEHOLDER — e.g., 85%] faster** |
+| Monthly revenue | $[PLACEHOLDER] | $[PLACEHOLDER] | **[PLACEHOLDER]% increase** |
+| Client retention rate | [PLACEHOLDER — e.g., 85%] | [PLACEHOLDER — e.g., 95%] | **[PLACEHOLDER — e.g., 10] point improvement** |
+| Monthly tool spend | $[PLACEHOLDER] ([X] tools) | $[PLACEHOLDER] (1 platform) | **$[PLACEHOLDER] saved/month** |
+| Proposals sent per month | [PLACEHOLDER — e.g., 8] | [PLACEHOLDER — e.g., 25] | **[PLACEHOLDER — e.g., 3x] increase** |
+| Client satisfaction (NPS) | [PLACEHOLDER] | [PLACEHOLDER] | **[PLACEHOLDER] point improvement** |
 
 ### ROI Summary
 
-```
-Monthly investment:     $[SOVEREIGN_AI_FEE]
-Monthly revenue gained: $[REVENUE_INCREASE]
-Monthly ROI:            [X]x return
-Payback period:         [X] days
-```
+| Metric | Value |
+|---|---|
+| **Monthly cost of solution** | $[PLACEHOLDER] |
+| **Monthly savings (labor + tools)** | $[PLACEHOLDER] |
+| **Additional monthly revenue** | $[PLACEHOLDER] |
+| **Net monthly ROI** | $[PLACEHOLDER] |
+| **Payback period** | [PLACEHOLDER — e.g., "< 1 month"] |
+| **Annual ROI** | [PLACEHOLDER — e.g., "450%"] |
+
+### Key Wins
+
+1. **[PLACEHOLDER — Win 1 headline]**
+   [PLACEHOLDER — 1-2 sentences with specific data points.]
+
+2. **[PLACEHOLDER — Win 2 headline]**
+   [PLACEHOLDER — 1-2 sentences with specific data points.]
+
+3. **[PLACEHOLDER — Win 3 headline]**
+   [PLACEHOLDER — 1-2 sentences with specific data points.]
 
 ---
 
 ## Client Testimonial
 
-> "[QUOTE -- 2--3 sentences from the client about their experience with Sovereign AI. Focus on specific results and the impact on their business.]"
+> "[PLACEHOLDER — Primary client quote, 2-4 sentences. Should highlight the transformation and results. Use specific numbers where possible. The quote should feel authentic and conversational, not overly polished.]"
 >
-> *Example: "Before Sovereign AI, I was spending my evenings answering voicemails and my weekends posting on Facebook. Now the AI handles everything -- I went from 15 leads a month to over 50, and I actually know which ones turn into jobs. The 60-day guarantee made it a no-brainer."*
-
-**-- [CLIENT_NAME], [TITLE], [CLIENT_COMPANY_NAME]**
-
----
-
-## Services Used
-
-The following Sovereign AI services contributed to these results:
-
-- [ ] AI Lead Generation
-- [ ] AI Voice Agents
-- [ ] AI Chat Assistant
-- [ ] AI SEO Domination
-- [ ] AI Ad Management
-- [ ] AI Email Marketing
-- [ ] AI Social Media
-- [ ] AI Review Management
-- [ ] AI Scheduling System
-- [ ] AI CRM Automation
-- [ ] AI Website Builder
-- [ ] AI Analytics
-- [ ] AI Content Engine
-- [ ] AI Reputation Shield
-- [ ] AI Retargeting
-- [ ] Custom AI Build
-
-**Plan**: [DIY / Starter / Growth / Empire]
-**Duration**: [X] months and counting
+> — **[PLACEHOLDER — CLIENT NAME]**
+> [PLACEHOLDER — TITLE], [PLACEHOLDER — CLIENT COMPANY NAME]
 
 ---
 
-*To learn how Sovereign AI can deliver similar results for your business, visit [trysovereignai.com/demo] or call [PHONE_NUMBER].*
+> "[PLACEHOLDER — Secondary quote from a different stakeholder, 1-2 sentences. Focus on a different aspect, such as ease of implementation, team adoption, or support quality.]"
+>
+> — **[PLACEHOLDER — CLIENT NAME]**
+> [PLACEHOLDER — TITLE], [PLACEHOLDER — CLIENT COMPANY NAME]
+
+---
+
+## Timeline Summary
+
+```
+[MONTH 1]          [MONTH 2]          [MONTH 3]          [MONTH 6]
+    |                  |                  |                  |
+    ▼                  ▼                  ▼                  ▼
+ Onboarded         First wins        Full adoption      Expansion
+ & live in         reported:         across team:       to [GROWTH/
+ [X] days          [KEY METRIC]      [KEY METRIC]       ENTERPRISE]
+```
+
+| Date | Milestone |
+|---|---|
+| [PLACEHOLDER — DATE] | Contract signed |
+| [PLACEHOLDER — DATE] | Onboarding complete, platform live |
+| [PLACEHOLDER — DATE] | First measurable results achieved |
+| [PLACEHOLDER — DATE] | 30-day review — all goals on track |
+| [PLACEHOLDER — DATE] | [PLACEHOLDER — Additional milestone, e.g., "Expanded to Growth tier"] |
+| [PLACEHOLDER — DATE] | [PLACEHOLDER — Additional milestone, e.g., "Added 5 new team members"] |
+
+---
+
+## What's Next for [PLACEHOLDER — CLIENT COMPANY NAME]
+
+[PLACEHOLDER — 1-2 sentences about the client's future plans with the platform. Are they expanding to a higher tier? Adding more users? Exploring new features?]
+
+- [PLACEHOLDER — Next initiative 1]
+- [PLACEHOLDER — Next initiative 2]
+- [PLACEHOLDER — Next initiative 3]
+
+---
+
+## About [PLACEHOLDER — COMPANY NAME]
+
+[PLACEHOLDER — COMPANY NAME] is an AI-powered business operations platform that helps service-based businesses automate client management, streamline communications, and scale revenue. Learn more at [PLACEHOLDER — WEBSITE URL].
+
+### Ready to achieve similar results?
+
+| Action | Details |
+|---|---|
+| **Book a Demo** | [PLACEHOLDER — CALENDAR LINK] |
+| **Start Free Trial** | [PLACEHOLDER — TRIAL URL] |
+| **Contact Sales** | [PLACEHOLDER — EMAIL] |
+
+---
+
+## Usage Notes for Internal Team
+
+*Remove this section before publishing.*
+
+### How to Complete This Case Study
+
+1. **Client interview:** Schedule a 30-minute call with the primary stakeholder. Record with permission.
+2. **Data collection:** Pull usage analytics, before/after metrics, and ROI calculations from the platform.
+3. **Quote approval:** Send final quotes to the client for written approval before publishing.
+4. **Legal review:** Ensure client has signed a testimonial release form.
+5. **Design:** Send completed markdown to design team for visual formatting (PDF, web page, slide deck).
+
+### Distribution Channels
+
+- [ ] Company website — Case Studies page
+- [ ] Sales team — Add to proposal appendix
+- [ ] Email — Include in relevant nurture sequences
+- [ ] Social media — Create summary posts with key stats
+- [ ] Sales collateral — Print version for meetings and events

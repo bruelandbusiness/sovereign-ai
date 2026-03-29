@@ -1,299 +1,433 @@
-# Sovereign AI -- Client Onboarding Standard Operating Procedure
+# Client Onboarding Standard Operating Procedure
 
-## Overview
-
-This SOP covers the end-to-end client onboarding process from signed contract through the 60-day guarantee checkpoint. Every new client follows this sequence to ensure consistent service delivery, rapid time-to-value, and measurable results.
-
-**Owner**: Account Manager / Client Success Lead
-**Timeline**: Day 0 through Day 60
+> **Last Updated:** [PLACEHOLDER — DATE]
+> **Owner:** [PLACEHOLDER — CLIENT SUCCESS MANAGER]
+> **Review Cadence:** Monthly
 
 ---
 
-## 1. Pre-Onboarding Checklist
+## Table of Contents
 
-Complete all items before beginning onboarding:
+1. [Overview](#overview)
+2. [Pre-Onboarding Checklist](#pre-onboarding-checklist)
+3. [Day 0: Account Setup](#day-0-account-setup)
+4. [Day 1: Welcome & Orientation](#day-1-welcome--orientation)
+5. [Service Activation Verification](#service-activation-verification)
+6. [First-Week Check-In](#first-week-check-in)
+7. [30-Day Review](#30-day-review)
+8. [Escalation Procedures](#escalation-procedures)
+9. [Templates](#templates)
 
-- [ ] **Contract signed** -- MSA and SLA fully executed (see `docs/legal/MSA-TEMPLATE.md`)
-- [ ] **Payment received** -- First invoice paid or subscription active in Stripe
-- [ ] **Discovery call completed** -- Business goals, current marketing stack, and pain points documented
-- [ ] **Client questionnaire returned** -- Company info, branding assets, target audience, service area
-- [ ] **Access credentials received** -- Google Business Profile, website CMS, existing ad accounts (if applicable)
-- [ ] **Internal kickoff completed** -- Assigned account manager, service delivery team briefed
-- [ ] **CRM record created** -- Client profile, contact info, tier, services, and start date entered
+---
 
-### Pre-Onboarding Deliverables to Client
+## Overview
 
-- [ ] Welcome email sent (template below)
-- [ ] Client portal login credentials delivered
-- [ ] Onboarding timeline shared
-- [ ] Point-of-contact information provided
+This SOP ensures every new client receives a consistent, high-quality onboarding experience. The goal is to achieve **Time to First Value (TTFV) within 48 hours** of contract signature.
+
+### Onboarding Timeline
+
+| Milestone | Timeframe | Owner |
+|---|---|---|
+| Contract signed | Day 0 | Sales |
+| Account provisioned | Day 0 (within 2 hours) | Operations |
+| Welcome call | Day 1 | Client Success |
+| Service activation verified | Day 1-2 | Technical Support |
+| First-week check-in | Day 5-7 | Client Success |
+| 30-day review | Day 30 | Client Success + Account Manager |
+
+---
+
+## Pre-Onboarding Checklist
+
+Complete before the client's start date.
+
+### Sales Handoff
+
+- [ ] Signed contract / MSA received and filed
+- [ ] Selected service bundle documented: [ ] Starter / [ ] Growth / [ ] Enterprise
+- [ ] Payment method on file (Stripe customer created)
+- [ ] Client contact information collected:
+  - Primary contact: [PLACEHOLDER]
+  - Billing contact: [PLACEHOLDER]
+  - Technical contact: [PLACEHOLDER]
+- [ ] Special requirements or customizations noted
+- [ ] Sales-to-Success handoff meeting completed
+- [ ] CRM record updated with onboarding status
+
+### Technical Preparation
+
+- [ ] Client organization created in platform
+- [ ] User accounts provisioned for all designated users
+- [ ] Service tier limits configured per contract
+- [ ] Custom domain configured (if applicable): [PLACEHOLDER]
+- [ ] API keys generated (if applicable)
+- [ ] Integration requirements documented
+- [ ] Data migration plan prepared (if applicable)
+
+### Materials Prepared
+
+- [ ] Welcome email drafted (see template below)
+- [ ] Onboarding deck customized for client's bundle
+- [ ] Training schedule proposed
+- [ ] Knowledge base access configured
+
+---
+
+## Day 0: Account Setup
+
+**Owner:** Operations Team
+**SLA:** Complete within 2 hours of contract signature
+
+### Steps
+
+1. **Create client organization**
+   ```
+   Platform → Admin → Organizations → Create New
+   - Organization name: [CLIENT NAME]
+   - Plan: [STARTER / GROWTH / ENTERPRISE]
+   - Billing email: [CLIENT BILLING EMAIL]
+   ```
+
+2. **Provision user accounts**
+   - Create accounts for all designated users
+   - Set appropriate roles (Admin, Manager, Member)
+   - Send invitation emails
+
+3. **Configure services per bundle**
+
+   | Service | Starter | Growth | Enterprise |
+   |---|---|---|---|
+   | AI Automation Suite | Basic | Advanced | Full |
+   | Client Portal | Standard | Branded | Custom |
+   | Analytics Dashboard | Basic | Advanced | Custom + API |
+   | Email Campaigns | 1,000/mo | 10,000/mo | Unlimited |
+   | SMS Notifications | 500/mo | 5,000/mo | Unlimited |
+   | Support Level | Email | Email + Chat | Dedicated CSM |
+   | API Access | -- | Standard | Premium |
+
+4. **Verify billing**
+   - Confirm Stripe subscription is active
+   - Verify correct pricing tier
+   - Set billing cycle start date
+
+5. **Send welcome email** (see template below)
+
+---
+
+## Day 1: Welcome & Orientation
+
+**Owner:** Client Success Manager
+**Duration:** 45-60 minutes
+
+### Welcome Call Agenda
+
+1. **Introductions** (5 min)
+   - Introduce the client success team
+   - Confirm key contacts on both sides
+
+2. **Platform Walkthrough** (20 min)
+   - Dashboard overview
+   - Key features relevant to their bundle
+   - Navigation and core workflows
+
+3. **Goal Setting** (10 min)
+   - What does success look like in 30/60/90 days?
+   - Document 3 specific, measurable goals
+   - Identify KPIs to track
+
+4. **Training Plan** (10 min)
+   - Review available training resources
+   - Schedule follow-up training sessions
+   - Share knowledge base and documentation links
+
+5. **Q&A and Next Steps** (10 min)
+   - Address immediate questions
+   - Confirm first-week check-in date
+   - Share support contact information
+
+### Post-Call Actions
+
+- [ ] Send meeting summary email within 2 hours
+- [ ] Create onboarding project in project management tool
+- [ ] Document client goals in CRM
+- [ ] Schedule first-week check-in
+- [ ] Assign any open action items
+
+---
+
+## Service Activation Verification
+
+**Owner:** Technical Support
+**SLA:** Complete within 24 hours of account provisioning
+
+### Verification Checklist
+
+#### Account Access
+- [ ] Client admin can log in successfully
+- [ ] All invited users received and accepted invitations
+- [ ] Role-based permissions working correctly
+- [ ] MFA configured (required for Enterprise tier)
+
+#### Core Services
+- [ ] Dashboard loads with correct data
+- [ ] AI automation features accessible per tier
+- [ ] Client portal configured and accessible
+- [ ] Custom branding applied (if applicable)
+
+#### Communication Services
+- [ ] Email integration active
+  - [ ] Send test email → Delivered successfully
+  - [ ] Sender domain verified (SPF, DKIM, DMARC)
+- [ ] SMS integration active
+  - [ ] Send test SMS → Delivered successfully
+  - [ ] Phone number verified
+
+#### Billing & Payments
+- [ ] Stripe subscription status: Active
+- [ ] Correct plan and pricing confirmed
+- [ ] Invoice generation working
+- [ ] Payment method valid
+
+#### Integrations (if applicable)
+- [ ] API keys working — test with: `curl -H "Authorization: Bearer [KEY]" [API_URL]/health`
+- [ ] Webhook endpoints configured and responding
+- [ ] Third-party integrations connected and syncing
+- [ ] Data import completed and verified
+
+### Verification Sign-Off
+
+| Item | Status | Verified By | Date |
+|---|---|---|---|
+| Account Access | [ ] Pass / [ ] Fail | [PLACEHOLDER] | [PLACEHOLDER] |
+| Core Services | [ ] Pass / [ ] Fail | [PLACEHOLDER] | [PLACEHOLDER] |
+| Communications | [ ] Pass / [ ] Fail | [PLACEHOLDER] | [PLACEHOLDER] |
+| Billing | [ ] Pass / [ ] Fail | [PLACEHOLDER] | [PLACEHOLDER] |
+| Integrations | [ ] Pass / [ ] Fail | [PLACEHOLDER] | [PLACEHOLDER] |
+
+---
+
+## First-Week Check-In
+
+**Owner:** Client Success Manager
+**Timing:** Day 5-7 after onboarding
+**Duration:** 30 minutes
+
+### Check-In Template
+
+#### Pre-Call Preparation
+- [ ] Review platform usage analytics for the client
+- [ ] Check support ticket history
+- [ ] Review activation verification results
+- [ ] Prepare usage summary
+
+#### Agenda
+
+1. **Usage Review** (10 min)
+   - How has the first week been?
+   - Which features have you used most?
+   - Any features you haven't explored yet?
+
+2. **Issue Resolution** (10 min)
+   - Any blockers or challenges encountered?
+   - Review and resolve any open support tickets
+   - Technical issues to escalate?
+
+3. **Quick Wins** (5 min)
+   - Highlight a feature or workflow they may have missed
+   - Share a relevant tip or best practice
+
+4. **Next Steps** (5 min)
+   - Action items for both sides
+   - Confirm 30-day review date
+   - Remind of support channels
+
+#### Post-Call Actions
+- [ ] Send summary email with action items
+- [ ] Update CRM with check-in notes
+- [ ] Escalate any unresolved technical issues
+- [ ] Schedule additional training if needed
+
+#### Health Score Assessment (Week 1)
+
+| Metric | Target | Actual | Status |
+|---|---|---|---|
+| Logins (7 days) | >= 5 | [PLACEHOLDER] | [GREEN/YELLOW/RED] |
+| Features activated | >= 50% of tier | [PLACEHOLDER] | [GREEN/YELLOW/RED] |
+| Support tickets | <= 3 | [PLACEHOLDER] | [GREEN/YELLOW/RED] |
+| User satisfaction (1-5) | >= 4 | [PLACEHOLDER] | [GREEN/YELLOW/RED] |
+
+---
+
+## 30-Day Review
+
+**Owner:** Client Success Manager + Account Manager
+**Duration:** 45 minutes
+
+### 30-Day Review Template
+
+#### Pre-Review Preparation
+- [ ] Pull 30-day usage analytics report
+- [ ] Review all support interactions
+- [ ] Calculate ROI metrics against stated goals
+- [ ] Prepare renewal/expansion talking points (if applicable)
+
+#### Agenda
+
+1. **Goal Progress Review** (15 min)
+
+   | Goal (set during onboarding) | Target | Actual | Status |
+   |---|---|---|---|
+   | [PLACEHOLDER — Goal 1] | [PLACEHOLDER] | [PLACEHOLDER] | [ON TRACK / AT RISK / BEHIND] |
+   | [PLACEHOLDER — Goal 2] | [PLACEHOLDER] | [PLACEHOLDER] | [ON TRACK / AT RISK / BEHIND] |
+   | [PLACEHOLDER — Goal 3] | [PLACEHOLDER] | [PLACEHOLDER] | [ON TRACK / AT RISK / BEHIND] |
+
+2. **Platform Adoption** (10 min)
+
+   | Metric | Target | Actual |
+   |---|---|---|
+   | Active users / Total users | >= 80% | [PLACEHOLDER] |
+   | Daily active usage | >= 60% of business days | [PLACEHOLDER] |
+   | Features utilized | >= 70% of tier | [PLACEHOLDER] |
+   | Automation workflows created | >= [PLACEHOLDER] | [PLACEHOLDER] |
+   | Client satisfaction (NPS) | >= 8 | [PLACEHOLDER] |
+
+3. **Value Delivered** (10 min)
+   - Time saved per week: [PLACEHOLDER] hours
+   - Revenue impact: $[PLACEHOLDER]
+   - Process improvements identified: [PLACEHOLDER]
+   - Key wins to highlight
+
+4. **Forward Planning** (10 min)
+   - 60/90-day goals
+   - Feature requests or enhancements
+   - Training needs
+   - Expansion opportunities (upsell discussion if appropriate)
+   - Identify client champion for case study / testimonial
+
+#### Post-Review Actions
+- [ ] Send 30-day review report to client
+- [ ] Update CRM with review outcomes
+- [ ] Create action plan for any "At Risk" goals
+- [ ] Schedule 60-day check-in (or quarterly cadence)
+- [ ] Flag expansion opportunities to Account Manager
+- [ ] Request testimonial if satisfaction score >= 8
+
+---
+
+## Escalation Procedures
+
+### Escalation Triggers
+
+| Trigger | Severity | Escalation Path |
+|---|---|---|
+| Client cannot access platform | High | Technical Support → Engineering (15 min) |
+| Billing discrepancy | Medium | Client Success → Finance (4 hours) |
+| Service not performing as sold | High | Client Success → Account Manager → VP Sales (24 hours) |
+| Client threatens cancellation | Critical | Client Success → Account Manager → VP CS (1 hour) |
+| Data loss or security concern | Critical | Technical Support → Engineering → CTO (immediate) |
+| Integration failure | Medium | Technical Support → Engineering (4 hours) |
+| Missed SLA | High | Client Success → Operations Manager (2 hours) |
+
+### Escalation Process
+
+1. **Document** — Record the issue, impact, and steps taken in the CRM
+2. **Notify** — Alert the next escalation level via Slack + email
+3. **Own** — Original assignee remains the client's point of contact
+4. **Update** — Provide client updates every [PLACEHOLDER — e.g., 2 hours / 4 hours]
+5. **Resolve** — Confirm resolution with client and document root cause
+6. **Prevent** — Create action item to prevent recurrence
+
+---
+
+## Templates
 
 ### Welcome Email Template
 
 ```
-Subject: Welcome to Sovereign AI -- Getting Started
+Subject: Welcome to [COMPANY NAME] — Your Account is Ready!
 
-Hi [CLIENT_NAME],
+Hi [CLIENT FIRST NAME],
 
-Welcome aboard! We're excited to start working with you.
+Welcome to [COMPANY NAME]! We're excited to have [CLIENT COMPANY] on board.
+
+Your account has been set up and is ready to go:
+
+  - Login URL: [PLACEHOLDER — APP URL]
+  - Your username: [CLIENT EMAIL]
+  - Temporary password: [SET VIA INVITATION LINK]
+
+Your plan: [STARTER / GROWTH / ENTERPRISE]
 
 Here's what happens next:
+  1. Log in and explore your dashboard
+  2. Join your welcome call on [DATE] at [TIME] — [CALENDAR LINK]
+  3. Check out our getting started guide: [PLACEHOLDER — DOCS URL]
 
-1. You'll receive your dashboard login within the next 2 hours
-2. We'll have your Day 1 setup call on [DATE] at [TIME]
-3. Your services will begin activating within 24 hours
+Your dedicated Client Success Manager is [CSM NAME] ([CSM EMAIL]).
+Don't hesitate to reach out with any questions.
 
-Your dedicated account manager is [AM_NAME] ([AM_EMAIL]).
-For urgent issues, reach our support team at support@trysovereignai.com.
-
-Talk soon,
-The Sovereign AI Team
-```
-
----
-
-## 2. Day 1 -- Account Setup and Service Activation
-
-### Account Manager Tasks
-
-- [ ] Create client account in Sovereign AI dashboard
-- [ ] Assign selected service tier and individual services
-- [ ] Configure billing (Stripe subscription linked)
-- [ ] Set up client notification preferences (email, SMS, push)
-- [ ] Enable Telegram alerts for client activity (internal)
-
-### Service Activation Verification
-
-For each subscribed service, verify activation:
-
-| Service | Activation Check | Expected Result |
-|---------|-----------------|-----------------|
-| AI Receptionist | Test inbound call | Call answered, transcript generated |
-| Lead Capture | Submit test form | Lead appears in dashboard |
-| Review Management | Trigger review request | SMS/email sent to test contact |
-| SEO Optimization | Verify site audit initiated | Audit report generated |
-| Social Media | Verify content calendar created | First week of posts scheduled |
-| Google Ads | Verify campaign structure | Campaign draft ready for review |
-| Email Marketing | Verify drip sequence loaded | Welcome sequence active |
-| Reputation Monitoring | Verify monitors configured | Tracking active for brand name |
-
-### Day 1 Setup Call Agenda (30 minutes)
-
-1. **Introductions** (5 min) -- Account manager, key contacts
-2. **Dashboard walkthrough** (10 min) -- Login, navigation, key metrics
-3. **Service overview** (10 min) -- What's active, what to expect in Week 1
-4. **Communication preferences** (5 min) -- Preferred contact method, reporting frequency
-5. **Questions and next steps** (5 min)
-
----
-
-## 3. Days 2--3 -- Configuration Review and Custom Settings
-
-### Configuration Tasks
-
-- [ ] Review and customize AI receptionist scripts and call routing
-- [ ] Upload client branding assets (logo, colors, fonts) to templates
-- [ ] Configure service-area targeting for local SEO and ads
-- [ ] Set up custom lead scoring rules based on client criteria
-- [ ] Configure automated follow-up sequences
-- [ ] Review and adjust notification thresholds
-- [ ] Set up integration with client's existing tools (CRM, calendar)
-
-### Quality Assurance
-
-- [ ] Run end-to-end test of each active service
-- [ ] Verify lead notifications deliver to correct contacts
-- [ ] Confirm reporting dashboards display accurate data
-- [ ] Test client's ability to log in and navigate the dashboard
-- [ ] Verify all automations are triggering correctly
-
----
-
-## 4. Week 1 Check-In Call
-
-**Timing**: Day 5--7 after activation
-**Duration**: 20 minutes
-**Attendees**: Account manager, client primary contact
-
-### Agenda
-
-1. **Service status review** (5 min)
-   - Confirm all services are active and performing
-   - Address any activation issues
-
-2. **Early results walkthrough** (5 min)
-   - Leads captured to date
-   - Calls handled (if AI receptionist active)
-   - Review requests sent
-   - Any early wins to highlight
-
-3. **Feedback collection** (5 min)
-   - Is the dashboard easy to use?
-   - Are notifications working as expected?
-   - Any changes to configuration needed?
-
-4. **Set expectations for Month 1** (5 min)
-   - Typical ramp-up timeline
-   - When to expect measurable results
-   - Upcoming optimization steps
-
-### Week 1 Check-In Email Template
-
-```
-Subject: Week 1 Check-In -- Your Sovereign AI Progress
-
-Hi [CLIENT_NAME],
-
-Great first week! Here's a quick snapshot:
-
-- Leads captured: [COUNT]
-- Calls handled: [COUNT]
-- Review requests sent: [COUNT]
-- Dashboard logins: [COUNT]
-
-[HIGHLIGHT any early wins or notable activity]
-
-Our next check-in is scheduled for [DATE]. In the meantime,
-your dashboard is always available at https://trysovereignai.com/dashboard.
+We look forward to helping [CLIENT COMPANY] achieve [STATED GOAL].
 
 Best,
-[AM_NAME]
+[CSM NAME]
+[COMPANY NAME]
 ```
 
----
-
-## 5. Day 30 -- Review Call and KPI Review
-
-**Timing**: Day 28--32
-**Duration**: 30 minutes
-**Attendees**: Account manager, client primary contact, (optional) service delivery lead
-
-### Pre-Call Preparation
-
-- [ ] Pull 30-day performance report from dashboard
-- [ ] Calculate KPIs against baseline (see below)
-- [ ] Prepare optimization recommendations
-- [ ] Note any support tickets or issues from the first month
-
-### KPI Review Framework
-
-| KPI | Baseline (Pre-Sovereign AI) | Current (Day 30) | Target (Day 60) |
-|-----|---------------------------|-------------------|------------------|
-| Monthly leads | [BASELINE] | [CURRENT] | [TARGET] |
-| Lead response time | [BASELINE] | [CURRENT] | < 5 minutes |
-| Google review count | [BASELINE] | [CURRENT] | [TARGET] |
-| Google review rating | [BASELINE] | [CURRENT] | 4.5+ |
-| Website traffic | [BASELINE] | [CURRENT] | [TARGET] |
-| Call answer rate | [BASELINE] | [CURRENT] | 95%+ |
-| Cost per lead | [BASELINE] | [CURRENT] | [TARGET] |
-| Revenue attributed | [BASELINE] | [CURRENT] | [TARGET] |
-
-### Day 30 Call Agenda
-
-1. **KPI review** (10 min) -- Walk through performance metrics
-2. **What's working** (5 min) -- Highlight wins, strong-performing services
-3. **Optimization plan** (10 min) -- Adjustments, A/B tests, new strategies
-4. **Client feedback** (5 min) -- Satisfaction, concerns, requests
-5. **Day 60 preview** (5 min) -- What to expect, guarantee checkpoint reminder
-
----
-
-## 6. Day 60 -- Guarantee Checkpoint
-
-**Timing**: Day 58--62
-**Duration**: 30 minutes
-**Purpose**: Formal review against the 60-day money-back guarantee terms
-
-### Pre-Call Preparation
-
-- [ ] Generate comprehensive 60-day performance report
-- [ ] Calculate ROI based on documented metrics
-- [ ] Compare results against guaranteed targets in the SLA
-- [ ] Prepare renewal/upsell recommendations (if appropriate)
-- [ ] Document all service delivery records
-
-### Guarantee Evaluation Criteria
-
-Per the MSA (Section: 60-Day Money-Back Guarantee):
-
-1. **Lead generation targets**: Did we meet the agreed-upon lead volume?
-2. **Service uptime**: Did we maintain 99.9% platform availability?
-3. **Response times**: Did we meet SLA response time commitments?
-4. **Service delivery**: Were all contracted services activated and operational?
-
-### Possible Outcomes
-
-| Outcome | Action |
-|---------|--------|
-| **Targets met** | Celebrate wins, discuss expansion/upsell, confirm continued service |
-| **Targets partially met** | Present optimization plan, extend guarantee period if warranted |
-| **Targets not met** | Process refund per MSA terms, conduct internal post-mortem |
-
-### Day 60 Call Agenda
-
-1. **60-day performance review** (10 min) -- Full metrics walkthrough
-2. **ROI analysis** (5 min) -- Revenue impact, cost savings
-3. **Guarantee evaluation** (5 min) -- Formal review against SLA targets
-4. **Go-forward plan** (10 min) -- Renewal, tier changes, additional services
-5. **Testimonial/case study request** (5 min) -- If results are strong
-
----
-
-## 7. Escalation Procedures
-
-### Client Escalation Triggers
-
-| Trigger | Severity | Response |
-|---------|----------|----------|
-| Client cannot access dashboard | High | Resolve within 1 hour |
-| Service not delivering (no leads, calls failing) | Critical | Resolve within 4 hours |
-| Client expresses dissatisfaction | High | Account manager call within 24 hours |
-| Client requests cancellation | Critical | Escalate to leadership within 2 hours |
-| Billing dispute | High | Resolve within 24 hours |
-
-### Escalation Path
+### First-Week Check-In Email Template
 
 ```
-Level 1: Account Manager
-  |
-Level 2: Client Success Lead
-  |
-Level 3: Head of Operations
-  |
-Level 4: Founder / CEO
+Subject: Week 1 Check-In — How's Everything Going?
+
+Hi [CLIENT FIRST NAME],
+
+It's been a week since you started with [COMPANY NAME]!
+Here's a quick summary of your first week:
+
+  - Logins: [X] times
+  - Features activated: [X] of [Y]
+  - Support tickets: [X]
+
+During our call, we discussed:
+  - [KEY DISCUSSION POINT 1]
+  - [KEY DISCUSSION POINT 2]
+
+Action items:
+  - [ACTION 1 — OWNER — DUE DATE]
+  - [ACTION 2 — OWNER — DUE DATE]
+
+Your 30-day review is scheduled for [DATE].
+
+Best,
+[CSM NAME]
 ```
 
-### Escalation Response Template
+### 30-Day Review Summary Email Template
 
 ```
-Subject: [URGENT] Client Escalation -- [CLIENT_NAME]
+Subject: Your 30-Day Review Summary — [CLIENT COMPANY]
 
-Client: [CLIENT_NAME]
-Account Manager: [AM_NAME]
-Severity: [CRITICAL / HIGH / MEDIUM]
-Issue: [BRIEF DESCRIPTION]
+Hi [CLIENT FIRST NAME],
 
-Timeline:
-- [DATE/TIME] -- Issue reported
-- [DATE/TIME] -- Initial response
-- [DATE/TIME] -- Current status
+Thank you for a great 30-day review! Here's a summary:
 
-Requested Action: [WHAT IS NEEDED]
-Deadline: [WHEN]
+GOAL PROGRESS:
+  - [GOAL 1]: [STATUS]
+  - [GOAL 2]: [STATUS]
+  - [GOAL 3]: [STATUS]
+
+KEY METRICS:
+  - Active users: [X] / [Y] ([Z]%)
+  - Time saved: ~[X] hours/week
+  - Satisfaction score: [X] / 5
+
+NEXT STEPS:
+  - [ACTION 1 — OWNER — DUE DATE]
+  - [ACTION 2 — OWNER — DUE DATE]
+  - Next review: [DATE]
+
+Thank you for your partnership. We're committed to making sure
+[CLIENT COMPANY] gets the most out of [COMPANY NAME].
+
+Best,
+[CSM NAME]
 ```
-
----
-
-## 8. Onboarding Timeline Summary
-
-| Day | Milestone | Owner |
-|-----|-----------|-------|
-| Day 0 | Contract signed, payment received | Sales |
-| Day 0 | Pre-onboarding checklist complete | Account Manager |
-| Day 1 | Account setup, services activated | Account Manager |
-| Day 1 | Setup call | Account Manager |
-| Day 2--3 | Configuration review, customization | Service Delivery |
-| Day 5--7 | Week 1 check-in call | Account Manager |
-| Day 14 | Two-week pulse check (email) | Account Manager |
-| Day 28--32 | Day 30 review call, KPI review | Account Manager |
-| Day 58--62 | Day 60 guarantee checkpoint | Account Manager + Leadership |

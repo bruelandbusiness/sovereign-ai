@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import Stripe from "stripe";
 import { stripe, assertStripeConfigured } from "@/lib/stripe";
 import { createAccountWithMagicLink } from "@/lib/auth";
 import { sendWelcomeEmail } from "@/lib/email";
 import { logger } from "@/lib/logger";
 import { BUNDLES, getServiceById } from "@/lib/constants";
 import { z } from "zod";
-import { rateLimitByIP, setRateLimitHeaders } from "@/lib/rate-limit";
-import { trackReferralConversion } from "@/lib/referral-tracker";
 
 export const dynamic = "force-dynamic";
 
@@ -16,11 +15,11 @@ const onboardingSchema = z.object({
     businessName: z.string().min(1, "Business name is required").max(200),
     ownerName: z.string().min(1, "Owner name is required").max(200),
     email: z.string().email("Valid email is required"),
-    phone: z.string().min(10, "Phone number is required").max(30),
+    phone: z.string().max(30).optional().default(""),
     website: z.string().max(500).optional().default(""),
-    city: z.string().min(2, "City is required").max(100),
-    state: z.string().min(2, "State is required").max(100),
-    industry: z.string().min(1, "Industry is required").max(100),
+    city: z.string().max(100).optional().default(""),
+    state: z.string().max(100).optional().default(""),
+    industry: z.string().max(100).optional().default(""),
     serviceAreaRadius: z.string().max(50).optional().default(""),
   }),
   step2: z.object({
@@ -41,8 +40,17 @@ const onboardingSchema = z.object({
     socialAccounts: z.string().max(1000).optional().default(""),
     additionalNotes: z.string().max(5000).optional().default(""),
   }),
+  billingInterval: z.enum(["monthly", "annual"]).default("monthly"),
   referralCode: z.string().max(50).nullable().optional(),
-  agencySlug: z.string().max(100).optional(),
+  agencySlug: z.string().max(100).nullable().optional(),
+  coupon: z.string().max(50).nullable().optional(),
+  utm: z.object({
+    utm_source: z.string().max(200).optional(),
+    utm_medium: z.string().max(200).optional(),
+    utm_campaign: z.string().max(200).optional(),
+    utm_term: z.string().max(200).optional(),
+    utm_content: z.string().max(200).optional(),
+  }).optional(),
 });
 
 /**
@@ -61,40 +69,20 @@ function matchBundle(selectedServices: string[]) {
 }
 
 export async function POST(request: NextRequest) {
-  // Rate limit: 10 onboarding submissions per hour per IP
-  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  const rl = await rateLimitByIP(ip, "onboarding", 10);
-  if (!rl.allowed) {
-    return setRateLimitHeaders(
-      NextResponse.json(
-        { error: "Too many requests. Please try again later." },
-        { status: 429 }
-      ),
-      rl
-    );
-  }
-
   try {
-    let rawBody: unknown;
-    try {
-      rawBody = await request.json();
-    } catch {
-      return NextResponse.json(
-        { error: "Invalid JSON body" },
-        { status: 400 }
-      );
-    }
+    const rawBody = await request.json();
 
     const parsed = onboardingSchema.safeParse(rawBody);
     if (!parsed.success) {
       return NextResponse.json(
-        { error: "Validation failed", details: parsed.error.flatten().fieldErrors },
+        { detail: "Invalid input", errors: parsed.error.issues.map((i) => i.message) },
         { status: 400 }
       );
     }
 
     const body = parsed.data;
     const selectedServices = body.step3.selectedServices;
+    const billingInterval = body.billingInterval;
     const email = body.step1.email;
     const ownerName = body.step1.ownerName;
     const businessName = body.step1.businessName;
@@ -138,9 +126,18 @@ export async function POST(request: NextRequest) {
               customPrice = agency.empirePrice;
             }
 
-            amount = customPrice !== null ? customPrice : Math.round(matchedBundle.price * 100);
+            if (customPrice !== null) {
+              amount = customPrice;
+            } else if (billingInterval === "annual") {
+              amount = Math.round(matchedBundle.annualPrice * 12 * 100);
+            } else {
+              amount = Math.round(matchedBundle.price * 100);
+            }
           } else {
-            amount = Math.round(matchedBundle.price * 100);
+            amount =
+              billingInterval === "annual"
+                ? Math.round(matchedBundle.annualPrice * 12 * 100)
+                : Math.round(matchedBundle.price * 100);
           }
           productName = `Sovereign AI ${matchedBundle.name} Bundle`;
           bundleId = matchedBundle.id;
@@ -156,6 +153,31 @@ export async function POST(request: NextRequest) {
         }
 
         if (amount > 0) {
+          // Prevent duplicate checkout sessions from double-clicks:
+          // If a checkout was created for this email in the last 60 seconds, return it
+          const recentCheckout = await prisma.auditLog.findFirst({
+            where: {
+              action: "onboarding_checkout_created",
+              resource: "email",
+              resourceId: email,
+              createdAt: { gt: new Date(Date.now() - 60_000) },
+            },
+          });
+          if (recentCheckout?.metadata) {
+            try {
+              const meta = JSON.parse(recentCheckout.metadata);
+              if (meta.checkout_url) {
+                return NextResponse.json({
+                  success: true,
+                  checkout_url: meta.checkout_url,
+                  session_id: meta.session_id,
+                });
+              }
+            } catch {
+              // Fall through to create new session if metadata is corrupt
+            }
+          }
+
           // Store only essential onboarding data in metadata (Stripe has 500 char limit per value)
           const onboardingEssentials = {
             businessName,
@@ -168,7 +190,13 @@ export async function POST(request: NextRequest) {
             serviceAreaRadius: body.step1.serviceAreaRadius,
           };
 
-          const checkoutSession = await stripe.checkout.sessions.create({
+          // Only allow known coupon IDs to prevent abuse
+          const ALLOWED_COUPONS = ["reactivation_20", "abandoned_10"];
+          const couponId = body.coupon && ALLOWED_COUPONS.includes(body.coupon)
+            ? body.coupon
+            : undefined;
+
+          const checkoutParams: Stripe.Checkout.SessionCreateParams = {
             mode: "subscription",
             payment_method_types: ["card"],
             customer_email: email,
@@ -180,7 +208,7 @@ export async function POST(request: NextRequest) {
                 price_data: {
                   currency: "usd",
                   product_data: { name: productName },
-                  recurring: { interval: "month" },
+                  recurring: { interval: billingInterval === "annual" ? "year" : "month" },
                   unit_amount: amount,
                 },
                 quantity: 1,
@@ -193,12 +221,41 @@ export async function POST(request: NextRequest) {
               business_name: businessName,
               email,
               onboarding_data: JSON.stringify(onboardingEssentials),
+              billing_interval: billingInterval,
               referral_code: body.referralCode || "",
               agency_id: agencyId,
+              coupon: couponId || "",
+              utm_source: body.utm?.utm_source || "",
+              utm_medium: body.utm?.utm_medium || "",
+              utm_campaign: body.utm?.utm_campaign || "",
             },
-            success_url: `${appUrl}/dashboard/billing/success?session_id={CHECKOUT_SESSION_ID}`,
+            success_url: `${appUrl}/dashboard?checkout=success`,
             cancel_url: `${appUrl}/onboarding?checkout=canceled`,
-          } as Parameters<typeof stripe.checkout.sessions.create>[0]);
+          };
+
+          // Apply discount coupon if provided (reactivation, abandoned cart, etc.)
+          if (couponId) {
+            checkoutParams.discounts = [{ coupon: couponId }];
+            // Coupons and trials can't both be applied — remove trial when using a coupon
+            delete checkoutParams.subscription_data;
+          }
+
+          const checkoutSession = await stripe.checkout.sessions.create(checkoutParams);
+
+          // Record checkout creation for double-click deduplication
+          await prisma.auditLog.create({
+            data: {
+              action: "onboarding_checkout_created",
+              resource: "email",
+              resourceId: email,
+              metadata: JSON.stringify({
+                checkout_url: checkoutSession.url,
+                session_id: checkoutSession.id,
+              }),
+            },
+          }).catch((err) => {
+            logger.errorWithCause("[onboarding] Failed to log checkout creation", err);
+          });
 
           return NextResponse.json({
             success: true,
@@ -255,40 +312,33 @@ export async function POST(request: NextRequest) {
           authResult.url
         );
 
-        // Track referral attribution
+        // Track referral attribution (atomic updates to prevent race conditions)
         if (body.referralCode) {
           try {
             const newClient = await prisma.client.findUnique({
               where: { accountId: authResult.account.id },
             });
-
             if (newClient) {
-              // Client-to-client referrals (ReferralCode table)
-              // Uses trackReferralConversion which handles self-referral
-              // prevention, double-credit prevention, notifications, and emails
-              await trackReferralConversion(newClient.id, body.referralCode);
-
-              // Affiliate partner referrals (AffiliateReferral table).
-              // Use updateMany with status guard to prevent double-crediting
-              // when both the onboarding route and Stripe webhook process
-              // the same referral code concurrently.
-              const affiliateRef = await prisma.affiliateReferral.findUnique({
-                where: { code: body.referralCode },
+              // Atomic: only update if referredClientId is still null
+              await prisma.referralCode.updateMany({
+                where: { code: body.referralCode, referredClientId: null },
+                data: {
+                  referredClientId: newClient.id,
+                  creditCents: 50000,
+                  status: "credited",
+                },
               });
-              if (affiliateRef && !affiliateRef.clientId && affiliateRef.status === "clicked") {
-                await prisma.affiliateReferral.updateMany({
-                  where: {
-                    id: affiliateRef.id,
-                    status: "clicked",
-                  },
-                  data: {
-                    clientId: newClient.id,
-                    email,
-                    status: "signed_up",
-                    convertedAt: new Date(),
-                  },
-                });
-              }
+
+              // Atomic: only update if clientId is still null
+              await prisma.affiliateReferral.updateMany({
+                where: { code: body.referralCode, clientId: null },
+                data: {
+                  clientId: newClient.id,
+                  email,
+                  status: "signed_up",
+                  convertedAt: new Date(),
+                },
+              });
             }
           } catch (refErr) {
             logger.errorWithCause("[onboarding] Referral tracking failed", refErr);
@@ -305,7 +355,7 @@ export async function POST(request: NextRequest) {
     });
   } catch {
     return NextResponse.json(
-      { error: "Onboarding submission failed" },
+      { detail: "Onboarding submission failed" },
       { status: 500 }
     );
   }

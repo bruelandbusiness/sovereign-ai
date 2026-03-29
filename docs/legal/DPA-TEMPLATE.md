@@ -1,119 +1,139 @@
 # Data Processing Agreement (DPA)
 
-**Between**: Sovereign AI ("Processor")
-**And**: [CLIENT_COMPANY_NAME] ("Controller")
-**Effective Date**: [DATE]
-**Agreement Number**: DPA-[YYYY]-[NNN]
-
-*This DPA supplements the Master Service Agreement (MSA) between the parties and governs the processing of personal data in connection with the services provided.*
-
----
-
-## 1. Definitions
-
-- **Personal Data**: Any information relating to an identified or identifiable natural person, including but not limited to names, email addresses, phone numbers, IP addresses, and location data.
-- **Processing**: Any operation performed on personal data, including collection, recording, storage, retrieval, use, disclosure, or deletion.
-- **Data Subject**: An identified or identifiable natural person whose personal data is processed.
-- **Controller**: The party that determines the purposes and means of processing personal data (the Client).
-- **Processor**: The party that processes personal data on behalf of the Controller (Sovereign AI).
-- **Sub-Processor**: A third party engaged by the Processor to process personal data on behalf of the Controller.
-- **Data Breach**: A breach of security leading to the accidental or unlawful destruction, loss, alteration, unauthorized disclosure of, or access to personal data.
+> **Document Type:** Legal Template
+> **Version:** 1.0
+> **Effective Date:** [PLACEHOLDER — DATE]
+> **Last Reviewed:** [PLACEHOLDER — DATE]
+>
+> **DISCLAIMER:** This template is provided for reference purposes only. It must be reviewed and approved by qualified legal counsel before use. This document is intended to address key requirements of the GDPR and CCPA but may require modification for specific jurisdictions or circumstances.
 
 ---
 
-## 2. Roles and Responsibilities
+## 1. Parties
 
-### 2.1 Controller (Client)
+This Data Processing Agreement ("DPA") is entered into between:
 
-The Controller:
-- Determines the purposes and means of processing personal data
-- Ensures a lawful basis exists for data collection (consent, legitimate interest, contract)
-- Is responsible for providing notice to data subjects about data processing
-- Is responsible for responding to data subject access requests
-- Warrants that all personal data provided to the Processor has been lawfully collected
+**Data Controller / Business:**
+[PLACEHOLDER — CLIENT LEGAL NAME]
+[PLACEHOLDER — CLIENT ADDRESS]
+("Controller")
 
-### 2.2 Processor (Sovereign AI)
+**Data Processor / Service Provider:**
+[PLACEHOLDER — COMPANY LEGAL NAME]
+[PLACEHOLDER — ADDRESS]
+("Processor")
 
-The Processor:
-- Processes personal data only on documented instructions from the Controller
-- Ensures personnel authorized to process personal data are bound by confidentiality obligations
-- Implements appropriate technical and organizational security measures
-- Assists the Controller in responding to data subject requests
-- Notifies the Controller of any data breach without undue delay
-- Deletes or returns all personal data upon termination of the agreement
+This DPA supplements and forms part of the Master Service Agreement ("MSA") dated [PLACEHOLDER — MSA DATE] between the parties.
 
 ---
 
-## 3. Types of Data Processed
+## 2. Definitions
 
-### 3.1 Categories of Data Subjects
+| Term | Definition |
+|---|---|
+| **Personal Data** | Any information relating to an identified or identifiable natural person, as defined under GDPR Art. 4(1) and CCPA Cal. Civ. Code 1798.140(v) |
+| **Processing** | Any operation performed on Personal Data, including collection, recording, storage, retrieval, use, disclosure, erasure, or destruction |
+| **Data Subject** | An identified or identifiable natural person whose Personal Data is processed |
+| **Sub-processor** | A third party engaged by Processor to process Personal Data on behalf of Controller |
+| **Data Breach** | A breach of security leading to the accidental or unlawful destruction, loss, alteration, unauthorized disclosure of, or access to Personal Data |
+| **GDPR** | Regulation (EU) 2016/679 (General Data Protection Regulation) |
+| **CCPA** | California Consumer Privacy Act, Cal. Civ. Code 1798.100 et seq., as amended by the CPRA |
+| **Supervisory Authority** | An independent public authority established by an EU Member State pursuant to GDPR Art. 51 |
+
+---
+
+## 3. Scope and Purpose of Processing
+
+### 3.1 Purpose
+
+Processor processes Personal Data solely for the purpose of providing the Services described in the MSA, including:
+
+- User account management and authentication
+- Client relationship management
+- Communication delivery (email, SMS)
+- Payment processing and billing
+- Analytics and reporting
+- AI-powered automation services
+
+### 3.2 Categories of Data Subjects
 
 | Category | Description |
-|----------|-------------|
-| Client's customers | Individuals who contact or engage with the Client's business |
-| Client's leads | Prospective customers who submit inquiries or request services |
-| Client's employees | Staff members who access the Sovereign AI platform |
-| Website visitors | Individuals who visit the Client's website with Sovereign AI integrations |
+|---|---|
+| Controller's employees | Staff who access the platform |
+| Controller's customers | End users of Controller's services managed through the platform |
+| Controller's prospects | Potential customers whose data is stored in the platform |
+| Controller's vendors | Third parties whose contact information is stored in the platform |
 
-### 3.2 Categories of Personal Data
+### 3.3 Types of Personal Data
 
-| Data Category | Specific Data Elements | Purpose |
-|--------------|----------------------|---------|
-| **Contact information** | Name, email, phone number, mailing address | Lead management, communication, service delivery |
-| **Business information** | Company name, job title, industry | Account management, service customization |
-| **Communication records** | Call transcripts, emails, SMS messages, chat logs | AI receptionist service, lead follow-up, quality assurance |
-| **Service interaction data** | Dashboard usage, service preferences, support tickets | Service delivery, product improvement |
-| **Financial data** | Billing address, payment status (no card numbers stored) | Billing and subscription management |
-| **Technical data** | IP address, browser type, device information | Security, analytics, platform optimization |
-| **Location data** | Service area, city, state, zip code | Local SEO, targeted advertising, lead routing |
-| **Review data** | Review content, ratings, reviewer names | Reputation management services |
+| Data Category | Examples |
+|---|---|
+| **Identity Data** | First name, last name, title, company name |
+| **Contact Data** | Email address, phone number, mailing address |
+| **Account Data** | Username, password (hashed), role, preferences |
+| **Transaction Data** | Payment history, invoices, subscription details |
+| **Communication Data** | Emails sent/received, SMS messages, notes |
+| **Usage Data** | Login timestamps, feature usage, IP addresses |
+| **Device Data** | Browser type, operating system, device identifiers |
 
-### 3.3 Sensitive Data
+### 3.4 Special Categories of Data
 
-The Processor does not intentionally collect or process sensitive personal data (racial or ethnic origin, political opinions, religious beliefs, health data, biometric data, etc.). If the Controller becomes aware that sensitive data has been inadvertently collected, they must notify the Processor immediately.
+Processor does **not** intentionally collect or process special categories of Personal Data as defined in GDPR Art. 9 (racial or ethnic origin, political opinions, religious beliefs, genetic data, biometric data, health data, sex life or sexual orientation).
 
----
-
-## 4. Processing Purposes
-
-Personal data is processed solely for the following purposes:
-
-1. **Service delivery** -- Providing the contracted AI marketing and automation services
-2. **Lead management** -- Capturing, scoring, routing, and nurturing leads
-3. **Communication** -- Sending emails, SMS, and push notifications on behalf of the Controller
-4. **AI services** -- Processing call transcripts and text through AI models for receptionist and automation services
-5. **Analytics and reporting** -- Generating performance reports and dashboards
-6. **Billing** -- Processing payments and managing subscriptions
-7. **Support** -- Resolving technical issues and responding to support requests
-8. **Security** -- Protecting the platform and detecting fraudulent activity
-9. **Legal compliance** -- Meeting legal and regulatory requirements
-
-The Processor will not process personal data for any purpose not listed above without prior written consent from the Controller.
+Controller shall not submit special categories of data to the Service without prior written consent from Processor and execution of additional safeguards.
 
 ---
 
-## 5. Data Retention
+## 4. Processor Obligations
 
-### 5.1 Retention Periods
+### 4.1 General Obligations
 
-| Data Category | Retention Period | Justification |
-|--------------|-----------------|---------------|
-| Active client data | Duration of service agreement | Service delivery |
-| Lead data | 24 months after last interaction | Lead nurturing lifecycle |
-| Call transcripts | 12 months | Quality assurance, dispute resolution |
-| Email/SMS communication logs | 12 months | Compliance, audit trail |
-| Billing records | 7 years after transaction | Tax and legal compliance |
-| Support tickets | 24 months after resolution | Service improvement |
-| Analytics/usage data | 24 months | Reporting, trend analysis |
-| Website visitor data | 13 months | Analytics (aligned with cookie consent) |
+Processor shall:
 
-### 5.2 Post-Termination
+1. Process Personal Data only on documented instructions from Controller, including transfers to third countries, unless required by applicable law
+2. Ensure that persons authorized to process Personal Data have committed to confidentiality or are under statutory obligation of confidentiality
+3. Implement appropriate technical and organizational security measures (see Section 6)
+4. Comply with the conditions for engaging Sub-processors (see Section 7)
+5. Assist Controller in responding to Data Subject requests (see Section 8)
+6. Assist Controller in ensuring compliance with obligations regarding Data Breach notification (see Section 9)
+7. Delete or return all Personal Data upon termination of the MSA, at Controller's choice (see Section 11)
+8. Make available to Controller all information necessary to demonstrate compliance with this DPA
+9. Allow for and contribute to audits conducted by Controller or an authorized auditor (see Section 10)
 
-Upon termination of the MSA:
-1. Controller may request export of all personal data within 30 days
-2. Processor will delete all personal data within 90 days of termination
-3. Processor will provide written confirmation of deletion upon request
-4. Retention obligations for billing records (7 years) survive termination
+### 4.2 Data Processing Locations
+
+Personal Data shall be processed in the following locations:
+
+| Processing Activity | Location | Provider |
+|---|---|---|
+| Application hosting | United States (AWS us-east-1) | Vercel / AWS |
+| Database | United States | [PLACEHOLDER — e.g., Supabase, Neon, AWS RDS] |
+| Email delivery | United States | SendGrid (Twilio Inc.) |
+| SMS delivery | United States | Twilio Inc. |
+| Payment processing | United States | Stripe, Inc. |
+| Error monitoring | United States | [PLACEHOLDER — e.g., Sentry] |
+| AI processing | United States | [PLACEHOLDER — e.g., Anthropic, OpenAI] |
+
+### 4.3 International Data Transfers
+
+Where Personal Data is transferred outside the European Economic Area (EEA):
+
+- Transfers to the United States are subject to the EU-U.S. Data Privacy Framework where applicable
+- Where the Data Privacy Framework does not apply, Standard Contractual Clauses (SCCs) as approved by the European Commission shall govern
+- Processor shall provide copies of relevant transfer mechanisms upon request
+
+---
+
+## 5. Controller Obligations
+
+Controller shall:
+
+1. Ensure it has a lawful basis for processing Personal Data and for instructing Processor
+2. Provide clear, documented processing instructions to Processor
+3. Comply with applicable data protection laws regarding collection and use of Personal Data
+4. Ensure Data Subjects are provided appropriate privacy notices
+5. Notify Processor promptly of any Data Subject requests or complaints
+6. Conduct data protection impact assessments where required
 
 ---
 
@@ -121,66 +141,66 @@ Upon termination of the MSA:
 
 ### 6.1 Technical Measures
 
-The Processor implements the following technical security measures:
+Processor implements and maintains the following technical security measures:
 
-- **Encryption in transit**: TLS 1.2+ for all data in transit
-- **Encryption at rest**: AES-256 encryption for stored data
-- **Access control**: Role-based access control (RBAC) with principle of least privilege
-- **Authentication**: Multi-factor authentication for administrative access
-- **Network security**: Firewall protection, DDoS mitigation (via Vercel)
-- **Monitoring**: Real-time error monitoring (Sentry), automated health checks
-- **Logging**: Structured audit logs for all data access and modifications
-- **Rate limiting**: API rate limiting to prevent abuse
-- **CSRF protection**: Origin-based CSRF validation on all endpoints
-- **Input validation**: Schema-based validation (Zod) on all inputs
+| Category | Measure |
+|---|---|
+| **Encryption at Rest** | AES-256 encryption for all stored Personal Data |
+| **Encryption in Transit** | TLS 1.2+ for all data in transit |
+| **Access Control** | Role-based access control (RBAC); principle of least privilege |
+| **Authentication** | Multi-factor authentication (MFA) required for all staff with data access |
+| **Network Security** | Firewall protection, DDoS mitigation, network segmentation |
+| **Vulnerability Management** | Regular vulnerability scanning; dependency auditing |
+| **Logging and Monitoring** | Audit logging of all data access; real-time anomaly detection |
+| **Backup** | Automated encrypted backups; tested restoration procedures |
+| **Password Storage** | Bcrypt hashing with appropriate cost factor; no plaintext storage |
 
 ### 6.2 Organizational Measures
 
-- **Employee training**: All personnel receive data protection training
-- **Confidentiality agreements**: All personnel sign confidentiality obligations
-- **Access reviews**: Quarterly review of access permissions
-- **Incident response plan**: Documented and tested incident response procedures
-- **Vendor assessment**: Security evaluation of all sub-processors
-- **Background checks**: Background checks for personnel with data access
-
-### 6.3 Infrastructure Security
-
-- **Hosting**: Vercel (SOC 2 Type II certified)
-- **Database**: Neon PostgreSQL (SOC 2 Type II certified, encrypted at rest)
-- **Payment processing**: Stripe (PCI DSS Level 1 certified)
-- **No card data storage**: Payment card numbers are never stored on Sovereign AI systems
+| Category | Measure |
+|---|---|
+| **Employee Training** | Annual data protection and security training for all staff |
+| **Background Checks** | Pre-employment screening for staff with data access |
+| **Confidentiality** | All staff bound by written confidentiality obligations |
+| **Access Reviews** | Quarterly review of access permissions |
+| **Incident Response** | Documented incident response plan; tested annually |
+| **Business Continuity** | Disaster recovery plan with defined RPO and RTO |
+| **Vendor Management** | Due diligence and contractual data protection requirements for all Sub-processors |
 
 ---
 
-## 7. Sub-Processors
+## 7. Sub-processors
 
-### 7.1 Authorized Sub-Processors
+### 7.1 Authorized Sub-processors
 
-The Controller provides general authorization for the Processor to engage the following sub-processors:
+Controller provides general authorization for Processor to engage Sub-processors, subject to the requirements in this Section.
 
-| Sub-Processor | Service | Data Processed | Location |
-|--------------|---------|---------------|----------|
-| Vercel Inc. | Hosting, CDN, serverless functions | All platform data | United States |
-| Neon Inc. | Database hosting | All stored data | United States |
-| Stripe Inc. | Payment processing | Billing data, email | United States |
-| Anthropic PBC | AI language model | Call transcripts, text content | United States |
-| Twilio Inc. | SMS and voice services | Phone numbers, call data | United States |
-| Sentry (Functional Software) | Error monitoring | Error context, IP addresses | United States |
+**Current Sub-processor List:**
 
-### 7.2 Sub-Processor Changes
+| Sub-processor | Purpose | Location | Data Processed |
+|---|---|---|---|
+| Vercel Inc. | Application hosting and CDN | United States | All application data |
+| [PLACEHOLDER — DB Provider] | Database hosting | United States | All stored data |
+| Stripe, Inc. | Payment processing | United States | Payment and billing data |
+| Twilio Inc. (SendGrid) | Email delivery | United States | Email addresses, email content |
+| Twilio Inc. | SMS delivery | United States | Phone numbers, message content |
+| [PLACEHOLDER — AI Provider] | AI processing | United States | Content submitted for AI processing |
+| [PLACEHOLDER — Monitoring] | Error tracking | United States | Error data, user context |
 
-- Processor will notify Controller at least 30 days before engaging a new sub-processor
-- Controller may object to a new sub-processor within 14 days of notification
-- If Controller objects, the parties will work in good faith to resolve the concern
-- If no resolution is reached, Controller may terminate the affected service without penalty
+### 7.2 Sub-processor Changes
 
-### 7.3 Sub-Processor Obligations
+1. Processor shall notify Controller at least **30 days** in advance of adding or replacing a Sub-processor
+2. Notification shall include the Sub-processor's name, location, and processing activities
+3. Controller may object to a new Sub-processor within **14 days** of notification
+4. If Controller objects on reasonable data protection grounds and the parties cannot resolve the objection within 30 days, Controller may terminate the affected Services without penalty
 
-The Processor ensures that all sub-processors:
-- Are bound by data protection obligations no less protective than this DPA
-- Implement appropriate technical and organizational security measures
-- Process data only for the specified purposes
-- Delete or return data upon termination of the sub-processing relationship
+### 7.3 Sub-processor Requirements
+
+Processor shall:
+- Impose data protection obligations no less protective than this DPA on all Sub-processors
+- Remain fully liable for the acts and omissions of its Sub-processors
+- Conduct appropriate due diligence on Sub-processors before engagement
+- Maintain an up-to-date list of Sub-processors available to Controller upon request
 
 ---
 
@@ -188,29 +208,33 @@ The Processor ensures that all sub-processors:
 
 ### 8.1 Supported Rights
 
-The Processor will assist the Controller in fulfilling data subject requests for:
+Processor shall assist Controller in responding to the following Data Subject requests:
 
-| Right | Description | Response Timeline |
-|-------|-------------|-------------------|
-| **Access** | Right to obtain a copy of their personal data | 30 days |
-| **Rectification** | Right to correct inaccurate personal data | 30 days |
-| **Erasure** ("Right to be Forgotten") | Right to request deletion of personal data | 30 days |
-| **Restriction** | Right to restrict processing of personal data | 30 days |
-| **Portability** | Right to receive data in a structured, machine-readable format | 30 days |
-| **Objection** | Right to object to processing based on legitimate interests | 30 days |
-| **Opt-out of sale** (CCPA) | Right to opt out of the sale of personal information | 15 business days |
+| Right | GDPR Article | CCPA Equivalent | Response Timeline |
+|---|---|---|---|
+| Right of Access | Art. 15 | Right to Know (1798.110) | 30 days |
+| Right to Rectification | Art. 16 | Right to Correct (1798.106) | 30 days |
+| Right to Erasure | Art. 17 | Right to Delete (1798.105) | 30 days |
+| Right to Restriction | Art. 18 | — | 30 days |
+| Right to Portability | Art. 20 | — | 30 days |
+| Right to Object | Art. 21 | Right to Opt-Out (1798.120) | 30 days |
+| Right re: Automated Decisions | Art. 22 | Right to Opt-Out of Automated Decision-Making (1798.185) | 30 days |
 
-### 8.2 Process
+### 8.2 Request Handling Procedure
 
-1. Controller receives data subject request
-2. Controller forwards request to Processor at privacy@trysovereignai.com
-3. Processor fulfills the request within the applicable timeline
-4. Processor confirms completion to Controller
-5. Controller communicates outcome to data subject
+1. Controller receives Data Subject request
+2. Controller notifies Processor (if assistance needed) via [PLACEHOLDER — PRIVACY EMAIL]
+3. Processor acknowledges within **2 business days**
+4. Processor provides requested data or completes action within **10 business days**
+5. Controller responds to Data Subject within statutory deadline
+6. Processor shall not respond directly to Data Subjects unless instructed by Controller
 
-### 8.3 Verification
+### 8.3 Data Export Format
 
-The Processor will verify the identity of data subjects (via the Controller) before fulfilling requests to prevent unauthorized access or deletion.
+Upon request, Processor shall export Personal Data in:
+- JSON format (structured data)
+- CSV format (tabular data)
+- Encrypted archive for secure transfer
 
 ---
 
@@ -218,134 +242,140 @@ The Processor will verify the identity of data subjects (via the Controller) bef
 
 ### 9.1 Notification Timeline
 
-- Processor will notify Controller of any confirmed data breach **within 72 hours** of becoming aware
-- Notification will be sent to Controller's designated privacy contact via email and phone
+| Action | Timeline |
+|---|---|
+| Processor notifies Controller of confirmed breach | Without undue delay, no later than **48 hours** |
+| Processor provides initial breach report | Within **72 hours** of discovery |
+| Processor provides detailed breach report | Within **5 business days** |
+| Controller notifies Supervisory Authority (if required) | Within **72 hours** of becoming aware (GDPR Art. 33) |
+| Controller notifies affected Data Subjects (if required) | Without undue delay (GDPR Art. 34) |
 
-### 9.2 Notification Contents
+### 9.2 Breach Notification Content
 
-Breach notifications will include:
+Processor's notification shall include, to the extent available:
 
-1. Nature of the breach (what happened)
-2. Categories and approximate number of data subjects affected
-3. Categories and approximate number of records affected
-4. Name and contact details of the Processor's data protection contact
-5. Likely consequences of the breach
-6. Measures taken or proposed to address the breach and mitigate harm
+1. Description of the nature of the breach
+2. Categories and approximate number of Data Subjects affected
+3. Categories and approximate number of Personal Data records affected
+4. Name and contact details of the Processor's data protection point of contact
+5. Description of likely consequences of the breach
+6. Description of measures taken or proposed to address the breach and mitigate adverse effects
 
-### 9.3 Cooperation
+### 9.3 Breach Response
 
-The Processor will:
-- Cooperate with the Controller in investigating the breach
-- Assist the Controller in notifying supervisory authorities and data subjects as required
-- Take immediate steps to contain and remediate the breach
-- Preserve evidence related to the breach
-- Provide regular updates until the breach is resolved
+Processor shall:
 
-### 9.4 Documentation
-
-The Processor will maintain a record of all data breaches, including facts, effects, and remedial actions taken, regardless of whether notification to the Controller was required.
-
----
-
-## 10. CCPA Compliance (California)
-
-### 10.1 Processor as Service Provider
-
-Under the California Consumer Privacy Act (CCPA) and California Privacy Rights Act (CPRA), the Processor acts as a "Service Provider" and:
-
-- Processes personal information only for the business purposes specified in this DPA
-- Does not sell personal information
-- Does not retain, use, or disclose personal information for purposes other than providing the services
-- Does not combine personal information with data from other sources except as permitted
-- Provides the same level of privacy protection as required by the CCPA
-
-### 10.2 Consumer Rights
-
-The Processor will assist the Controller in responding to consumer requests under CCPA, including:
-- Right to know what personal information is collected
-- Right to delete personal information
-- Right to opt-out of the sale of personal information (N/A -- Processor does not sell data)
-- Right to non-discrimination for exercising privacy rights
-
-### 10.3 Certification
-
-The Processor certifies that it understands and will comply with the restrictions and obligations set forth in this DPA and the CCPA.
+1. Take immediate steps to contain and remediate the breach
+2. Preserve evidence for investigation
+3. Cooperate fully with Controller's investigation
+4. Not notify Data Subjects or third parties without Controller's prior written consent (unless required by law)
+5. Conduct a post-incident review and provide findings to Controller
+6. Implement measures to prevent recurrence
 
 ---
 
-## 11. GDPR Compliance (European Union)
+## 10. Audits and Compliance
 
-### 11.1 Applicability
+### 10.1 Audit Rights
 
-This section applies when the Processor processes personal data of data subjects located in the European Economic Area (EEA) or United Kingdom.
+1. Controller may audit Processor's compliance with this DPA once per calendar year
+2. Audits shall be conducted during business hours with at least **30 days** written notice
+3. Controller shall bear its own costs for audits
+4. Audits shall not unreasonably disrupt Processor's operations
+5. Controller may engage a qualified third-party auditor, subject to confidentiality obligations
 
-### 11.2 Legal Basis
+### 10.2 Certifications and Reports
 
-The Controller is responsible for ensuring a valid legal basis for processing under GDPR Article 6 (consent, contract, legitimate interest, legal obligation, vital interest, or public interest).
+Processor shall maintain and provide upon request:
 
-### 11.3 International Transfers
-
-- Personal data is processed in the United States
-- Transfers are governed by Standard Contractual Clauses (SCCs) as adopted by the European Commission
-- The Processor implements supplementary measures (encryption, access controls) to protect transferred data
-- The Controller acknowledges and consents to the transfer of data to the United States
-
-### 11.4 Data Protection Officer
-
-If required by applicable law, the Controller should designate a Data Protection Officer. The Processor's privacy contact is:
-
-**Privacy Contact**: privacy@trysovereignai.com
-
-### 11.5 Data Protection Impact Assessments
-
-The Processor will assist the Controller in conducting Data Protection Impact Assessments (DPIAs) when processing is likely to result in a high risk to data subjects.
+- SOC 2 Type II report (or equivalent) — [PLACEHOLDER — AVAILABLE / IN PROGRESS]
+- Penetration test summary (conducted annually by [PLACEHOLDER — FIRM NAME])
+- Data protection impact assessment results (where applicable)
+- Records of processing activities (GDPR Art. 30)
 
 ---
 
-## 12. Audit Rights
+## 11. Data Retention and Deletion
 
-### 12.1 Controller Audit Rights
+### 11.1 Retention Periods
 
-The Controller may audit the Processor's compliance with this DPA:
-- Upon 30 days written notice
-- During normal business hours
-- No more than once per year (unless a breach has occurred)
-- At the Controller's expense
+| Data Category | Retention Period | Basis |
+|---|---|---|
+| Active account data | Duration of MSA | Contractual necessity |
+| Communication logs | 12 months after creation | Legitimate interest (support) |
+| Transaction records | 7 years after transaction | Legal obligation (tax/accounting) |
+| Usage/analytics data | 24 months after collection | Legitimate interest (improvement) |
+| Error and debug logs | 90 days | Legitimate interest (operations) |
+| Backup data | 30 days after primary deletion | Business continuity |
 
-### 12.2 Audit Alternatives
+### 11.2 Post-Termination
 
-In lieu of an on-site audit, the Processor may provide:
-- SOC 2 Type II audit reports (from infrastructure providers)
-- Completed security questionnaires
-- Results of third-party penetration tests
-- Data protection compliance certifications
+Upon termination of the MSA:
+
+1. Controller may request data export within **30 days** of termination
+2. Processor shall delete all Personal Data within **60 days** of termination (or earlier upon written request)
+3. Processor shall provide written certification of deletion upon request
+4. Data retained for legal obligations shall be isolated and protected until deletion is permissible
+
+### 11.3 Deletion Standards
+
+- Electronic data: Cryptographic erasure or overwrite per NIST SP 800-88
+- Backup data: Deleted upon normal backup rotation cycle (maximum 30 days)
+- Sub-processors: Processor shall ensure Sub-processors delete data per the same standards
 
 ---
 
-## 13. Term and Termination
+## 12. CCPA-Specific Provisions
 
-- This DPA remains in effect for the duration of the MSA
-- Obligations regarding data deletion survive termination (see Section 5.2)
-- Obligations regarding confidentiality survive termination indefinitely
-- The Processor will cooperate with any post-termination data requests for 90 days
+Where Controller is a "Business" and Processor is a "Service Provider" under the CCPA:
+
+1. Processor shall not sell or share Personal Data
+2. Processor shall not retain, use, or disclose Personal Data for any purpose other than performing the Services
+3. Processor shall not combine Personal Data with data received from other sources, except as permitted by the CCPA
+4. Processor shall comply with the CCPA and grant Controller the same level of privacy protection as required by the CCPA
+5. Processor shall notify Controller if it determines it can no longer meet its CCPA obligations
+6. Controller has the right to take reasonable steps to ensure Processor uses Personal Data consistently with Controller's CCPA obligations
 
 ---
 
-## 14. Signatures
+## 13. Liability
 
-| | Processor (Sovereign AI) | Controller (Client) |
-|-|--------------------------|---------------------|
-| **Name** | ________________________ | ________________________ |
-| **Title** | ________________________ | ________________________ |
-| **Date** | ________________________ | ________________________ |
-| **Signature** | ________________________ | ________________________ |
+- Liability under this DPA is subject to the limitation of liability provisions in the MSA
+- Each party shall be liable for damages caused by its breach of applicable data protection laws
+- Processor shall indemnify Controller for fines and penalties arising from Processor's breach of this DPA or applicable data protection laws, subject to the liability cap in the MSA
+
+---
+
+## 14. Term
+
+- This DPA shall remain in effect for the duration of the MSA
+- Obligations regarding data deletion and confidentiality shall survive termination
+- Sections 9 (Data Breach), 10 (Audits), 11 (Retention/Deletion), and 13 (Liability) shall survive termination
+
+---
+
+## 15. Contact Information
+
+| Role | Contact |
+|---|---|
+| Processor's Data Protection Officer (or Privacy Contact) | [PLACEHOLDER — NAME, EMAIL] |
+| Controller's Data Protection Contact | [PLACEHOLDER — NAME, EMAIL] |
+| Privacy Inquiries | [PLACEHOLDER — PRIVACY@COMPANY.COM] |
+| Breach Notifications | [PLACEHOLDER — SECURITY@COMPANY.COM] |
+
+---
+
+## 16. Signatures
+
+| | Controller | Processor |
+|---|---|---|
+| **Name** | [PLACEHOLDER] | [PLACEHOLDER] |
+| **Title** | [PLACEHOLDER] | [PLACEHOLDER] |
+| **Signature** | _________________________ | _________________________ |
+| **Date** | [PLACEHOLDER] | [PLACEHOLDER] |
 
 ---
 
 ## Appendix A: Standard Contractual Clauses
 
-*For international data transfers involving EEA data subjects, the Standard Contractual Clauses (Module Two: Controller to Processor) as adopted by the European Commission Decision 2021/914 are incorporated by reference.*
-
-## Appendix B: Technical and Organizational Measures
-
-*See Section 6 of this DPA for the complete list of security measures implemented by the Processor.*
+[PLACEHOLDER — Attach the EU Commission's Standard Contractual Clauses (Module Two: Controller to Processor) as adopted by Commission Implementing Decision (EU) 2021/914, if international data transfers are applicable.]

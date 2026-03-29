@@ -165,49 +165,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.6,
     },
-    // Case study detail pages
-    {
-      url: `${baseUrl}/results/smith-plumbing-300-percent-revenue-growth`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/results/acme-hvac-starter-bundle-results`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/results/summit-roofing-empire-bundle-340k`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/results/hvac-47-leads-30-days`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/results/plumber-5-star-rating-60-days`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/results/roofer-312-percent-roi`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/results/electrician-73k-revenue`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
     // Comparison pages
     {
       url: `${baseUrl}/vs`,
@@ -251,24 +208,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.6,
     },
-    {
-      url: `${baseUrl}/vs/servicetitan`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/vs/jobber`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/vs/housecall-pro`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
     // Additional public pages
     {
       url: `${baseUrl}/contact`,
@@ -300,30 +239,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.7,
     },
-    {
-      url: `${baseUrl}/help`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/privacy`,
-      lastModified: now,
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/terms`,
-      lastModified: now,
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/cookies`,
-      lastModified: now,
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
     // Static blog posts
     {
       url: `${baseUrl}/blog/ai-transforming-home-service-marketing-2026`,
@@ -344,13 +259,37 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/blog/ai-marketing-cost-home-service-businesses`,
+      url: `${baseUrl}/blog/ai-marketing-cost-home-service-businesses-2026`,
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.7,
     },
     {
       url: `${baseUrl}/blog/ai-vs-traditional-marketing-agency-contractors`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/blog/50-leads-per-month-plumbing-business`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/blog/roi-ai-review-management-hvac`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/blog/signs-home-service-business-needs-marketing-automation`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/blog/google-business-profile-optimization-contractors`,
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.7,
@@ -368,63 +307,65 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/blog/google-business-profile-optimization-contractors`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/blog/50-leads-per-month-plumbing-business`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
       url: `${baseUrl}/blog/why-contractor-marketing-agencies-fail`,
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/blog/roi-ai-review-management-hvac`,
+      url: `${baseUrl}/blog/hvac-case-study-6-to-52-leads`,
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.7,
     },
+    // Onboarding & signup
     {
-      url: `${baseUrl}/blog/hvac-company-6-to-52-leads-case-study`,
+      url: `${baseUrl}/onboarding`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/signup`,
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.7,
     },
+    // Partner & affiliate pages
     {
-      url: `${baseUrl}/blog/signs-home-service-business-needs-marketing-automation`,
+      url: `${baseUrl}/affiliates`,
       lastModified: now,
       changeFrequency: "monthly",
-      priority: 0.7,
+      priority: 0.6,
     },
-    // Status
     {
-      url: `${baseUrl}/status`,
+      url: `${baseUrl}/agency`,
       lastModified: now,
-      changeFrequency: "daily",
-      priority: 0.4,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    // Knowledge & resources
+    {
+      url: `${baseUrl}/knowledge`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.6,
     },
     // Legal & misc
     {
+      url: `${baseUrl}/privacy`,
+      lastModified: now,
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/terms`,
+      lastModified: now,
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    {
       url: `${baseUrl}/legal`,
-      lastModified: now,
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/legal/privacy`,
-      lastModified: now,
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/legal/terms`,
       lastModified: now,
       changeFrequency: "yearly",
       priority: 0.3,
@@ -440,43 +381,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "yearly",
       priority: 0.3,
-    },
-    // Additional public pages
-    {
-      url: `${baseUrl}/affiliates`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/affiliates/signup`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/knowledge`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/legal/cookies`,
-      lastModified: now,
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/signup`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/demo/vsl`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.7,
     },
   ];
 }
