@@ -21,12 +21,14 @@ export const metadata: Metadata = {
       "The hard truth about why most marketing agencies underdeliver for contractors, and the smarter alternative.",
     url: "/blog/why-contractor-marketing-agencies-fail",
     type: "article",
+    images: [{ url: "/og-blog.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Why Most Contractor Marketing Agencies Fail (And What to Do Instead)",
     description:
       "The hard truth about why most marketing agencies underdeliver for contractors, and the smarter alternative.",
+    images: ["/og-blog.png"],
   },
 };
 

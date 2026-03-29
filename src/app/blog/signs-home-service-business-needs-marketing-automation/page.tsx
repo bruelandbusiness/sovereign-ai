@@ -21,12 +21,14 @@ export const metadata: Metadata = {
       "Is your home service business leaving money on the table? Here are 7 clear signs it is time to automate your marketing.",
     url: "/blog/signs-home-service-business-needs-marketing-automation",
     type: "article",
+    images: [{ url: "/og-blog.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "7 Signs Your Home Service Business Needs Marketing Automation",
     description:
       "Is your home service business leaving money on the table? Here are 7 clear signs it is time to automate your marketing.",
+    images: ["/og-blog.png"],
   },
 };
 

@@ -23,12 +23,14 @@ export const metadata: Metadata = {
       "AI is changing the game for home service contractors. Here are the 5 biggest shifts happening right now.",
     url: "/blog/ai-transforming-home-service-marketing-2026",
     type: "article",
+    images: [{ url: "/og-blog.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "5 Ways AI Is Transforming Home Service Marketing in 2026",
     description:
       "AI is changing the game for home service contractors. Here are the 5 biggest shifts happening right now.",
+    images: ["/og-blog.png"],
   },
 };
 

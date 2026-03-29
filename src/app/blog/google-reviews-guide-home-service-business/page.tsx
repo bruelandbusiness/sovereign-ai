@@ -26,12 +26,14 @@ export const metadata: Metadata = {
       "Google reviews are the #1 factor in local search rankings. Here is how to get more of them consistently.",
     url: "/blog/google-reviews-guide-home-service-business",
     type: "article",
+    images: [{ url: "/og-blog.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Get More Google Reviews for Your Home Service Business",
     description:
       "Proven strategies to get more 5-star Google reviews for HVAC, plumbing, roofing, and electrical businesses.",
+    images: ["/og-blog.png"],
   },
 };
 

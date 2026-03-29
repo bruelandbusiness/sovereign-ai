@@ -31,12 +31,14 @@ export const metadata: Metadata = {
       "Complete cost breakdown of AI marketing vs traditional agencies for home service contractors. See the real numbers.",
     url: "/blog/ai-marketing-cost-home-service-businesses",
     type: "article",
+    images: [{ url: "/og-blog.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "AI Marketing Costs for Home Service Businesses (2026)",
     description:
       "Complete cost breakdown: AI marketing vs traditional agencies for home service contractors. See the real numbers.",
+    images: ["/og-blog.png"],
   },
 };
 

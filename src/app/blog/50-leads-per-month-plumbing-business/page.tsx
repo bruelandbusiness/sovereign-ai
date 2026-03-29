@@ -21,12 +21,14 @@ export const metadata: Metadata = {
       "A proven playbook for plumbing companies to consistently generate 50+ qualified leads every month using AI marketing.",
     url: "/blog/50-leads-per-month-plumbing-business",
     type: "article",
+    images: [{ url: "/og-blog.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "How to Get 50+ Leads Per Month for Your Plumbing Business",
     description:
       "A proven playbook for plumbing companies to consistently generate 50+ qualified leads every month using AI marketing.",
+    images: ["/og-blog.png"],
   },
 };
 

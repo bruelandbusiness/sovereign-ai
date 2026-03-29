@@ -23,12 +23,14 @@ export const metadata: Metadata = {
       "Traditional marketing agencies can not compete with AI. Here is why HVAC companies are making the switch.",
     url: "/blog/hvac-companies-switching-ai-marketing",
     type: "article",
+    images: [{ url: "/og-blog.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Why HVAC Companies Are Switching to AI Marketing",
     description:
       "Traditional agencies can't compete with AI. Here's why HVAC companies are making the switch.",
+    images: ["/og-blog.png"],
   },
 };
 

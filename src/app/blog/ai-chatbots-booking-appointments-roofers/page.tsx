@@ -21,12 +21,14 @@ export const metadata: Metadata = {
       "AI chatbots are transforming how roofing companies capture and convert leads. Here is how the best roofers are using them.",
     url: "/blog/ai-chatbots-booking-appointments-roofers",
     type: "article",
+    images: [{ url: "/og-blog.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "How AI Chatbots Are Booking 3x More Appointments for Roofers",
     description:
       "AI chatbots are transforming how roofing companies capture and convert leads. Here is how the best roofers are using them.",
+    images: ["/og-blog.png"],
   },
 };
 

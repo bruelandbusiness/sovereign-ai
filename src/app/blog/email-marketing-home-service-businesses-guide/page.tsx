@@ -21,12 +21,14 @@ export const metadata: Metadata = {
       "The complete guide to email marketing for home service contractors. Build campaigns that drive repeat business and referrals.",
     url: "/blog/email-marketing-home-service-businesses-guide",
     type: "article",
+    images: [{ url: "/og-blog.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Email Marketing for Home Service Businesses: The Complete Guide",
     description:
       "The complete guide to email marketing for home service contractors. Build campaigns that drive repeat business and referrals.",
+    images: ["/og-blog.png"],
   },
 };
 

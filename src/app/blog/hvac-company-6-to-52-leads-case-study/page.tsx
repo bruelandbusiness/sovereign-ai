@@ -23,12 +23,14 @@ export const metadata: Metadata = {
       "A detailed case study showing how AI marketing transformed an HVAC company from struggling to thriving in 45 days.",
     url: "/blog/hvac-company-6-to-52-leads-case-study",
     type: "article",
+    images: [{ url: "/og-blog.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "HVAC Case Study: 6 to 52 Leads in 45 Days",
     description:
       "How one HVAC company went from 6 leads/month to 52 in just 45 days using AI-powered marketing. Full breakdown.",
+    images: ["/og-blog.png"],
   },
 };
 

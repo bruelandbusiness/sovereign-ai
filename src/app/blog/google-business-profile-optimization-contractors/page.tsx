@@ -21,12 +21,14 @@ export const metadata: Metadata = {
       "The complete guide to optimizing your Google Business Profile for HVAC, plumbing, roofing, and electrical contractors.",
     url: "/blog/google-business-profile-optimization-contractors",
     type: "article",
+    images: [{ url: "/og-blog.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Google Business Profile Optimization Guide for Contractors",
     description:
       "The complete guide to optimizing your Google Business Profile for HVAC, plumbing, roofing, and electrical contractors.",
+    images: ["/og-blog.png"],
   },
 };
 

@@ -21,12 +21,14 @@ export const metadata: Metadata = {
       "A complete breakdown of AI marketing costs for home service contractors in 2026, including ROI expectations and budget guidance.",
     url: "/blog/ai-marketing-cost-home-service-businesses-2026",
     type: "article",
+    images: [{ url: "/og-blog.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "How Much Does AI Marketing Cost for Home Service Businesses in 2026",
     description:
       "A complete breakdown of AI marketing costs for home service contractors in 2026, including ROI expectations and budget guidance.",
+    images: ["/og-blog.png"],
   },
 };
 
