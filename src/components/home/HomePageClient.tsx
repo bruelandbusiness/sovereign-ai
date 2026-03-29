@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { BookingModal } from "@/components/home/BookingModal";
 import { VideoModal } from "@/components/shared/VideoModal";
-import { ExitIntentPopup } from "@/components/shared/ExitIntentPopup";
 import { trackEvent } from "@/lib/tracking";
 import { trackDemoVideoPlayed } from "@/lib/analytics";
 
@@ -38,7 +37,6 @@ export function HomePageClient({ demoVideoId, children }: HomePageClientProps) {
       {demoVideoId && (
         <VideoModal open={videoOpen} onOpenChange={setVideoOpen} videoId={demoVideoId} />
       )}
-      <ExitIntentPopup />
     </>
   );
 }

@@ -9,8 +9,10 @@ import { TrackingScripts } from "@/components/shared/TrackingScripts";
 import { UtmCapture } from "@/components/shared/UtmCapture";
 import { GlobalWidgets } from "@/components/shared/GlobalWidgets";
 import { CookieConsent } from "@/components/shared/CookieConsent";
+import { ExitIntentPopup } from "@/components/shared/ExitIntentPopup";
 import { ServiceWorkerRegistration } from "@/components/shared/ServiceWorkerRegistration";
 import { PwaInstallPrompt } from "@/components/shared/PwaInstallPrompt";
+import { SocialProofToast } from "@/components/shared/SocialProofToast";
 import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
@@ -133,8 +135,10 @@ export default function RootLayout({
         <UtmCapture />
         <GlobalWidgets />
         <CookieConsent />
+        <ExitIntentPopup />
         <ServiceWorkerRegistration />
         <PwaInstallPrompt />
+        <SocialProofToast />
         <VercelAnalytics />
         <SpeedInsights />
       </body>
