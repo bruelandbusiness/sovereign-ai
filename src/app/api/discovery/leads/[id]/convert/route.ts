@@ -3,6 +3,7 @@ import { NextRequest } from "next/server";
 import { requireClient, AuthError, getErrorMessage } from "@/lib/require-client";
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
+import { recordConsent } from "@/lib/compliance/consent";
 
 export const dynamic = "force-dynamic";
 /**
@@ -86,6 +87,29 @@ export async function POST(
       where: { id },
       data: { convertedLeadId: lead.id },
     });
+
+    // Ensure consent is recorded when converting a discovered lead.
+    // Implied consent from public business listings expires after 30 days
+    // per CAN-SPAM/TCPA best practices.
+    if (discoveredLead.ownerEmail || discoveredLead.ownerPhone) {
+      try {
+        await recordConsent({
+          clientId,
+          contactEmail: discoveredLead.ownerEmail ?? null,
+          contactPhone: discoveredLead.ownerPhone ?? null,
+          channel: "email",
+          consentType: "implied",
+          consentSource: "discovery",
+          consentText: `Implied consent: contact discovered from public ${discoveredLead.sourceType} listing`,
+        });
+      } catch (consentErr) {
+        logger.errorWithCause(
+          "[api/discovery/leads/convert] Failed to record consent",
+          consentErr,
+          { clientId, discoveredLeadId: id },
+        );
+      }
+    }
 
     logger.info("[api/discovery/leads/convert] Lead converted", {
       clientId,

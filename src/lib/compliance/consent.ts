@@ -9,7 +9,7 @@ export interface RecordConsentParams {
   contactEmail?: string | null;
   channel: "sms" | "email" | "voice";
   consentType: "express_written" | "opt_in" | "implied";
-  consentSource: "form" | "chatbot" | "api" | "manual";
+  consentSource: "form" | "chatbot" | "api" | "manual" | "discovery";
   consentText?: string | null;
   ipAddress?: string | null;
 }

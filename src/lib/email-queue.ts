@@ -3,6 +3,7 @@ import { Prisma } from "@/generated/prisma/client";
 import { sendEmail, SendGridError } from "@/lib/email";
 import { logger } from "@/lib/logger";
 import { canSendEmail } from "@/lib/compliance";
+import { canSendEmail as checkFrequencyCap } from "@/lib/email-frequency";
 import { logContactAttempt } from "@/lib/compliance/tcpa";
 
 /**
@@ -185,6 +186,25 @@ export async function processEmailQueue(): Promise<{
       });
       failed++;
       continue;
+    }
+
+    // Frequency cap: prevent over-emailing the same recipient across all
+    // email types (welcome-drip, re-engagement, abandoned-cart, etc.).
+    // Non-blocking — skips silently on cap, never throws.
+    if (email.clientId) {
+      const withinCap = await checkFrequencyCap(email.to, email.clientId);
+      if (!withinCap) {
+        await prisma.emailQueue.update({
+          where: { id: email.id },
+          data: {
+            status: "failed",
+            attempts: newAttempts,
+            lastError: "Suppressed: recipient frequency cap reached (max per 24h)",
+          },
+        });
+        failed++;
+        continue;
+      }
     }
 
     // Compliance gate: only applies to marketing emails (clientId present).

@@ -20,12 +20,16 @@ export async function GET() {
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
     const [
-      products,
-      allPurchases,
+      topSelling,
+      revenueByTierRaw,
       recentPurchases,
       totalPublished,
+      totalRevenueAgg,
+      totalSalesCount,
     ] = await Promise.all([
+      // Top 10 selling products (already sorted by salesCount in DB)
       prisma.digitalProduct.findMany({
+        where: { salesCount: { gt: 0 } },
         select: {
           id: true,
           name: true,
@@ -34,21 +38,17 @@ export async function GET() {
           salesCount: true,
           rating: true,
           reviewCount: true,
-          isPublished: true,
         },
         orderBy: { salesCount: "desc" },
-        take: 100,
+        take: 10,
       }),
-      prisma.productPurchase.findMany({
-        select: {
-          amount: true,
-          createdAt: true,
-          product: {
-            select: { tier: true },
-          },
-        },
-        take: 100,
+      // Revenue by tier via groupBy on purchases joined with product
+      prisma.productPurchase.groupBy({
+        by: ["productId"],
+        _sum: { amount: true },
+        _count: { id: true },
       }),
+      // Recent purchases for time series (last 30 days)
       prisma.productPurchase.findMany({
         where: { createdAt: { gte: thirtyDaysAgo } },
         select: {
@@ -56,36 +56,50 @@ export async function GET() {
           createdAt: true,
         },
         orderBy: { createdAt: "asc" },
-        take: 100,
       }),
+      // Total published products
       prisma.digitalProduct.count({ where: { isPublished: true } }),
+      // Total revenue aggregate
+      prisma.productPurchase.aggregate({
+        _sum: { amount: true },
+      }),
+      // Total sales count
+      prisma.productPurchase.count(),
     ]);
 
-    // Revenue by tier
+    // For revenue by tier, we need to map productId -> tier.
+    // Fetch only the tiers for products that have purchases.
+    const productIds = revenueByTierRaw.map((r) => r.productId);
+    const productTiers =
+      productIds.length > 0
+        ? await prisma.digitalProduct.findMany({
+            where: { id: { in: productIds } },
+            select: { id: true, tier: true },
+          })
+        : [];
+    const tierMap = new Map(productTiers.map((p) => [p.id, p.tier ?? "unknown"]));
+
     const revenueByTier: Record<string, { revenue: number; sales: number }> = {};
-    for (const purchase of allPurchases) {
-      const tier = purchase.product.tier ?? "unknown";
+    for (const row of revenueByTierRaw) {
+      const tier = tierMap.get(row.productId) ?? "unknown";
       if (!revenueByTier[tier]) {
         revenueByTier[tier] = { revenue: 0, sales: 0 };
       }
-      revenueByTier[tier].revenue += purchase.amount;
-      revenueByTier[tier].sales += 1;
+      revenueByTier[tier].revenue += row._sum.amount ?? 0;
+      revenueByTier[tier].sales += row._count.id;
     }
 
-    // Top selling products (top 10)
-    const topSelling = products
-      .filter((p) => p.salesCount > 0)
-      .slice(0, 10)
-      .map((p) => ({
-        id: p.id,
-        name: p.name,
-        tier: p.tier,
-        price: p.price,
-        salesCount: p.salesCount,
-        revenue: p.salesCount * p.price,
-        rating: p.rating,
-        reviewCount: p.reviewCount,
-      }));
+    // Top selling with computed revenue
+    const topSellingResult = topSelling.map((p) => ({
+      id: p.id,
+      name: p.name,
+      tier: p.tier,
+      price: p.price,
+      salesCount: p.salesCount,
+      revenue: p.salesCount * p.price,
+      rating: p.rating,
+      reviewCount: p.reviewCount,
+    }));
 
     // Revenue over time (last 30 days, grouped by day)
     const revenueOverTime: Record<string, { revenue: number; sales: number }> =
@@ -106,16 +120,16 @@ export async function GET() {
     }
 
     // Conversion rate estimate: total purchases / total published products
-    // This is a simplified metric — real conversion would need page views
-    const totalSales = allPurchases.length;
     const conversionRate =
       totalPublished > 0
-        ? Math.round((totalSales / totalPublished) * 100) / 100
+        ? Math.round((totalSalesCount / totalPublished) * 100) / 100
         : 0;
+
+    const totalRevenue = totalRevenueAgg._sum.amount ?? 0;
 
     return NextResponse.json({
       revenueByTier,
-      topSelling,
+      topSelling: topSellingResult,
       revenueOverTime: Object.entries(revenueOverTime).map(
         ([date, data]) => ({
           date,
@@ -125,14 +139,12 @@ export async function GET() {
       ),
       conversionRate,
       summary: {
-        totalRevenue: allPurchases.reduce((sum, p) => sum + p.amount, 0),
-        totalSales,
+        totalRevenue,
+        totalSales: totalSalesCount,
         totalPublished,
         avgOrderValue:
-          totalSales > 0
-            ? Math.round(
-                allPurchases.reduce((sum, p) => sum + p.amount, 0) / totalSales
-              )
+          totalSalesCount > 0
+            ? Math.round(totalRevenue / totalSalesCount)
             : 0,
       },
     });

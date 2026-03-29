@@ -24,50 +24,46 @@ export async function GET() {
     );
     const totalInvestment = monthlyInvestment * monthsActive;
 
-    // ── Total returns: won lead values ────────────────────────
-    const leads = await prisma.lead.findMany({
-      where: { clientId },
-      select: {
-        status: true,
-        value: true,
-        source: true,
-        updatedAt: true,
-      },
-      take: 5000,
-    });
+    // ── Aggregated lead data (database-level) ───────────────
+    const [
+      wonLeadAgg,
+      referralWonAgg,
+      adConversionsAgg,
+      revenueBySourceRaw,
+    ] = await Promise.all([
+      // Total value of all won leads
+      prisma.lead.aggregate({
+        where: { clientId, status: "won", value: { not: null } },
+        _sum: { value: true },
+        _count: { id: true },
+      }),
+      // Referral won lead value
+      prisma.lead.aggregate({
+        where: { clientId, status: "won", source: "referral", value: { not: null } },
+        _sum: { value: true },
+      }),
+      // Total ad conversions
+      prisma.adCampaign.aggregate({
+        where: { clientId },
+        _sum: { conversions: true },
+      }),
+      // Revenue grouped by source for won leads
+      prisma.lead.groupBy({
+        by: ["source"],
+        where: { clientId, status: "won", value: { not: null } },
+        _sum: { value: true },
+      }),
+    ]);
 
-    const wonLeadValue = leads
-      .filter((l) => l.status === "won" && l.value != null)
-      .reduce((sum, l) => sum + (l.value || 0), 0);
+    const wonLeadValue = wonLeadAgg._sum.value ?? 0;
+    const wonLeadCount = wonLeadAgg._count.id;
+    const referralValue = referralWonAgg._sum.value ?? 0;
 
-    // ── Estimated value from other channels ───────────────────
-    const adCampaigns = await prisma.adCampaign.findMany({
-      where: { clientId },
-      select: { conversions: true },
-      take: 200,
-    });
-    const adConversions = adCampaigns.reduce(
-      (sum, c) => sum + c.conversions,
-      0
-    );
-    // Estimate average conversion value from won leads
-    const wonLeads = leads.filter(
-      (l) => l.status === "won" && l.value != null
-    );
+    // Estimate average deal value from won leads
     const avgDealValue =
-      wonLeads.length > 0
-        ? wonLeads.reduce((sum, l) => sum + (l.value || 0), 0) / wonLeads.length
-        : 50000; // default $500 if no data
+      wonLeadCount > 0 ? wonLeadValue / wonLeadCount : 50000; // default $500 if no data
+    const adConversions = adConversionsAgg._sum.conversions ?? 0;
     const estimatedAdRevenue = adConversions * avgDealValue;
-
-    // Referral value (from leads with source 'referral')
-    const referralLeads = leads.filter(
-      (l) => l.source === "referral" && l.status === "won" && l.value != null
-    );
-    const referralValue = referralLeads.reduce(
-      (sum, l) => sum + (l.value || 0),
-      0
-    );
 
     // ── Totals ────────────────────────────────────────────────
     const totalReturns = wonLeadValue + estimatedAdRevenue + referralValue;
@@ -79,12 +75,9 @@ export async function GET() {
 
     // ── Revenue by source ─────────────────────────────────────
     const revenueBySource: Record<string, number> = {};
-    leads
-      .filter((l) => l.status === "won" && l.value != null)
-      .forEach((l) => {
-        revenueBySource[l.source] =
-          (revenueBySource[l.source] || 0) + (l.value || 0);
-      });
+    for (const group of revenueBySourceRaw) {
+      revenueBySource[group.source] = group._sum.value ?? 0;
+    }
 
     // Add estimated ad revenue
     if (estimatedAdRevenue > 0) {
@@ -92,36 +85,46 @@ export async function GET() {
         (revenueBySource["ads"] || 0) + estimatedAdRevenue;
     }
 
-    // ── Monthly trend ─────────────────────────────────────────
-    const monthlyTrend: Array<{
-      month: string;
-      investment: number;
-      returns: number;
-    }> = [];
+    // ── Monthly trend (up to last 6 months, via groupBy) ─────
+    const trendMonths = Math.min(monthsActive, 6);
+    const trendStart = new Date();
+    trendStart.setMonth(trendStart.getMonth() - trendMonths + 1);
+    trendStart.setDate(1);
+    trendStart.setHours(0, 0, 0, 0);
 
-    for (let i = Math.min(monthsActive, 6) - 1; i >= 0; i--) {
-      const monthDate = new Date();
-      monthDate.setMonth(monthDate.getMonth() - i);
-      const monthStr = monthDate.toISOString().slice(0, 7); // YYYY-MM
-      const monthStart = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1);
-      const monthEnd = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0);
+    const monthlyLeadData = await prisma.lead.groupBy({
+      by: ["updatedAt"],
+      where: {
+        clientId,
+        status: "won",
+        value: { not: null },
+        updatedAt: { gte: trendStart },
+      },
+      _sum: { value: true },
+    });
 
-      const monthLeadValue = leads
-        .filter(
-          (l) =>
-            l.status === "won" &&
-            l.value != null &&
-            l.updatedAt >= monthStart &&
-            l.updatedAt <= monthEnd
-        )
-        .reduce((sum, l) => sum + (l.value || 0), 0);
-
-      monthlyTrend.push({
-        month: monthStr,
-        investment: monthlyInvestment,
-        returns: monthLeadValue,
-      });
+    // Build month buckets and aggregate the grouped results
+    const monthBuckets: Record<string, number> = {};
+    for (let i = trendMonths - 1; i >= 0; i--) {
+      const d = new Date();
+      d.setMonth(d.getMonth() - i);
+      monthBuckets[d.toISOString().slice(0, 7)] = 0;
     }
+
+    for (const row of monthlyLeadData) {
+      const monthKey = row.updatedAt.toISOString().slice(0, 7);
+      if (monthKey in monthBuckets) {
+        monthBuckets[monthKey] += row._sum.value ?? 0;
+      }
+    }
+
+    const monthlyTrend = Object.entries(monthBuckets).map(
+      ([month, returns]) => ({
+        month,
+        investment: monthlyInvestment,
+        returns,
+      })
+    );
 
     return NextResponse.json({
       totalInvestment,

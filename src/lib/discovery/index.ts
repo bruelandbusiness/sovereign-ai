@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
+import { recordConsent } from "@/lib/compliance/consent";
 import { scoreDiscoveredLead } from "./scoring";
 import { deduplicateDiscoveries } from "./dedup";
 import { fetchPermits } from "./sources/permits";
@@ -181,6 +182,33 @@ export async function runDiscoveryForClient(
   }
 
   result.leadsStored = storedCount;
+
+  // Record implied consent for discovered leads that have contact info.
+  // Implied consent from public business listings expires after 30 days
+  // per CAN-SPAM/TCPA best practices — downstream systems should check
+  // consentedAt and treat implied consent as stale beyond that window.
+  for (const lead of uniqueLeads) {
+    if (!lead.ownerEmail && !lead.ownerPhone) {
+      continue;
+    }
+    try {
+      await recordConsent({
+        clientId,
+        contactEmail: lead.ownerEmail ?? null,
+        contactPhone: lead.ownerPhone ?? null,
+        channel: "email",
+        consentType: "implied",
+        consentSource: "discovery",
+        consentText: `Implied consent: contact discovered from public ${lead.sourceType} listing`,
+      });
+    } catch (err) {
+      logger.errorWithCause(
+        "[discovery] Failed to record consent for discovered lead",
+        err,
+        { clientId, sourceType: lead.sourceType },
+      );
+    }
+  }
 
   logger.info("[discovery] Discovery run complete", {
     clientId,

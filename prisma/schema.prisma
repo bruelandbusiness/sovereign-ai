@@ -1830,7 +1830,7 @@ model ConsentRecord {
   contactEmail  String?
   channel       String    // sms | email | voice
   consentType   String    // express_written | opt_in | implied
-  consentSource String    // form | chatbot | api | manual
+  consentSource String    // form | chatbot | api | manual | discovery
   consentText   String?   // The actual disclosure shown to the contact
   ipAddress     String?
   consentedAt   DateTime  @default(now())
