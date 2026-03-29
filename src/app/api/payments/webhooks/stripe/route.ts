@@ -8,6 +8,7 @@ import { logger } from "@/lib/logger";
 import { stripe, assertStripeConfigured } from "@/lib/stripe";
 import { trackReferralConversion } from "@/lib/referral-tracker";
 import { sendTelegramAlert } from "@/lib/telegram";
+import { warnOnInvalidTransition } from "@/lib/subscription-state";
 import type Stripe from "stripe";
 
 export const dynamic = "force-dynamic";
@@ -483,6 +484,13 @@ async function handleSubscriptionUpdated(sub: SubscriptionObject) {
   // Check if the bundle changed via metadata
   const newBundleId = sub.metadata?.bundle_id || subscription.bundleId;
 
+  // Validate the status transition (warn but don't block Stripe events)
+  warnOnInvalidTransition(subscription.status, status, {
+    subscriptionId: subscription.id,
+    stripeSubId: sub.id,
+    handler: "handleSubscriptionUpdated",
+  });
+
   await prisma.subscription.update({
     where: { id: subscription.id },
     data: {
@@ -518,6 +526,13 @@ async function handleSubscriptionDeleted(sub: SubscriptionObject) {
     include: { client: true },
   });
   if (!subscription) return;
+
+  // Validate the status transition (warn but don't block Stripe events)
+  warnOnInvalidTransition(subscription.status, "canceled", {
+    subscriptionId: subscription.id,
+    stripeSubId: sub.id,
+    handler: "handleSubscriptionDeleted",
+  });
 
   // Run independent updates in parallel
   await Promise.all([
@@ -615,6 +630,10 @@ async function handleInvoicePaymentSucceeded(invoice: InvoiceObject) {
 
   // Ensure subscription is active after successful payment
   if (subscription.status !== "active") {
+    warnOnInvalidTransition(subscription.status, "active", {
+      subscriptionId: subscription.id,
+      handler: "handleInvoicePaymentSucceeded",
+    });
     parallelOps.push(
       prisma.subscription.update({
         where: { id: subscription.id },
@@ -689,6 +708,13 @@ async function handlePaymentFailed(invoice: InvoiceObject) {
     include: { client: { include: { account: true } } },
   });
   if (!subscription) return;
+
+  // Validate the status transition (warn but don't block Stripe events)
+  warnOnInvalidTransition(subscription.status, "past_due", {
+    subscriptionId: subscription.id,
+    stripeSubId: resolveId(invoice.subscription),
+    handler: "handlePaymentFailed",
+  });
 
   // Run independent updates in parallel
   const parallelOps: Promise<unknown>[] = [
@@ -773,6 +799,11 @@ async function handleInvoicePaid(invoice: InvoiceObject) {
 
   // Restore subscription to active if it was past_due
   if (subscription.status === "past_due") {
+    warnOnInvalidTransition(subscription.status, "active", {
+      subscriptionId: subscription.id,
+      handler: "handleInvoicePaid",
+    });
+
     await Promise.all([
       prisma.subscription.update({
         where: { id: subscription.id },
@@ -800,9 +831,16 @@ async function handleInvoicePaid(invoice: InvoiceObject) {
 async function handleSubscriptionPaused(sub: SubscriptionObject) {
   const subscription = await prisma.subscription.findFirst({
     where: { stripeSubId: sub.id },
-    select: { id: true, clientId: true },
+    select: { id: true, clientId: true, status: true },
   });
   if (!subscription) return;
+
+  // Validate the status transition (warn but don't block Stripe events)
+  warnOnInvalidTransition(subscription.status, "paused", {
+    subscriptionId: subscription.id,
+    stripeSubId: sub.id,
+    handler: "handleSubscriptionPaused",
+  });
 
   await Promise.all([
     prisma.subscription.update({
@@ -830,9 +868,16 @@ async function handleSubscriptionPaused(sub: SubscriptionObject) {
 async function handleSubscriptionResumed(sub: SubscriptionObject) {
   const subscription = await prisma.subscription.findFirst({
     where: { stripeSubId: sub.id },
-    select: { id: true, clientId: true },
+    select: { id: true, clientId: true, status: true },
   });
   if (!subscription) return;
+
+  // Validate the status transition (warn but don't block Stripe events)
+  warnOnInvalidTransition(subscription.status, "active", {
+    subscriptionId: subscription.id,
+    stripeSubId: sub.id,
+    handler: "handleSubscriptionResumed",
+  });
 
   await Promise.all([
     prisma.subscription.update({

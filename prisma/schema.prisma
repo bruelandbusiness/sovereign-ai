@@ -132,6 +132,7 @@ model Client {
   affiliateReferrals   AffiliateReferral[]
   complianceConfig     ComplianceConfig?
   consentRecords       ConsentRecord[]
+  emailPreferences     EmailPreference?
   suppressionEntries   SuppressionList[]     @relation("ClientSuppression")
   contactAttempts      ContactAttemptLog[]
   discoverySources     DiscoverySource[]
@@ -685,6 +686,7 @@ model AuditLog {
 model EmailQueue {
   id          String    @id @default(cuid())
   clientId    String?   // null = transactional (skip compliance), set = marketing (compliance gated)
+  category    String    @default("transactional") // marketing | weekly_reports | product_updates | transactional
   to          String
   subject     String
   html        String
@@ -1843,6 +1845,19 @@ model ConsentRecord {
   @@index([contactPhone])
   @@index([contactEmail])
   @@index([channel])
+}
+
+model EmailPreference {
+  id              String   @id @default(cuid())
+  clientId        String   @unique
+  marketing       Boolean  @default(true)  // campaigns, promotions
+  weeklyReports   Boolean  @default(true)  // weekly KPI emails
+  productUpdates  Boolean  @default(true)  // feature announcements
+  transactional   Boolean  @default(true)  // booking confirmations, invoices (always true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
 }
 
 model SuppressionList {

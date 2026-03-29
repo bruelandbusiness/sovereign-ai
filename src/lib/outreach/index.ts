@@ -10,6 +10,11 @@ import {
   incrementSmsCount,
 } from "./warmup";
 import { generatePersonalization } from "./personalization";
+import {
+  getSmsColdTemplate,
+  renderSmsTemplate,
+  getSmsSegmentCount,
+} from "./sms-templates";
 
 const TAG = "[outreach]";
 
@@ -297,8 +302,25 @@ async function processSmsStep(
     return;
   }
 
-  // 3. Send
-  const body = personalized?.fullMessage ?? "Hi, we noticed your business and wanted to connect. Reply YES to learn more.";
+  // 3. Build message from SMS cold sequence template (fall back to personalized or default)
+  let body: string;
+  const smsTemplate = getSmsColdTemplate(entry.currentStep + 1);
+  if (smsTemplate) {
+    const vars: Record<string, string> = {
+      firstName: entry.contactName?.split(" ")[0] ?? "there",
+      businessName: personalized?.businessName ?? "your business",
+      vertical: personalized?.vertical ?? "home service",
+      senderName: personalized?.senderName ?? "Seth",
+      calLink: personalized?.calLink ?? "https://cal.com/sovereign-ai",
+    };
+    body = renderSmsTemplate(smsTemplate.body, vars);
+  } else {
+    body =
+      personalized?.fullMessage ??
+      "Hi, we noticed your business and wanted to connect. Reply YES to learn more.";
+  }
+
+  logger.info(`${TAG} SMS for entry ${entry.id}: ${getSmsSegmentCount(body)} segment(s), ${body.length} chars`);
 
   const result = await sendSms(entry.contactPhone, body, entry.clientId);
   if (!result.success) {
