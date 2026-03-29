@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { stripe, assertStripeConfigured } from "@/lib/stripe";
@@ -67,6 +68,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ url: portalSession.url });
   } catch (error) {
+    Sentry.captureException(error);
     logger.error("Dashboard billing portal session error", {
       error: error instanceof Error ? error.message : String(error),
     });

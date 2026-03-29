@@ -22,6 +22,12 @@ export const metadata: Metadata = {
     url: "/blog/why-contractor-marketing-agencies-fail",
     type: "article",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Why Most Contractor Marketing Agencies Fail (And What to Do Instead)",
+    description:
+      "The hard truth about why most marketing agencies underdeliver for contractors, and the smarter alternative.",
+  },
 };
 
 export default function BlogPost() {

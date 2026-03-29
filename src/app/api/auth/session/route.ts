@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { getSession } from "@/lib/auth";
 import { rateLimitByIP } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
@@ -38,6 +39,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
+    Sentry.captureException(error);
     logger.error("GET /api/auth/session failed", { error });
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }

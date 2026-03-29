@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { getBundleById, getServiceById } from "@/lib/constants";
@@ -72,6 +73,7 @@ export async function GET() {
       services: serviceDetails,
     });
   } catch (error) {
+    Sentry.captureException(error);
     logger.errorWithCause("[billing] GET failed:", error);
     return NextResponse.json(
       { error: "Failed to fetch billing information" },

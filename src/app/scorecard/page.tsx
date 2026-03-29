@@ -13,6 +13,12 @@ export const metadata: Metadata = {
     url: "/scorecard",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Free Business Health Score | Sovereign AI",
+    description:
+      "Get your instant business health score. See how you stack up against local competitors.",
+  },
 };
 
 export default function ScorecardPage() {

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import crypto from "crypto";
 import { cookies } from "next/headers";
 import { rateLimitByIP, setRateLimitHeaders } from "@/lib/rate-limit";
@@ -75,7 +76,8 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.redirect(`${GOOGLE_AUTH_URL}?${params.toString()}`);
-  } catch {
+  } catch (error) {
+    Sentry.captureException(error);
     return NextResponse.json(
       { error: "Failed to initiate Google OAuth" },
       { status: 500 }

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { z } from "zod";
 import { requireClient, AuthError } from "@/lib/require-client";
 import { prisma } from "@/lib/db";
@@ -149,6 +150,7 @@ export async function POST(req: NextRequest) {
         { error: error.message },
         { status: error.status }
       );
+    Sentry.captureException(error);
     logger.errorWithCause("[referrals/invite] POST failed:", error);
     return NextResponse.json(
       { error: "Failed to send referral invitations" },

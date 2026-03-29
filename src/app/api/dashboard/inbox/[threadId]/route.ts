@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { prisma } from "@/lib/db";
 import { requireClient, AuthError, getErrorMessage } from "@/lib/require-client";
 import { sendSms } from "@/lib/twilio";
@@ -71,6 +72,7 @@ export async function GET(
       })),
     });
   } catch (error) {
+    Sentry.captureException(error);
     logger.errorWithCause("[dashboard/inbox/[threadId]] GET failed:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
@@ -163,6 +165,7 @@ export async function POST(
       },
     });
   } catch (error) {
+    Sentry.captureException(error);
     logger.errorWithCause("[api/dashboard/inbox] POST failed", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
@@ -229,6 +232,7 @@ export async function PATCH(
       status: updated.status,
     });
   } catch (error) {
+    Sentry.captureException(error);
     logger.errorWithCause("[api/dashboard/inbox] PATCH failed", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }

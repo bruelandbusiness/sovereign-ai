@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { z } from "zod";
 import { requireClient, AuthError } from "@/lib/require-client";
 import { prisma } from "@/lib/db";
@@ -110,6 +111,7 @@ export async function PATCH(
         { status: error.status },
       );
     }
+    Sentry.captureException(error);
     logger.errorWithCause("[leads/outcome] PATCH failed:", error);
     return NextResponse.json(
       { error: "Failed to update lead outcome" },

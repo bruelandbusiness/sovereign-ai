@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { requireClient, AuthError } from "@/lib/require-client";
 import { prisma } from "@/lib/db";
 import { z } from "zod";
@@ -50,6 +51,7 @@ export async function GET(
         { error: error.message },
         { status: error.status },
       );
+    Sentry.captureException(error);
     logger.errorWithCause("[support/[id]] GET failed:", error);
     return NextResponse.json(
       { error: "Failed to fetch ticket" },
@@ -104,6 +106,7 @@ export async function POST(
         { error: error.message },
         { status: error.status },
       );
+    Sentry.captureException(error);
     logger.errorWithCause("[support/[id]] POST failed:", error);
     return NextResponse.json(
       { error: "Failed to add message" },

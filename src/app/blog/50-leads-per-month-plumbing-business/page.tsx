@@ -22,6 +22,12 @@ export const metadata: Metadata = {
     url: "/blog/50-leads-per-month-plumbing-business",
     type: "article",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Get 50+ Leads Per Month for Your Plumbing Business",
+    description:
+      "A proven playbook for plumbing companies to consistently generate 50+ qualified leads every month using AI marketing.",
+  },
 };
 
 export default function BlogPost() {

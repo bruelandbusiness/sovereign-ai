@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { prisma } from "@/lib/db";
 import { createAccountWithMagicLink } from "@/lib/auth";
 import { sendWelcomeEmail, sendEmailQueued, emailLayout, emailButton } from "@/lib/email";
@@ -180,6 +181,7 @@ export async function POST(request: NextRequest) {
       }
     } catch (err) {
       handlerError = err;
+      Sentry.captureException(err);
       logger.errorWithCause(
         `[payments/webhooks/stripe] Handler failed for ${event.type}`,
         err,
@@ -215,6 +217,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     // Unexpected error outside handler dispatch (e.g. idempotency DB check
     // failed, assertStripeConfigured threw). Return 500 so Stripe retries.
+    Sentry.captureException(error);
     logger.errorWithCause("[payments/webhooks/stripe] Webhook infrastructure error", error);
     return NextResponse.json(
       { error: "internal_error" },

@@ -21,6 +21,12 @@ export const metadata: Metadata = {
       "Browse guides, FAQs, and contact our support team. We're here to help you get the most out of Sovereign AI.",
     url: "/support",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Support — Sovereign AI Help Center",
+    description:
+      "Browse guides, FAQs, and contact our support team. We're here to help you get the most out of Sovereign AI.",
+  },
 };
 
 const supportChannels = [

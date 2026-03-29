@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { z } from "zod";
 import { requireClient, AuthError, getErrorMessage } from "@/lib/require-client";
 import { prisma } from "@/lib/db";
@@ -56,6 +57,7 @@ export async function PATCH(
       isActive: endpoint.isActive,
     });
   } catch (error) {
+    Sentry.captureException(error);
     logger.errorWithCause("[api/dashboard/webhooks/[id]] Error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
@@ -85,6 +87,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (error) {
+    Sentry.captureException(error);
     logger.errorWithCause("[api/dashboard/webhooks/[id]] DELETE failed", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }

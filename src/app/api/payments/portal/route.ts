@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { stripe, assertStripeConfigured } from "@/lib/stripe";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
@@ -80,6 +81,7 @@ export async function POST(request: NextRequest) {
 
     return setRateLimitHeaders(NextResponse.json({ url: portalSession.url }), rl);
   } catch (error) {
+    Sentry.captureException(error);
     logger.error("Portal session creation error", {
       error: error instanceof Error ? error.message : String(error),
     });

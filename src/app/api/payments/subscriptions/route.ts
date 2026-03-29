@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { stripe, assertStripeConfigured } from "@/lib/stripe";
@@ -114,6 +115,7 @@ export async function GET(request: NextRequest) {
     res.headers.set("Cache-Control", "private, max-age=30");
     return res;
   } catch (error) {
+    Sentry.captureException(error);
     logger.error("Subscription fetch error", {
       error: error instanceof Error ? error.message : String(error),
     });

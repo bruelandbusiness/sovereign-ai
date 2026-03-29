@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { requireClient, AuthError } from "@/lib/require-client";
 import { prisma } from "@/lib/db";
 
@@ -115,6 +116,7 @@ export async function GET() {
         { error: error.message },
         { status: error.status }
       );
+    Sentry.captureException(error);
     logger.errorWithCause("[referrals] GET failed:", error);
     return NextResponse.json(
       { error: "Failed to fetch referrals" },
@@ -156,6 +158,7 @@ export async function POST() {
         { error: error.message },
         { status: error.status }
       );
+    Sentry.captureException(error);
     logger.errorWithCause("[referrals] POST failed:", error);
     return NextResponse.json(
       { error: "Failed to create referral code" },

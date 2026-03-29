@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { signOut } from "@/lib/auth";
 import { rateLimitByIP, setRateLimitHeaders } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
@@ -23,6 +24,7 @@ export async function POST(request: NextRequest) {
     logger.info("[auth/signout] User signed out", { ip });
     return setRateLimitHeaders(NextResponse.json({ success: true }), rl);
   } catch (error) {
+    Sentry.captureException(error);
     logger.error("POST /api/auth/signout failed", { error });
     // Still clear the cookie even if the DB delete failed, so the user is
     // logged out client-side and not stuck in a broken state.

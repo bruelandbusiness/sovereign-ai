@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { z } from "zod";
 import { stripe, assertStripeConfigured } from "@/lib/stripe";
 import { getSession } from "@/lib/auth";
@@ -241,6 +242,7 @@ export async function POST(request: NextRequest) {
       rl
     );
   } catch (error) {
+    Sentry.captureException(error);
     logger.error("Subscription upgrade error", {
       error: error instanceof Error ? error.message : String(error),
     });

@@ -1,4 +1,5 @@
 import { randomUUID } from "crypto";
+import * as Sentry from "@sentry/nextjs";
 import { NextRequest, NextResponse } from "next/server";
 import { requireClient, AuthError } from "@/lib/require-client";
 import { prisma } from "@/lib/db";
@@ -121,6 +122,7 @@ export async function POST() {
         { status: error.status },
       );
     }
+    Sentry.captureException(error);
     logger.errorWithCause("[dashboard-snapshots] POST failed:", error);
     return NextResponse.json(
       { error: "Failed to create snapshot" },
@@ -175,6 +177,7 @@ export async function GET() {
         { status: error.status },
       );
     }
+    Sentry.captureException(error);
     logger.errorWithCause("[dashboard-snapshots] GET failed:", error);
     return NextResponse.json(
       { error: "Failed to list snapshots" },
@@ -224,6 +227,7 @@ export async function DELETE(request: NextRequest) {
         { status: error.status },
       );
     }
+    Sentry.captureException(error);
     logger.errorWithCause("[dashboard-snapshots] DELETE failed:", error);
     return NextResponse.json(
       { error: "Failed to revoke snapshot" },

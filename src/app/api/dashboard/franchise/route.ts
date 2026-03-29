@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { requireClient, AuthError, getErrorMessage } from "@/lib/require-client";
@@ -154,6 +155,7 @@ export async function POST(request: NextRequest) {
       createdAt: location.createdAt.toISOString(),
     });
   } catch (error) {
+    Sentry.captureException(error);
     logger.errorWithCause("[dashboard/franchise] POST failed", error);
     return NextResponse.json(
       { error: "Failed to create franchise location" },

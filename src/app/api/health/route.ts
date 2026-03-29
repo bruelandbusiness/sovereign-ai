@@ -1,5 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { rateLimitByIP } from "@/lib/rate-limit";
+import { getAllCircuitBreakerStatus } from "@/lib/circuit-breaker";
 import { logger } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
@@ -20,14 +22,24 @@ const DB_TIMEOUT_MS = 2000;
  * Each subsystem check is independent so a single failure never crashes
  * the whole endpoint.
  */
-export async function GET() {
-  const checks: Record<string, CheckResult> = {};
+export async function GET(request: NextRequest) {
+  // Rate limit: 60 requests per hour per IP (allows frequent monitoring but prevents abuse)
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  const { allowed } = await rateLimitByIP(ip, "health-check", 60);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Too many requests" },
+      { status: 429 }
+    );
+  }
+
+  const checks: Record<string, CheckResult | Record<string, unknown>> = {};
   const appVersion = process.env.npm_package_version ?? "unknown";
 
   // 1. Database connection (with timeout)
   checks.database = await timedCheck(async () => {
     const result = await Promise.race([
-      prisma.$queryRawUnsafe("SELECT 1 as ok"),
+      prisma.$queryRaw`SELECT 1 as ok`,
       new Promise((_, reject) =>
         setTimeout(() => reject(new Error("TIMEOUT")), DB_TIMEOUT_MS),
       ),
@@ -71,17 +83,32 @@ export async function GET() {
     human: `${hours}h ${minutes}m`,
   };
 
+  // 6. Circuit breaker status
+  const breakerStatus = getAllCircuitBreakerStatus();
+  if (Object.keys(breakerStatus).length > 0) {
+    checks.circuitBreakers = breakerStatus;
+  }
+
   // Derive overall status (only from service checks, not memory/uptime)
-  const serviceChecks = [checks.database, checks.stripe, checks.sendgrid];
+  const serviceChecks = [
+    checks.database as CheckResult,
+    checks.stripe as CheckResult,
+    checks.sendgrid as CheckResult,
+  ];
   const hasError = serviceChecks.some((c) => c.status === "error");
   const hasTimeout = serviceChecks.some((c) => c.status === "timeout");
   const allFailed = serviceChecks.every((c) => c.status !== "ok");
 
   // Database is critical — if it errors (not timeout), the system is unhealthy
-  const dbDown = checks.database.status === "error";
+  const dbDown = (checks.database as CheckResult).status === "error";
+
+  // Check if any circuit breaker is open
+  const hasOpenBreaker = Object.values(breakerStatus).some(
+    (b) => b.state === "open"
+  );
 
   let overall: "ok" | "degraded" | "error";
-  if (!hasError && !hasTimeout) {
+  if (!hasError && !hasTimeout && !hasOpenBreaker) {
     overall = "ok";
   } else if (allFailed || dbDown) {
     overall = "error";
@@ -103,8 +130,8 @@ export async function GET() {
       status: overall,
       checks: Object.fromEntries(
         Object.entries(checks)
-          .filter(([, v]) => v.status !== "ok")
-          .map(([k, v]) => [k, v.message]),
+          .filter(([, v]) => (v as CheckResult).status !== "ok")
+          .map(([k, v]) => [k, (v as CheckResult).message]),
       ),
     });
   }

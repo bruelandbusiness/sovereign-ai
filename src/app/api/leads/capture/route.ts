@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { rateLimitByIP, setRateLimitHeaders } from "@/lib/rate-limit";
@@ -143,7 +144,8 @@ export async function POST(request: NextRequest) {
       NextResponse.json({ success: true, id: lead.id }),
       rl
     );
-  } catch {
+  } catch (error) {
+    Sentry.captureException(error);
     return NextResponse.json(
       { error: "Failed to capture lead" },
       { status: 500 }

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { requireClient, AuthError } from "@/lib/require-client";
@@ -145,6 +146,7 @@ export async function GET() {
         { status: error.status },
       );
     }
+    Sentry.captureException(error);
     logger.errorWithCause("[settings/branding] GET failed:", error);
     return NextResponse.json(
       { error: "Failed to fetch branding settings" },
@@ -246,6 +248,7 @@ export async function PUT(request: NextRequest) {
         { status: error.status },
       );
     }
+    Sentry.captureException(error);
     logger.errorWithCause("[settings/branding] PUT failed:", error);
     return NextResponse.json(
       { error: "Failed to update branding settings" },

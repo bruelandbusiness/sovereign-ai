@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { prisma } from "@/lib/db";
 import { rateLimitByIP } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
@@ -87,6 +88,7 @@ export async function GET(
 
     return response;
   } catch (error) {
+    Sentry.captureException(error);
     logger.errorWithCause("[dashboard-snapshot] GET failed:", error);
     return NextResponse.json(
       { error: "Internal server error" },

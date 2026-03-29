@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { z } from "zod";
 import { getSession, listSessions, revokeSession } from "@/lib/auth";
 import { rateLimitByIP } from "@/lib/rate-limit";
@@ -42,6 +43,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ success: true, data: { sessions: result } });
   } catch (error) {
+    Sentry.captureException(error);
     logger.errorWithCause("[auth/sessions] GET failed:", error);
     return NextResponse.json(
       { error: "Failed to list sessions" },
@@ -106,6 +108,7 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
+    Sentry.captureException(error);
     logger.errorWithCause("[auth/sessions] DELETE failed:", error);
     return NextResponse.json(
       { error: "Failed to revoke session" },

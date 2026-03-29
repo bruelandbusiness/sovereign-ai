@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { requireClient, AuthError } from "@/lib/require-client";
 import { prisma } from "@/lib/db";
 import { rateLimit, setRateLimitHeaders } from "@/lib/rate-limit";
@@ -295,6 +296,7 @@ export async function POST() {
         { status: error.status },
       );
     }
+    Sentry.captureException(error);
     logger.errorWithCause("[export-data] POST failed:", error);
     return NextResponse.json(
       { error: "Failed to export data" },

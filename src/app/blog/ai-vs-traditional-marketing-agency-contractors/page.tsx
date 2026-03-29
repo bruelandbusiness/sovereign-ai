@@ -22,6 +22,12 @@ export const metadata: Metadata = {
     url: "/blog/ai-vs-traditional-marketing-agency-contractors",
     type: "article",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "AI vs Traditional Marketing Agency: Which Is Better for Contractors",
+    description:
+      "A head-to-head comparison of AI marketing versus traditional agencies for home service contractors, with real data on cost and performance.",
+  },
 };
 
 export default function BlogPost() {

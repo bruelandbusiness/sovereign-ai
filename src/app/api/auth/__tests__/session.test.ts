@@ -1,14 +1,24 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { NextRequest } from "next/server";
 
 // ---------------------------------------------------------------------------
 // Hoisted mocks
 // ---------------------------------------------------------------------------
-const { mockGetSession } = vi.hoisted(() => ({
+const { mockGetSession, mockRateLimitByIP } = vi.hoisted(() => ({
   mockGetSession: vi.fn(),
+  mockRateLimitByIP: vi.fn(),
 }));
 
 vi.mock("@/lib/auth", () => ({
   getSession: mockGetSession,
+}));
+
+vi.mock("@/lib/rate-limit", () => ({
+  rateLimitByIP: mockRateLimitByIP,
+}));
+
+vi.mock("@sentry/nextjs", () => ({
+  captureException: vi.fn(),
 }));
 
 vi.mock("@/lib/logger", () => ({
@@ -23,8 +33,13 @@ vi.mock("@/lib/logger", () => ({
 
 const sessionRoute = () => import("@/app/api/auth/session/route");
 
+function makeGetRequest(): NextRequest {
+  return new NextRequest("http://localhost/api/auth/session", { method: "GET" });
+}
+
 beforeEach(() => {
   vi.clearAllMocks();
+  mockRateLimitByIP.mockResolvedValue({ allowed: true, remaining: 119 });
 });
 
 // ---------------------------------------------------------------------------
@@ -35,7 +50,7 @@ describe("GET /api/auth/session", () => {
     mockGetSession.mockResolvedValue(null);
 
     const { GET } = await sessionRoute();
-    const res = await GET();
+    const res = await GET(makeGetRequest());
     expect(res.status).toBe(401);
 
     const json = await res.json();
@@ -61,7 +76,7 @@ describe("GET /api/auth/session", () => {
     });
 
     const { GET } = await sessionRoute();
-    const res = await GET();
+    const res = await GET(makeGetRequest());
     expect(res.status).toBe(200);
 
     const json = await res.json();
@@ -93,7 +108,7 @@ describe("GET /api/auth/session", () => {
     });
 
     const { GET } = await sessionRoute();
-    const json = await (await GET()).json();
+    const json = await (await GET(makeGetRequest())).json();
     expect(json.user.client).toBeNull();
   });
 
@@ -101,7 +116,7 @@ describe("GET /api/auth/session", () => {
     mockGetSession.mockRejectedValue(new Error("DB unavailable"));
 
     const { GET } = await sessionRoute();
-    const res = await GET();
+    const res = await GET(makeGetRequest());
     expect(res.status).toBe(500);
 
     const json = await res.json();
@@ -114,7 +129,7 @@ describe("GET /api/auth/session", () => {
     );
 
     const { GET } = await sessionRoute();
-    const json = await (await GET()).json();
+    const json = await (await GET(makeGetRequest())).json();
     expect(JSON.stringify(json)).not.toContain("ECONNREFUSED");
   });
 });

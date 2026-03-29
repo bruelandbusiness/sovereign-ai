@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { prisma } from "@/lib/db";
 import { requireClient, AuthError, getErrorMessage } from "@/lib/require-client";
 import { sendSms } from "@/lib/twilio";
@@ -46,6 +47,7 @@ export async function GET(
       createdAt: invoice.createdAt.toISOString(),
     });
   } catch (error) {
+    Sentry.captureException(error);
     logger.errorWithCause("[dashboard/invoices/[id]] GET failed:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
@@ -123,6 +125,7 @@ export async function POST(
 
     return NextResponse.json({ success: true, message: "Invoice resent" });
   } catch (error) {
+    Sentry.captureException(error);
     logger.errorWithCause("[dashboard/invoices/[id]] POST failed:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
@@ -205,6 +208,7 @@ export async function PUT(
       message: "Invoice marked as paid",
     });
   } catch (error) {
+    Sentry.captureException(error);
     logger.errorWithCause("[dashboard/invoices/[id]] PUT failed:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
@@ -255,6 +259,7 @@ export async function PATCH(
       message: "Invoice canceled",
     });
   } catch (error) {
+    Sentry.captureException(error);
     logger.errorWithCause("[dashboard/invoices/[id]] PATCH failed:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }

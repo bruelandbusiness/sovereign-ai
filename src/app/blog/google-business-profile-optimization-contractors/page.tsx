@@ -22,6 +22,12 @@ export const metadata: Metadata = {
     url: "/blog/google-business-profile-optimization-contractors",
     type: "article",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Google Business Profile Optimization Guide for Contractors",
+    description:
+      "The complete guide to optimizing your Google Business Profile for HVAC, plumbing, roofing, and electrical contractors.",
+  },
 };
 
 export default function BlogPost() {

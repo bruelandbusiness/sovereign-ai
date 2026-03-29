@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { stripe, assertStripeConfigured } from "@/lib/stripe";
 import { prisma } from "@/lib/db";
 import type Stripe from "stripe";
@@ -171,6 +172,7 @@ export async function POST(request: NextRequest) {
     // to retry up to ~16 times over 3 days — flooding logs and creating
     // race conditions. If the event wasn't marked as processed, Stripe's
     // normal delivery mechanism will re-send it naturally.
+    Sentry.captureException(error);
     logger.error("[invoice-webhook] Error processing event", { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json({ received: true, error: "processing_failed" });
   }

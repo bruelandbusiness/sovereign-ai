@@ -22,6 +22,12 @@ export const metadata: Metadata = {
     url: "/blog/ai-chatbots-booking-appointments-roofers",
     type: "article",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "How AI Chatbots Are Booking 3x More Appointments for Roofers",
+    description:
+      "AI chatbots are transforming how roofing companies capture and convert leads. Here is how the best roofers are using them.",
+  },
 };
 
 export default function BlogPost() {

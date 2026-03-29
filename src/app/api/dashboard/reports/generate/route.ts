@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { requireClient, AuthError } from "@/lib/require-client";
 import { generateReportHTML } from "@/lib/pdf-report";
 import { rateLimitByIP, setRateLimitHeaders } from "@/lib/rate-limit";
@@ -53,6 +54,7 @@ export async function GET(request: NextRequest) {
         { error: error.message },
         { status: error.status },
       );
+    Sentry.captureException(error);
     logger.errorWithCause("[reports/generate] GET failed:", error);
     return NextResponse.json(
       { error: "Failed to generate report" },

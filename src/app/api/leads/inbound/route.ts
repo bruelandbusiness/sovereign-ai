@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { rateLimitByIP } from "@/lib/rate-limit";
@@ -83,7 +84,8 @@ export async function POST(request: NextRequest) {
       success: true,
       count: created.count,
     });
-  } catch {
+  } catch (error) {
+    Sentry.captureException(error);
     return NextResponse.json(
       { error: "Failed to process leads" },
       { status: 500 }

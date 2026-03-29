@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { z } from "zod";
 import { generateMagicLink } from "@/lib/auth";
 import { sendMagicLinkEmail } from "@/lib/email";
@@ -56,7 +57,8 @@ export async function POST(request: NextRequest) {
     await sendMagicLinkEmail(email, result.url);
 
     return setRateLimitHeaders(NextResponse.json({ success: true }), rl);
-  } catch {
+  } catch (error) {
+    Sentry.captureException(error);
     return NextResponse.json(
       { error: "Failed to send magic link" },
       { status: 500 }

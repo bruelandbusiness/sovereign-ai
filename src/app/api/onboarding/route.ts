@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { prisma } from "@/lib/db";
-import Stripe from "stripe";
 import { stripe, assertStripeConfigured } from "@/lib/stripe";
 import { createAccountWithMagicLink } from "@/lib/auth";
 import { sendWelcomeEmail } from "@/lib/email";
 import { logger } from "@/lib/logger";
 import { BUNDLES, getServiceById } from "@/lib/constants";
+import { rateLimitByIP, setRateLimitHeaders } from "@/lib/rate-limit";
 import { z } from "zod";
 
 export const dynamic = "force-dynamic";
@@ -70,6 +71,19 @@ function matchBundle(selectedServices: string[]) {
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limit: 10 onboarding submissions per IP per hour
+    const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    const rl = await rateLimitByIP(ip, "onboarding", 10);
+    if (!rl.allowed) {
+      return setRateLimitHeaders(
+        NextResponse.json(
+          { detail: "Too many requests. Please try again later." },
+          { status: 429 }
+        ),
+        rl
+      );
+    }
+
     const rawBody = await request.json();
 
     const parsed = onboardingSchema.safeParse(rawBody);
@@ -196,7 +210,8 @@ export async function POST(request: NextRequest) {
             ? body.coupon
             : undefined;
 
-          const checkoutParams: Stripe.Checkout.SessionCreateParams = {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const checkoutParams: Record<string, any> = {
             mode: "subscription",
             payment_method_types: ["card"],
             customer_email: email,
@@ -264,6 +279,7 @@ export async function POST(request: NextRequest) {
           });
         }
       } catch (stripeError) {
+        Sentry.captureException(stripeError);
         logger.errorWithCause("[onboarding] Stripe checkout creation failed", stripeError);
         // Fall through to create a free account if Stripe fails
       }
@@ -345,6 +361,7 @@ export async function POST(request: NextRequest) {
           }
         }
       } catch (error) {
+        Sentry.captureException(error);
         logger.errorWithCause("[onboarding] Failed to create account", error);
       }
     }
@@ -353,7 +370,8 @@ export async function POST(request: NextRequest) {
       success: true,
       message: "Onboarding submitted successfully",
     });
-  } catch {
+  } catch (error) {
+    Sentry.captureException(error);
     return NextResponse.json(
       { detail: "Onboarding submission failed" },
       { status: 500 }

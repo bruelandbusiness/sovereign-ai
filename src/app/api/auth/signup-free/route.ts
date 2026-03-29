@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { generateMagicLink } from "@/lib/auth";
@@ -223,6 +224,7 @@ export async function POST(request: NextRequest) {
       rl
     );
   } catch (error) {
+    Sentry.captureException(error);
     logger.errorWithCause("[api/auth/signup-free] Error", error);
     return NextResponse.json(
       { error: "Internal server error" },

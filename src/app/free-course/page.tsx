@@ -12,6 +12,12 @@ export const metadata: Metadata = {
       "5-lesson video course: install an AI chatbot, automate review requests, and set up 24/7 lead capture for your home service business.",
     url: "/free-course",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Free AI Marketing Course | Sovereign AI",
+    description:
+      "5-lesson video course: install an AI chatbot, automate review requests, and set up 24/7 lead capture for your home service business.",
+  },
 };
 
 export default function FreeCourseRoute() {

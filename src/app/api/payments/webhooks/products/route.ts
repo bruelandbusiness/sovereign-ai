@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { prisma } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
 import { logger } from "@/lib/logger";
@@ -104,6 +105,7 @@ export async function POST(request: NextRequest) {
     // The database-backed idempotency guard and the productPurchase unique
     // constraint prevent double-processing. Returning 500 causes Stripe to
     // retry up to ~16 times over 3 days, flooding logs.
+    Sentry.captureException(error);
     logger.error("Product webhook error", { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json({ received: true, error: "processing_failed" });
   }

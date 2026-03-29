@@ -22,6 +22,12 @@ export const metadata: Metadata = {
     url: "/blog/roi-ai-review-management-hvac",
     type: "article",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "The ROI of AI-Powered Review Management for HVAC Companies",
+    description:
+      "How HVAC companies are using AI review management to generate more five-star reviews and turn online reputation into revenue.",
+  },
 };
 
 export default function BlogPost() {

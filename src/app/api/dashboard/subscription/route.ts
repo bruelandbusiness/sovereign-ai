@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 
@@ -48,6 +49,7 @@ export async function GET() {
     response.headers.set("Cache-Control", "private, max-age=60");
     return response;
   } catch (error) {
+    Sentry.captureException(error);
     logger.errorWithCause("[subscription] GET failed:", error);
     return NextResponse.json(
       { error: "Failed to fetch subscription" },

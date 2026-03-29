@@ -19,6 +19,12 @@ export const metadata: Metadata = {
       "See what's new in Sovereign AI. Product updates, new features, improvements, and bug fixes.",
     url: "/changelog",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "What's New | Sovereign AI",
+    description:
+      "See what's new in Sovereign AI. Product updates, new features, improvements, and bug fixes.",
+  },
 };
 
 const CATEGORY_CONFIG: Record<

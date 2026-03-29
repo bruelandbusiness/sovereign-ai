@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { verifyMagicLink, setSessionCookie } from "@/lib/auth";
 import { rateLimitByIP, setRateLimitHeaders } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
@@ -53,6 +54,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.redirect(new URL("/dashboard", request.url));
   } catch (error) {
+    Sentry.captureException(error);
     logger.error("GET /api/auth/verify failed", { error });
     return NextResponse.redirect(
       new URL("/login?error=invalid_or_expired", request.url)

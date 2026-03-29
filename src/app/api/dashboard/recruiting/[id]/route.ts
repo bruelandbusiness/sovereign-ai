@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { prisma } from "@/lib/db";
 import { requireClient, AuthError, getErrorMessage } from "@/lib/require-client";
 import { z } from "zod";
@@ -74,6 +75,7 @@ export async function GET(
       })),
     });
   } catch (error) {
+    Sentry.captureException(error);
     logger.errorWithCause("[api/dashboard/recruiting/[id]] GET failed", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
@@ -138,6 +140,7 @@ export async function PUT(
       updatedAt: updated.updatedAt.toISOString(),
     });
   } catch (error) {
+    Sentry.captureException(error);
     logger.errorWithCause("[api/dashboard/recruiting/[id]] PUT failed", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }

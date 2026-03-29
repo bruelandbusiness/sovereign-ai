@@ -10,6 +10,8 @@ const {
   mockAssertStripeConfigured,
   mockCreateAccountWithMagicLink,
   mockSendWelcomeEmail,
+  mockRateLimitByIP,
+  mockSetRateLimitHeaders,
 } = vi.hoisted(() => ({
   mockPrisma: {
     agency: { findUnique: vi.fn() },
@@ -28,6 +30,8 @@ const {
   mockAssertStripeConfigured: vi.fn(),
   mockCreateAccountWithMagicLink: vi.fn(),
   mockSendWelcomeEmail: vi.fn(),
+  mockRateLimitByIP: vi.fn(),
+  mockSetRateLimitHeaders: vi.fn((res: unknown) => res),
 }));
 
 vi.mock("@/lib/db", () => ({
@@ -46,6 +50,22 @@ vi.mock("@/lib/auth", () => ({
 vi.mock("@/lib/email", () => ({
   sendWelcomeEmail: mockSendWelcomeEmail,
 }));
+
+vi.mock("@/lib/rate-limit", () => ({
+  rateLimitByIP: mockRateLimitByIP,
+  setRateLimitHeaders: mockSetRateLimitHeaders,
+}));
+
+vi.mock("@sentry/nextjs", () => ({
+  captureException: vi.fn(),
+}));
+
+vi.mock("@/lib/constants", async (importOriginal) => {
+  const original = await importOriginal<typeof import("@/lib/constants")>();
+  return {
+    ...original,
+  };
+});
 
 vi.mock("@/lib/logger", () => ({
   logger: {
@@ -112,6 +132,8 @@ function validPayload(overrides: Record<string, unknown> = {}) {
 // ---------------------------------------------------------------------------
 beforeEach(() => {
   vi.clearAllMocks();
+  // Default: rate limit allows
+  mockRateLimitByIP.mockResolvedValue({ allowed: true, remaining: 9 });
   // Default: stripe works, returns a checkout session
   mockAssertStripeConfigured.mockReturnValue(undefined);
   mockStripe.checkout.sessions.create.mockResolvedValue({

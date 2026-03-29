@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { rotateSession } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { rateLimitByIP, setRateLimitHeaders } from "@/lib/rate-limit";
@@ -35,6 +36,7 @@ export async function POST(request: NextRequest) {
 
     return setRateLimitHeaders(NextResponse.json({ ok: true }), rl);
   } catch (error) {
+    Sentry.captureException(error);
     logger.errorWithCause("Session rotation failed:", error);
     return NextResponse.json(
       { error: "Session rotation failed" },

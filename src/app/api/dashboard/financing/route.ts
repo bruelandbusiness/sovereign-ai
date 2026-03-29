@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { prisma } from "@/lib/db";
 import { requireClient, AuthError } from "@/lib/require-client";
 
@@ -104,6 +105,7 @@ export async function GET(request: NextRequest) {
         { error: error.message },
         { status: error.status },
       );
+    Sentry.captureException(error);
     logger.errorWithCause("[financing] GET failed:", error);
     return NextResponse.json(
       { error: "Failed to fetch financing data" },

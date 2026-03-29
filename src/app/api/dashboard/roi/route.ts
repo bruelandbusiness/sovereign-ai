@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { requireClient, AuthError } from "@/lib/require-client";
 import { calculateROI } from "@/lib/roi";
 
@@ -36,6 +37,7 @@ export async function GET() {
         { error: error.message },
         { status: error.status },
       );
+    Sentry.captureException(error);
     logger.errorWithCause("[roi] GET failed:", error);
     return NextResponse.json(
       { error: "Failed to fetch ROI data" },

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { cookies } from "next/headers";
 import {
   findOrCreateAccountByEmail,
@@ -163,6 +164,7 @@ export async function GET(request: NextRequest) {
     const destination = isSafeRedirect ? redirectPath : "/dashboard";
     return NextResponse.redirect(new URL(destination, request.url));
   } catch (error) {
+    Sentry.captureException(error);
     logger.errorWithCause("Google OAuth callback error:", error);
     return NextResponse.redirect(
       new URL("/login?error=oauth_failed", request.url)

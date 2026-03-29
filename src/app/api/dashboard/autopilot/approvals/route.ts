@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { prisma } from "@/lib/db";
 import { requireClient, AuthError } from "@/lib/require-client";
 import { processApproval } from "@/lib/governance/approvals";
@@ -45,6 +46,7 @@ export async function GET() {
         { error: error.message },
         { status: error.status },
       );
+    Sentry.captureException(error);
     logger.errorWithCause("[autopilot/approvals] GET failed:", error);
     return NextResponse.json(
       { error: "Failed to fetch approvals" },
@@ -87,6 +89,7 @@ export async function PUT(request: Request) {
         { error: error.message },
         { status: error.status },
       );
+    Sentry.captureException(error);
     logger.errorWithCause("[autopilot/approvals] PUT failed:", error);
     return NextResponse.json(
       { error: "Failed to update approval" },

@@ -22,6 +22,12 @@ export const metadata: Metadata = {
     url: "/blog/email-marketing-home-service-businesses-guide",
     type: "article",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Email Marketing for Home Service Businesses: The Complete Guide",
+    description:
+      "The complete guide to email marketing for home service contractors. Build campaigns that drive repeat business and referrals.",
+  },
 };
 
 export default function BlogPost() {

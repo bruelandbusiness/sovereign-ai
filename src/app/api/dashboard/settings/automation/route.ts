@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { requireClient, AuthError } from "@/lib/require-client";
@@ -48,6 +49,7 @@ export async function GET() {
         { error: error.message },
         { status: error.status },
       );
+    Sentry.captureException(error);
     logger.errorWithCause("[settings/automation] GET failed:", error);
     return NextResponse.json(
       { error: "Failed to fetch automation settings" },
@@ -143,6 +145,7 @@ export async function PUT(request: Request) {
         { error: error.message },
         { status: error.status },
       );
+    Sentry.captureException(error);
     logger.errorWithCause("[settings/automation] PUT failed:", error);
     return NextResponse.json(
       { error: "Failed to update automation settings" },

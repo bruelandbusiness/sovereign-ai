@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { getSession } from "@/lib/auth";
 import { cache } from "@/lib/cache";
 
@@ -25,7 +26,8 @@ export async function GET() {
     const res = NextResponse.json(data);
     res.headers.set("Cache-Control", "private, max-age=60");
     return res;
-  } catch {
+  } catch (error) {
+    Sentry.captureException(error);
     return NextResponse.json({ error: "Could not connect to backend" }, { status: 502 });
   }
 }
