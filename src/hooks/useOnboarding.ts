@@ -144,6 +144,7 @@ export function useOnboarding(): UseOnboardingReturn {
   const [error, setError] = useState<string | null>(null);
   const [referralCode, setReferralCode] = useState<string | null>(null);
   const [agencySlug, setAgencySlug] = useState<string | null>(null);
+  const [coupon, setCoupon] = useState<string | null>(null);
   const searchParams = useSearchParams();
 
   // Load persisted data on mount, or pre-select from URL params
@@ -158,6 +159,19 @@ export function useOnboarding(): UseOnboardingReturn {
     const agencyParam = searchParams.get("agency");
     if (agencyParam) {
       setAgencySlug(agencyParam);
+    }
+
+    // Map offer param to coupon code for reactivation/abandoned cart flows
+    const offerParam = searchParams.get("offer");
+    if (offerParam) {
+      const offerToCoupon: Record<string, string> = {
+        reactivation20: "reactivation_20",
+        abandoned10: "abandoned_10",
+      };
+      const mappedCoupon = offerToCoupon[offerParam];
+      if (mappedCoupon) {
+        setCoupon(mappedCoupon);
+      }
     }
 
     const saved = loadFromStorage();
@@ -247,7 +261,7 @@ export function useOnboarding(): UseOnboardingReturn {
       const res = await fetch("/api/onboarding", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...apiData, referralCode, agencySlug }),
+        body: JSON.stringify({ ...apiData, referralCode, agencySlug, coupon }),
       });
 
       if (!res.ok) {
@@ -272,7 +286,7 @@ export function useOnboarding(): UseOnboardingReturn {
     } finally {
       setIsSubmitting(false);
     }
-  }, [formData, referralCode, agencySlug]);
+  }, [formData, referralCode, agencySlug, coupon]);
 
   return {
     step,

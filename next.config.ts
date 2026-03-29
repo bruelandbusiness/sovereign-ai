@@ -1,4 +1,6 @@
 import type { NextConfig } from "next";
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { withSentryConfig } = require("@sentry/nextjs");
 
 const nextConfig: NextConfig = {
   /* ── External packages for server-side bundling ──────────────────────── */
@@ -92,4 +94,15 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+  /* ── Sentry build plugin options ─────────────────────────────────────── */
+  // Suppress Sentry CLI output during builds.
+  silent: true,
+
+  // Upload wider set of client source maps for better stack traces.
+  widenClientFileUpload: true,
+
+  // Keep the server-side Webpack plugin enabled for automatic
+  // error boundaries and performance tracing.
+  disableServerWebpackPlugin: false,
+});

@@ -12,31 +12,32 @@ import { ScrollReveal } from "@/components/shared/ScrollReveal";
 import { CountUp } from "@/components/shared/CountUp";
 
 /* ------------------------------------------------------------------ */
-/*  Below-fold sections -- dynamically imported to reduce initial JS   */
+/*  Below-fold sections -- dynamically imported with ssr:false to      */
+/*  eliminate their JS from the initial page load bundle.              */
 /* ------------------------------------------------------------------ */
 const BundlePricing = dynamic(
   () => import("@/components/home/BundlePricing").then((m) => ({ default: m.BundlePricing })),
-  { ssr: true }
+  { ssr: false, loading: () => <div className="min-h-[400px]" /> }
 );
 const HowItWorks = dynamic(
   () => import("@/components/home/HowItWorks").then((m) => ({ default: m.HowItWorks })),
-  { ssr: true }
+  { ssr: false, loading: () => <div className="min-h-[400px]" /> }
 );
 const TestimonialsSection = dynamic(
   () => import("@/components/home/TestimonialsSection").then((m) => ({ default: m.TestimonialsSection })),
-  { ssr: true }
+  { ssr: false, loading: () => <div className="min-h-[300px]" /> }
 );
 const CTASection = dynamic(
   () => import("@/components/home/CTASection").then((m) => ({ default: m.CTASection })),
-  { ssr: true }
+  { ssr: false, loading: () => <div className="min-h-[200px]" /> }
 );
 const TrustSection = dynamic(
   () => import("@/components/home/TrustSection").then((m) => ({ default: m.TrustSection })),
-  { ssr: true }
+  { ssr: false, loading: () => <div className="min-h-[300px]" /> }
 );
 const ROICalculator = dynamic(
   () => import("@/components/home/ROICalculator").then((m) => ({ default: m.ROICalculator })),
-  { ssr: true }
+  { ssr: false, loading: () => <div className="min-h-[400px]" /> }
 );
 
 export function HomePageContent() {

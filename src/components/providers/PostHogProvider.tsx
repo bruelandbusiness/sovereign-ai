@@ -1,15 +1,30 @@
 "use client";
 
-import { Suspense, useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-import { initPostHog, posthog } from "@/lib/posthog";
 
+/**
+ * Lazy-loaded PostHog page-view tracker.
+ *
+ * The posthog-js library is dynamically imported so it is NOT included in the
+ * initial JavaScript bundle (~45 KiB gzipped savings). The library loads after
+ * hydration via the dynamic import in PostHogProvider below.
+ */
 function PostHogPageView(): null {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const posthogRef = useRef<typeof import("posthog-js").default | null>(null);
 
   useEffect(() => {
-    if (!posthog.__loaded) {
+    // Dynamically import posthog-js so it is code-split from the main bundle
+    import("posthog-js").then((mod) => {
+      posthogRef.current = mod.default;
+    });
+  }, []);
+
+  useEffect(() => {
+    const ph = posthogRef.current;
+    if (!ph || !ph.__loaded) {
       return;
     }
 
@@ -17,7 +32,7 @@ function PostHogPageView(): null {
       ? `${pathname}?${searchParams.toString()}`
       : pathname;
 
-    posthog.capture("$pageview", { $current_url: url });
+    ph.capture("$pageview", { $current_url: url });
   }, [pathname, searchParams]);
 
   return null;
@@ -29,19 +44,27 @@ interface PostHogProviderProps {
 
 export function PostHogProvider({ children }: PostHogProviderProps) {
   const initialized = useRef(false);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if (!initialized.current) {
+    if (initialized.current) return;
+    initialized.current = true;
+
+    // Dynamically import posthog-js and the init helper so the ~45 KiB
+    // posthog-js library is loaded after hydration, not in the initial bundle.
+    import("@/lib/posthog").then(({ initPostHog }) => {
       initPostHog();
-      initialized.current = true;
-    }
+      setReady(true);
+    });
   }, []);
 
   return (
     <>
-      <Suspense fallback={null}>
-        <PostHogPageView />
-      </Suspense>
+      {ready && (
+        <Suspense fallback={null}>
+          <PostHogPageView />
+        </Suspense>
+      )}
       {children}
     </>
   );
